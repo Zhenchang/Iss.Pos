@@ -11,6 +11,8 @@ import java.util.HashSet;
 /**
  *
  * @author Zaid
+ * @author Vishnu
+ * 
  */
 public class Product {
     private final String id;
