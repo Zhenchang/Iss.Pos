@@ -5,8 +5,6 @@
  */
 package edu.nus.iss.pos.dao.Formatters;
 
-import edu.nus.iss.pos.core.IEntity;
-import edu.nus.iss.pos.core.Product;
 import edu.nus.iss.pos.core.dao.IFileFormatter;
 
 /**
@@ -16,15 +14,14 @@ import edu.nus.iss.pos.core.dao.IFileFormatter;
 public class FileFormatterFactory {
     public IFileFormatter getFormatter(FileType type) throws Exception{
         switch(type){
-            case User: return new MemberFileFormatter();
-            case Member: return new MemberFileFormatter();
-            case Category: return new MemberFileFormatter();
-            case Product: return new MemberFileFormatter();
-            case Transaction: return new TransactionFileFormatter();
-            case Discount: return new MemberFileFormatter();
-            case Vendor: return new MemberFileFormatter();
+            case User: return UserFileFormatter.getInstance();
+            case Member: return MemberFileFormatter.getInstance();
+            case Category: throw new Exception("No Formatter Found!");
+            case Product: throw new Exception("No Formatter Found!");
+            case Transaction: return TransactionFileFormatter.getInstance();
+            case Discount: throw new Exception("No Formatter Found!");
+            case Vendor: throw new Exception("No Formatter Found!");
             default: throw new Exception("No Formatter Found!");
         }
     }
 }
-

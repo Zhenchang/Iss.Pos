@@ -13,6 +13,15 @@ import edu.nus.iss.pos.core.dao.IFileFormatter;
  * @author Zaid
  */
 public class UserFileFormatter implements IFileFormatter<User> {
+    
+    private static final UserFileFormatter singleton =  new UserFileFormatter();
+    private UserFileFormatter(){
+        
+    }
+    public static UserFileFormatter getInstance(){
+        return singleton;
+    }
+    
     @Override
     public String format(User entity) {
         return entity.getUsername() + "," + entity.getPassword() + "\n";

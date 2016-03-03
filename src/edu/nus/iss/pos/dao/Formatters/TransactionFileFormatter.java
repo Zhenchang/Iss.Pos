@@ -18,6 +18,14 @@ import java.util.Date;
  */
 public class TransactionFileFormatter implements IFileFormatter<Transaction>{
 
+    private static final TransactionFileFormatter singleton =  new TransactionFileFormatter();
+    private TransactionFileFormatter(){
+        
+    }
+    public static TransactionFileFormatter getInstance(){
+        return singleton;
+    }
+    
     @Override
     public String format(Transaction entity) {
         String str = "";

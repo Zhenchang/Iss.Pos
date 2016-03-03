@@ -14,6 +14,14 @@ import edu.nus.iss.pos.core.dao.IFileFormatter;
  */
 public class MemberFileFormatter implements IFileFormatter<Member>{
 
+    private static final MemberFileFormatter singleton =  new MemberFileFormatter();
+    private MemberFileFormatter(){
+        
+    }
+    public static MemberFileFormatter getInstance(){
+        return singleton;
+    }
+    
     @Override
     public String format(Member entity) {
         return entity.getKey() + "," + entity.getName() + "," + String.valueOf(entity.getLoyaltyPoints()) + "\n";
@@ -30,5 +38,6 @@ public class MemberFileFormatter implements IFileFormatter<Member>{
         int loyaltyPoints = Integer.parseInt(params[2]);
         return new Member(id, name, loyaltyPoints);
     }
+    
     
 }
