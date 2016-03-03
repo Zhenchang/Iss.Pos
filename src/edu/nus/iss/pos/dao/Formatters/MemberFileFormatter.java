@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package edu.nus.iss.pos.dao;
+package edu.nus.iss.pos.dao.Formatters;
 
 import edu.nus.iss.pos.core.Member;
 import edu.nus.iss.pos.core.dao.IFileFormatter;
@@ -17,6 +17,18 @@ public class MemberFileFormatter implements IFileFormatter<Member>{
     @Override
     public String format(Member entity) {
         return entity.getKey() + "," + entity.getName() + "," + String.valueOf(entity.getLoyaltyPoints()) + "\n";
+    }
+
+    @Override
+    public Member readEntity(String data) throws Exception {
+        String[] lines = data.split("\n");
+        if(lines.length == 0) throw new Exception("Cannot map data to entity!");
+        String[] params = lines[0].split(",");
+        if(params.length != 3) throw new Exception("Cannot map data to entity!");
+        String id = params[0];
+        String name = params[1];
+        int loyaltyPoints = Integer.parseInt(params[2]);
+        return new Member(id, name, loyaltyPoints);
     }
     
 }

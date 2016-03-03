@@ -20,6 +20,17 @@ public class Transaction implements IEntity {
     private String memberId;
     private Collection<TransactionDetail> transactionDetails;
     
+    public Transaction(int id, Date date, Member member){
+        setId(id);
+        setDate(date);
+        setMember(member);
+    }
+    
+    public Transaction(int id, Date date, String memberId){
+        setId(id);
+        setDate(date);
+        setMemberId(memberId);
+    }
     
     @Override
     public String getKey() {
@@ -47,15 +58,32 @@ public class Transaction implements IEntity {
         return date;
     }
 
-    public void setDate(Date date) {
+    public final void setDate(Date date) {
         this.date = date;
     }
 
-    public void setMember(Member member) {
+    public final void setMember(Member member) {
         if(member == null) throw new IllegalArgumentException("member");
         this.memberId = member.getKey();
         this.member = member;
     }
     
+    public final void setMemberId(String memberId){
+        this.memberId = memberId;
+    }
     
+    public int getId() {
+        return this.id;
+    }
+    
+    public void addTransactionDetail(TransactionDetail transactionDetail){
+        if(transactionDetail == null) throw new IllegalArgumentException("transactionDetail");
+        if(!transactionDetail.getTransaction().equals(this)) throw new IllegalArgumentException("transactionDetail");
+        transactionDetails.add(transactionDetail);
+    }
+    
+    public void removeTransactionDetail(TransactionDetail transactionDetail){
+        if(transactionDetail == null) throw new IllegalArgumentException("transactionDetail"); 
+        transactionDetails.remove(transactionDetail);
+    }
 }

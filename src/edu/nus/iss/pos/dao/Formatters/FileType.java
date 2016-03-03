@@ -3,13 +3,18 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package edu.nus.iss.pos.core;
+package edu.nus.iss.pos.dao.Formatters;
 
 /**
  *
- * @author Liu Zhenchang
+ * @author Zaid
  */
-public class Order {
-    
-    
+public enum FileType {
+    User,
+    Member,
+    Category,
+    Product,
+    Transaction,
+    Vendor,
+    Discount
 }

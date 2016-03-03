@@ -19,12 +19,16 @@ public class TransactionDetail {
     private String transactionId;
     private Transaction transaction;
     
-     public TransactionDetail(Transaction transaction, Product product, int quantityPurchased){
+    public TransactionDetail(Transaction transaction, Product product, int quantityPurchased){
         setQuantityPurchased(quantityPurchased);
         setProduct(product);
         setTransaction(transaction);
-        this.transaction = transaction;
-        
+    }
+    
+    public TransactionDetail(Transaction transaction, String productId, int quantityPurchased){
+        setQuantityPurchased(quantityPurchased);
+        setProductId(productId);
+        setTransaction(transaction);
     }
 
     public String getProductId() {
@@ -39,7 +43,7 @@ public class TransactionDetail {
         return quantityPurchased;
     }
 
-    public void setQuantityPurchased(int quantityPurchased) {
+    public final void setQuantityPurchased(int quantityPurchased) {
         if(quantityPurchased < 1) throw new IllegalArgumentException("quantityPurchased");
         this.quantityPurchased = quantityPurchased;
     }
@@ -48,9 +52,9 @@ public class TransactionDetail {
         return product;
     }
 
-    public void setProduct(Product product) {
+    public final void setProduct(Product product) {
         if(product == null) throw new IllegalArgumentException("product");
-        this.productId = product.getKey();
+        this.setProductId(product.getKey());
         this.product = product;
     }
 
@@ -58,13 +62,14 @@ public class TransactionDetail {
         return transaction;
     }
 
-    public void setTransaction(Transaction transaction) {
+    public final void setTransaction(Transaction transaction) {
         if(transaction == null) throw new IllegalArgumentException("member");
         this.transactionId = transaction.getKey();
         this.transaction = transaction;
     }
-    
-    
-    
+
+    public final void setProductId(String productId) {
+        this.productId = productId;
+    }
     
 }

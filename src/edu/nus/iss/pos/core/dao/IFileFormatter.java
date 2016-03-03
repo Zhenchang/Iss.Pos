@@ -10,7 +10,9 @@ import edu.nus.iss.pos.core.IEntity;
 /**
  *
  * @author Liu Zhenchang
+ * @param <T>
  */
 public interface IFileFormatter<T extends IEntity> {
     String format(T entity);
+    T readEntity(String data) throws Exception;
 }
