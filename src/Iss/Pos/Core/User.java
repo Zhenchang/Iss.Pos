@@ -8,6 +8,7 @@ package Iss.Pos.Core;
 /**
  *
  * @author Zaid
+ * @author Liu Zhenchang
  */
 public class User {
     private String username;
