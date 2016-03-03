@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package Iss.Pos.Core;
+package edu.nus.iss.pos.core;
 
 import java.util.Collection;
 import java.util.HashSet;
@@ -12,7 +12,7 @@ import java.util.HashSet;
  *
  * @author Zaid
  */
-public class Vendor {
+public class Vendor implements IEntity {
     private String name;
     private String description;
     
@@ -32,5 +32,10 @@ public class Vendor {
     
     public void removeCategory(Category category){
         categories.remove(category);
+    }
+
+    @Override
+    public String getKey() {
+        return name;
     }
 }

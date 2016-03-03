@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package Iss.Pos.Core;
+package edu.nus.iss.pos.core;
 
 import java.util.Collection;
 import java.util.HashSet;
@@ -14,22 +14,23 @@ import java.util.HashSet;
  * @author Vishnu
  * 
  */
-public class Product {
+public class Product  implements IEntity {
     private final String id;
     private String name;
     private String description;
-    private int quantity;
+    private int availableQuantity;
     private float price;
-    private int barcodeNumber;
+    private String barcodeNumber;
     private int reorderQuantity;
     private int orderQuantity; 
     
     private final Category category;
     private final Collection<Transaction> transactions;
     
+    // id = CLO/1
     public Product(Category c, int index){
         category = c;
-        this.id = c.getId() + "/" + String.valueOf(index);
+        this.id = c.getKey() + "/" + String.valueOf(index);
         this.transactions = new HashSet<>();
     }
     
@@ -54,14 +55,14 @@ public class Product {
     }
 
     public void setQuantity(int quantity) {
-        this.quantity = quantity;
+        this.availableQuantity = quantity;
     }
 
     public void setPrice(float price) {
         this.price = price;
     }
 
-    public void setBarcodeNumber(int barcodeNumber) {
+    public void setBarcodeNumber(String barcodeNumber) {
         this.barcodeNumber = barcodeNumber;
     }
 
@@ -73,7 +74,7 @@ public class Product {
         this.orderQuantity = orderQuantity;
     }
 
-    public String getId() {
+    public String getKey() {
         return id;
     }
 
@@ -86,14 +87,14 @@ public class Product {
     }
 
     public int getQuantity() {
-        return quantity;
+        return availableQuantity;
     }
 
     public float getPrice() {
         return price;
     }
 
-    public int getBarcodeNumber() {
+    public String getBarcodeNumber() {
         return barcodeNumber;
     }
 

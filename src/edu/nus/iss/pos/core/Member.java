@@ -3,13 +3,13 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package Iss.Pos.Core;
+package edu.nus.iss.pos.core;
 
 /**
  *
  * @author Zaid
  */
-public class Member {
+public class Member implements IEntity {
     private String id;
     private String name;
     private int loyaltyPoints;
@@ -86,7 +86,14 @@ public class Member {
         else throw new IllegalArgumentException("loyaltyPoints");
     }
     
-    public String getId(){
+    public String getName(){
+        return this.name;
+    }
+    public int getLoyaltyPoints(){
+        return this.loyaltyPoints;
+    }
+    
+    public String getKey(){
         return this.id;
     }
 }

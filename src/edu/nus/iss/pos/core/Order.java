@@ -3,14 +3,13 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package Iss.Pos.Core;
+package edu.nus.iss.pos.core;
 
 /**
  *
- * @author Zaid
  * @author Liu Zhenchang
  */
-public class User {
-    private String username;
-    private String password;
+public class Order {
+    
+    
 }
