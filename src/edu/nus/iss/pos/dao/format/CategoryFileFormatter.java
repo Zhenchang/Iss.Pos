@@ -3,9 +3,8 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package edu.nus.iss.pos.dao.formatters;
+package edu.nus.iss.pos.dao.format;
 
-import edu.nus.iss.pos.core.IEntity;
 import edu.nus.iss.pos.core.dao.IFileFormatter;
 import edu.nus.iss.pos.core.*;
 

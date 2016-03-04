@@ -6,7 +6,7 @@
 package edu.nus.iss.pos.core.dao;
 
 import edu.nus.iss.pos.core.IEntity;
-import edu.nus.iss.pos.dao.formatters.FileType;
+import edu.nus.iss.pos.dao.format.FileType;
 import java.io.IOException;
 
 /**
