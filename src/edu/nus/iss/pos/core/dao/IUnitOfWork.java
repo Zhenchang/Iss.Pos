@@ -12,7 +12,5 @@ import edu.nus.iss.pos.dao.format.FileType;
  * @author Liu Zhenchang
  */
 public interface IUnitOfWork {
-    IRepository getRepository(FileType fileType);
-    void addRepository(IRepository repository);
-    void removeRepository(IRepository repository);
+    IRepository getRepository(FileType fileType) throws Exception;
 }
