@@ -10,7 +10,6 @@ import edu.nus.iss.pos.core.Vendor;
 import edu.nus.iss.pos.core.dao.IUnitOfWork;
 import edu.nus.iss.pos.dao.format.FileType;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.List;
 
 /**

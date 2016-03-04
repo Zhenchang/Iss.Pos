@@ -24,7 +24,7 @@ public class Repository<T extends IEntity> implements IRepository<T>{
     private FileType fileType;
     private String fileName;
     private final IFileFormatter formatter;
-    private IUnitOfWork unitOfWork;
+    private final IUnitOfWork unitOfWork;
     
     public Repository(IUnitOfWork unitOfWork, FileType fileType, String filename) throws Exception{
         this.setFileType(fileType);
@@ -47,7 +47,7 @@ public class Repository<T extends IEntity> implements IRepository<T>{
 
     @Override
     public void add(T entity) throws Exception {
-        try(FileWriter fileWriter = new FileWriter(fileName)){
+        try(FileWriter fileWriter = new FileWriter(fileName, true)){
             fileWriter.append(this.formatter.format(entity));
         }
     }
@@ -58,6 +58,7 @@ public class Repository<T extends IEntity> implements IRepository<T>{
                 int linePosition = -1;
                 while(bufferedReader.ready()){
                     String lineKey = this.formatter.getKey(bufferedReader.readLine());
+                    linePosition++;
                     if(key.equals(lineKey)) {
                         return linePosition;
                     }
@@ -132,8 +133,14 @@ public class Repository<T extends IEntity> implements IRepository<T>{
                             list.add( (T) this.formatter.readEntity(lines));
                             lines = "";
                             currentEntity = (T) this.formatter.readEntity(line);
+                        } else{
+                             list.add(currentEntity);
+                            currentEntity = (T) this.formatter.readEntity(line);
                         }
                     }
+                }
+                if(currentEntity != null){
+                    list.add(currentEntity);
                 }
             }
         }
