@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package edu.nus.iss.pos.dao.Formatters;
+package edu.nus.iss.pos.dao.formatters;
 
 /**
  *

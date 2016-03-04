@@ -16,7 +16,7 @@ public class Vendor implements IEntity {
     private String name;
     private String description;
     
-    private final Collection<Category> categories;
+    private Collection<Category> categories;
     
     public Vendor(){
         categories = new HashSet<>();

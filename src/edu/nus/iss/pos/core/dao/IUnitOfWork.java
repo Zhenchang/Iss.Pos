@@ -5,7 +5,7 @@
  */
 package edu.nus.iss.pos.core.dao;
 
-import edu.nus.iss.pos.dao.Formatters.FileType;
+import edu.nus.iss.pos.dao.formatters.FileType;
 
 /**
  *
@@ -13,4 +13,6 @@ import edu.nus.iss.pos.dao.Formatters.FileType;
  */
 public interface IUnitOfWork {
     IRepository getRepository(FileType fileType);
+    void addRepository(IRepository repository);
+    void removeRepository(IRepository repository);
 }

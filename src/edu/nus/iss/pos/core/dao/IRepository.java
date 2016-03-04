@@ -6,19 +6,20 @@
 package edu.nus.iss.pos.core.dao;
 
 import edu.nus.iss.pos.core.IEntity;
-import edu.nus.iss.pos.dao.Formatters.FileType;
+import edu.nus.iss.pos.dao.formatters.FileType;
 import java.util.Collection;
 
 /**
  *
  * @author Liu Zhenchang
  */
-interface IRepository<T extends IEntity> {
+public interface IRepository<T extends IEntity> {
     
-     void add(T entity);
-     void delete(T entity);
-     void update(T entity);
-     T getByKey(String key);
-     Collection<T> getAll();
+     void add(T entity) throws Exception;
+     void delete(T entity) throws Exception;
+     void update(String oldKey, T entity) throws Exception;
+     
+     T getByKey(String key) throws Exception;
+     Iterable<T> getAll() throws Exception;
      FileType getFileType();
 }
