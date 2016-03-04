@@ -15,7 +15,7 @@ import java.util.HashSet;
  * 
  */
 public class Product  implements IEntity {
-    private final String id;
+    private String id;
     private String name;
     private String description;
     private int availableQuantity;
@@ -24,8 +24,8 @@ public class Product  implements IEntity {
     private int reorderQuantity;
     private int orderQuantity; 
     
-    private final Category category;
-    private final Collection<Transaction> transactions;
+    private Category category;
+    private Collection<Transaction> transactions;
     
     // id = CLO/1
     public Product(Category c, int index){
@@ -33,6 +33,27 @@ public class Product  implements IEntity {
         this.id = c.getKey() + "/" + String.valueOf(index);
         this.transactions = new HashSet<>();
     }
+
+    public Product(String id, String name, String description, int availableQuantity, float price, String barcodeNumber, int reorderQuantity, int orderQuantity) {
+        this.setId(id);
+        this.setName(name);;
+        this.setDescription(description);
+        this.setQuantity(orderQuantity);;
+        this.setPrice(price);
+        this.setDescription(description);
+        this.setReorderQuantity(reorderQuantity);
+        this.setOrderQuantity(orderQuantity);
+    }
+    
+    public String getCategoryId(){
+        return this.id.split("/")[0];
+    }
+    
+    private void setId(String id){
+        this.id = id;
+    }
+    
+    
     
     public void addTransaction(Transaction t){
         this.transactions.add(t);
@@ -50,7 +71,7 @@ public class Product  implements IEntity {
         this.name = name;
     }
 
-    public void setDescription(String description) {
+    public final void setDescription(String description) {
         this.description = description;
     }
 
@@ -62,7 +83,7 @@ public class Product  implements IEntity {
         this.price = price;
     }
 
-    public void setBarcodeNumber(String barcodeNumber) {
+    public final void setBarcodeNumber(String barcodeNumber) {
         this.barcodeNumber = barcodeNumber;
     }
 

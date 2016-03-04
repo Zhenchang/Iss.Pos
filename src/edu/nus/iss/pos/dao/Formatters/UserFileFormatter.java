@@ -38,4 +38,12 @@ public class UserFileFormatter implements IFileFormatter<User> {
         return new User(username, password);
     }
     
+    @Override
+    public String getKey(String data) throws Exception{
+        int pos = data.indexOf(",");
+        if(pos < 1) throw new Exception("No key found!"); 
+        String key = data.substring(0, pos);
+        return key;
+    }
+    
 }

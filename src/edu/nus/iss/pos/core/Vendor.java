@@ -22,6 +22,13 @@ public class Vendor implements IEntity {
         categories = new HashSet<>();
     }
     
+    public Vendor(String name, String description){
+        this();
+        this.name = name;
+        this.description = description;
+        
+    }
+    
     public Iterable<Category> getCategories(){
         return categories;
     }
@@ -37,5 +44,9 @@ public class Vendor implements IEntity {
     @Override
     public String getKey() {
         return name;
+    }
+    
+    public String getDescription(){
+        return this.description;
     }
 }

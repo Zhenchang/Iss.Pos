@@ -25,6 +25,7 @@ public interface IInventoryService {
                         int reorderQuantity,
                         int orderQuantity);
     void reorderProduct(Product product, Vendor vendor);
+    /*Similar to wildcard search*/
     Collection<Product> searchProductByName(String name);
     Product searchProductByBarcode(String barcode);
     Collection<Product> getProductsBelowThreshold();

@@ -5,10 +5,12 @@
  */
 package edu.nus.iss.pos.core.dao;
 
+import edu.nus.iss.pos.dao.Formatters.FileType;
+
 /**
  *
  * @author Liu Zhenchang
  */
 public interface IUnitOfWork {
-    IRepository getRepository();
+    IRepository getRepository(FileType fileType);
 }

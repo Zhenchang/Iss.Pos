@@ -6,6 +6,7 @@
 package edu.nus.iss.pos.core.dao;
 
 import edu.nus.iss.pos.core.IEntity;
+import edu.nus.iss.pos.dao.Formatters.FileType;
 import java.util.Collection;
 
 /**
@@ -19,4 +20,5 @@ interface IRepository<T extends IEntity> {
      void update(T entity);
      T getByKey(String key);
      Collection<T> getAll();
+     FileType getFileType();
 }

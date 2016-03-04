@@ -13,6 +13,7 @@ import edu.nus.iss.pos.core.IEntity;
  * @param <T>
  */
 public interface IFileFormatter<T extends IEntity> {
+    String getKey(String data) throws Exception;
     String format(T entity);
     T readEntity(String data) throws Exception;
 }

@@ -81,4 +81,8 @@ public class Discount implements IEntity {
         this.forMembers = forMembers;
     }
     
+    public boolean getForMembers(){
+        return this.forMembers;
+    }
+    
 }
