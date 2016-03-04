@@ -3,11 +3,12 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package edu.nus.iss.pos.dao.respositories;
+package edu.nus.iss.pos.dao.repositories;
 
 import edu.nus.iss.pos.core.IEntity;
 import edu.nus.iss.pos.core.dao.IFileFormatter;
 import edu.nus.iss.pos.core.dao.IRepository;
+import edu.nus.iss.pos.core.dao.IUnitOfWork;
 import edu.nus.iss.pos.dao.formatters.FileFormatterFactory;
 import edu.nus.iss.pos.dao.formatters.FileType;
 import java.io.*;
@@ -18,19 +19,30 @@ import java.util.HashSet;
  * @author zz
  * @param <T>
  */
-public class Respository<T extends IEntity> implements IRepository<T>{
+public class Repository<T extends IEntity> implements IRepository<T>{
     
     private FileType fileType;
     private String fileName;
     private final IFileFormatter formatter;
+    private IUnitOfWork unitOfWork;
     
-    public Respository(FileType fileType) throws Exception{
+    public Repository(IUnitOfWork unitOfWork, FileType fileType, String filename) throws Exception{
         this.setFileType(fileType);
+        this.setFileName(filename);
         this.formatter = FileFormatterFactory.getFormatter(fileType);
+        this.unitOfWork = unitOfWork;
     }
     
     private void setFileType(FileType fileType){
         this.fileType = fileType;
+    }
+    
+    @Override
+    public final void setFileName(String fileName) throws IOException{
+        if(fileName.length() != 0){
+            new File(fileName).createNewFile();
+            this.fileName = fileName;
+        }
     }
 
     @Override
@@ -157,5 +169,10 @@ public class Respository<T extends IEntity> implements IRepository<T>{
             
             raf.setLength(writePos);
         }
+    }
+
+    @Override
+    public IUnitOfWork getUnitOfWork() {
+        return this.unitOfWork;
     }
 }

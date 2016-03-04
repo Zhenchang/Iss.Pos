@@ -45,6 +45,13 @@ public class Category implements IEntity{
     public void removeProduct(Product p){
         products.remove(p);
     }
+    public void addVendor(Vendor v){
+        vendors.add(v);
+    }
+    
+    public void removeVendor(Vendor v){
+        vendors.remove(v);
+    }
     
     public final void setId(String id){
         if(id.length() != 3) throw new IllegalArgumentException("id");
