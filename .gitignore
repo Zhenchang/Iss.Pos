@@ -4,5 +4,5 @@
 /bin/
 /bin/
 /bin/
-**/*.dat
+*.dat
 .classpath
