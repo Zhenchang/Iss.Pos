@@ -5,10 +5,19 @@
  */
 package edu.nus.iss.pos.core.services;
 
+import edu.nus.iss.pos.core.User;
+
+
+
 /**
  *
  * @author Liu Zhenchang
  */
 public interface IUsersService {
-    
+    User Login (String username, String password) throws Exception;
+    User getUserByName(String username) throws Exception;
+    void ChangePassword(String username, String oldPassword, String newPassword) throws Exception;
+    User addUser(String username, String password) throws Exception;
+    void deleteUser(String username) throws Exception;
+    boolean checkPasswordComplexity(String password) throws Exception;
 }

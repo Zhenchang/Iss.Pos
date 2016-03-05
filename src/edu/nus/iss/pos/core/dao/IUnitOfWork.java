@@ -5,6 +5,7 @@
  */
 package edu.nus.iss.pos.core.dao;
 
+import edu.nus.iss.pos.core.IEntity;
 import edu.nus.iss.pos.dao.format.FileType;
 
 /**
@@ -13,4 +14,7 @@ import edu.nus.iss.pos.dao.format.FileType;
  */
 public interface IUnitOfWork {
     IRepository getRepository(FileType fileType) throws Exception;
+    <T extends IEntity> void add(T entity) throws Exception;
+    <T extends IEntity> void update(String oldkey, T entity) throws Exception;
+    <T extends IEntity> void delete(T entity) throws Exception;
 }

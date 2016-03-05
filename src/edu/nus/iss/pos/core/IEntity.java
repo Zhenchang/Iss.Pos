@@ -10,7 +10,5 @@ package edu.nus.iss.pos.core;
  * @author Liu Zhenchang
  */
 public interface IEntity {
-    
     String getKey();
-  
 }

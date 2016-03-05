@@ -39,5 +39,33 @@ public class UnitOfWork implements IUnitOfWork {
         }
         throw new Exception("No Such Repository!");
     }
+
+    @Override
+    public <T extends IEntity> void add(T entity) throws Exception {
+        IRepository repo = getRepository(entity);
+        repo.add(entity);
+    }
+
+    @Override
+    public <T extends IEntity> void update(String oldkey, T entity) throws Exception {
+        IRepository repo = getRepository(entity);
+        repo.update(oldkey, entity);
+    }
+
+    @Override
+    public <T extends IEntity> void delete(T entity) throws Exception {
+        IRepository repo = getRepository(entity);
+        repo.delete(entity);
+    }
     
+    private IRepository getRepository(IEntity entity) throws Exception{
+        if(entity instanceof User) getRepository(FileType.User);
+        if(entity instanceof Member) getRepository(FileType.Member);
+        if(entity instanceof Category) getRepository(FileType.Category);
+        if(entity instanceof Product) getRepository(FileType.Product);
+        if(entity instanceof Transaction) getRepository(FileType.Transaction);
+        if(entity instanceof Discount) getRepository(FileType.Discount);
+        if(entity instanceof Vendor) getRepository(FileType.Vendor);
+        throw new Exception("No Such Repository!");
+    }
 }
