@@ -40,8 +40,6 @@ public class ApplicationLauncher {
         }
         //</editor-fold>
 
-        
-        
         try {
             // TODO code application logic here
             IUnitOfWork db = new UnitOfWork();
