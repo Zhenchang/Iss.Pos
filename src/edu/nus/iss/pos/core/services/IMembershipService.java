@@ -14,7 +14,10 @@ import edu.nus.iss.pos.core.Member;
 public interface IMembershipService {
     
     void registerMember(String id, String name);
+    
     Member searchMemberByName(String name);
+    
     Member searchMemberById(String id);
+    
     
 }

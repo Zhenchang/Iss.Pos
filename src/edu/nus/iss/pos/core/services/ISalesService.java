@@ -17,8 +17,13 @@ import edu.nus.iss.pos.core.TransactionDetail;
 public interface ISalesService {
     
     Transaction beginTransaction(Member member);
+    
     TransactionDetail addToCart(Transaction transaction, Product product, int quantity);
-    void checkout(Transaction transaction);
     
-    
+    /**
+     * this should save the transaction to disk, and increase members points, and possibly redeem his points.
+     * @param transaction
+     * @param useLoyaltyPoints if true loyalty points should be used to decrease the final price.
+     */
+    void checkout(Transaction transaction, boolean useLoyaltyPoints);
 }

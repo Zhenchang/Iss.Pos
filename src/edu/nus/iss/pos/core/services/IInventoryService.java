@@ -16,6 +16,10 @@ import java.util.Collection;
  */
 public interface IInventoryService {
     
+    Category addCategory(String id, String name);
+    
+    void deleteCategory(String categoryId);
+
     Product addProduct(Category category, 
                         String name, 
                         String description, 
@@ -24,10 +28,18 @@ public interface IInventoryService {
                         String barcodeNumber,
                         int reorderQuantity,
                         int orderQuantity);
+    
+    void deleteProduct(String productId);
+    
+    
     void reorderProduct(Product product, Vendor vendor);
+    
     /*Similar to wildcard search*/
     Collection<Product> searchProductByName(String name);
+    
     Product searchProductByBarcode(String barcode);
+    
     Collection<Product> getProductsBelowThreshold();
-    Collection<Product> getProductsByCategoryId(String id);
+    
+    Collection<Product> getProductsByCategoryId(String categoryId);
 }
