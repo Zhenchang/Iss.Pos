@@ -42,6 +42,11 @@ public class MainFrame extends javax.swing.JFrame {
         productButton.setText("Product");
 
         categoryButton.setText("Category");
+        categoryButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                categoryButtonActionPerformed(evt);
+            }
+        });
 
         userButton.setText("User");
         userButton.addActionListener(new java.awt.event.ActionListener() {
@@ -89,6 +94,11 @@ public class MainFrame extends javax.swing.JFrame {
     private void memberButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_memberButtonActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_memberButtonActionPerformed
+
+    private void categoryButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_categoryButtonActionPerformed
+        // TODO add your handling code here:
+        //add something
+    }//GEN-LAST:event_categoryButtonActionPerformed
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton categoryButton;
