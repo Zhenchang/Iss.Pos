@@ -13,11 +13,11 @@ import edu.nus.iss.pos.core.Member;
  */
 public interface IMembershipService {
     
-    void registerMember(String id, String name);
+    Member registerMember(String id, String name) throws Exception;
     
-    Member searchMemberByName(String name);
+    Member searchMemberByName(String name) throws Exception;
     
-    Member searchMemberById(String id);
+    Member searchMemberById(String id) throws Exception;
     
     
 }
