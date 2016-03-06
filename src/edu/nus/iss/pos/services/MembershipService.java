@@ -1,8 +1,10 @@
 package edu.nus.iss.pos.services;
 
 import edu.nus.iss.pos.core.Member;
+import edu.nus.iss.pos.core.dao.IRepository;
 import edu.nus.iss.pos.core.dao.IUnitOfWork;
 import edu.nus.iss.pos.core.services.IMembershipService;
+import edu.nus.iss.pos.dao.format.FileType;
 
 public class MembershipService implements IMembershipService {
 
@@ -14,21 +16,32 @@ public class MembershipService implements IMembershipService {
     }
     
 	@Override
-	public void registerMember(String id, String name) {
-		// TODO Auto-generated method stub
-
+	public Member registerMember(String id, String name) throws Exception {
+		
+		Member m = new Member(id,name);
+		unitOfWork.add(m);
+		return m;
 	}
 
 	@Override
-	public Member searchMemberByName(String name) {
-		// TODO Auto-generated method stub
+	public Member searchMemberByName(String name) throws Exception {
+		
+		IRepository repository = unitOfWork.getRepository(FileType.Member);
+		Iterable<Member> members =  repository.getAll();
+		for(Member m : members) {
+			if(m.getName().equals(name)){
+				return m;
+			}
+		}
 		return null;
 	}
 
 	@Override
-	public Member searchMemberById(String id) {
-		// TODO Auto-generated method stub
-		return null;
+	public Member searchMemberById(String id) throws Exception {
+		
+		IRepository repository = unitOfWork.getRepository(FileType.Member);
+		Member member = (Member) repository.getByKey(id);
+		return member;
 	}
 
 }
