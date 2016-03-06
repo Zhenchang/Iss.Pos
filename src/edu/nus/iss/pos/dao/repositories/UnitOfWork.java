@@ -59,13 +59,13 @@ public class UnitOfWork implements IUnitOfWork {
     }
     
     private IRepository getRepository(IEntity entity) throws Exception{
-        if(entity instanceof User) getRepository(FileType.User);
-        if(entity instanceof Member) getRepository(FileType.Member);
-        if(entity instanceof Category) getRepository(FileType.Category);
-        if(entity instanceof Product) getRepository(FileType.Product);
-        if(entity instanceof Transaction) getRepository(FileType.Transaction);
-        if(entity instanceof Discount) getRepository(FileType.Discount);
-        if(entity instanceof Vendor) getRepository(FileType.Vendor);
+        if(entity instanceof User) return getRepository(FileType.User);
+        if(entity instanceof Member) return  getRepository(FileType.Member);
+        if(entity instanceof Category) return  getRepository(FileType.Category);
+        if(entity instanceof Product) return getRepository(FileType.Product);
+        if(entity instanceof Transaction) return  getRepository(FileType.Transaction);
+        if(entity instanceof Discount) return getRepository(FileType.Discount);
+        if(entity instanceof Vendor)  return getRepository(FileType.Vendor);
         throw new Exception("No Such Repository!");
     }
 }

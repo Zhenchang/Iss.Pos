@@ -75,7 +75,7 @@ public class Member implements IEntity {
         this.id = id;
     }
     
-    private void setName(String name){
+    public void setName(String name){
         if(name.length() < 2) throw new IllegalArgumentException("name");
         this.name = name;
     }
