@@ -16,9 +16,9 @@ import java.util.Collection;
  */
 public interface IInventoryService {
     
-    Category addCategory(String id, String name);
+    Category addCategory(String id, String name) throws Exception;
     
-    void deleteCategory(String categoryId);
+    void deleteCategory(String categoryId) throws Exception;
 
     Product addProduct(Category category, 
                         String name, 
@@ -27,19 +27,19 @@ public interface IInventoryService {
                         int price,
                         String barcodeNumber,
                         int reorderQuantity,
-                        int orderQuantity);
+                        int orderQuantity) throws Exception;
     
-    void deleteProduct(String productId);
+    void deleteProduct(String productId) throws Exception;
     
     
-    void reorderProduct(Product product, Vendor vendor);
+    void reorderProduct(Product product, Vendor vendor) throws Exception;
     
     /*Similar to wildcard search*/
-    Collection<Product> searchProductByName(String name);
+    Collection<Product> searchProductByName(String name) throws Exception;
     
-    Product searchProductByBarcode(String barcode);
+    Product searchProductByBarcode(String barcode) throws Exception;
     
-    Collection<Product> getProductsBelowThreshold();
+    Collection<Product> getProductsBelowThreshold() throws Exception;
     
-    Collection<Product> getProductsByCategoryId(String categoryId);
+    Collection<Product> getProductsByCategoryId(String categoryId) throws Exception;
 }
