@@ -47,6 +47,9 @@ public class Repository<T extends IEntity> implements IRepository<T>{
 
     @Override
     public void add(T entity) throws Exception {
+        if(indexOfKey(entity.getKey()) != -1){
+            throw new Exception("Duplicate Key!");
+        }
         try(FileWriter fileWriter = new FileWriter(fileName, true)){
             fileWriter.append(this.formatter.format(entity));
         }
@@ -104,6 +107,9 @@ public class Repository<T extends IEntity> implements IRepository<T>{
                         break;
                     }
                     
+                }
+                if(lines.isEmpty()){
+                    return null;
                 }
                 return (T) this.formatter.readEntity(lines);
             }
