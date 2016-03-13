@@ -7,6 +7,9 @@ import edu.nus.iss.pos.core.Product;
 import edu.nus.iss.pos.core.Vendor;
 import edu.nus.iss.pos.core.dao.IUnitOfWork;
 import edu.nus.iss.pos.core.services.IInventoryService;
+import edu.nus.iss.pos.dao.format.FileType;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 public class InventoryService implements IInventoryService {
 
@@ -31,7 +34,7 @@ public class InventoryService implements IInventoryService {
 	}
 
 	@Override
-	public Product addProduct(Category category, String name, String description, int availableQuantity, int price,
+	public Product addProduct(Category category, String name, String description, int availableQuantity, float price,
 			String barcodeNumber, int reorderQuantity, int orderQuantity) {
 		// TODO Auto-generated method stub
 		return null;
@@ -73,4 +76,13 @@ public class InventoryService implements IInventoryService {
 		return null;
 	}
 
+    @Override
+    public Iterable<Category> getAllCategory() {
+            try {
+                return unitOfWork.getRepository(FileType.Category).getAll();
+            } catch (Exception ex) {
+                Logger.getLogger(InventoryService.class.getName()).log(Level.SEVERE, null, ex);
+            }
+            return null;
+    }
 }

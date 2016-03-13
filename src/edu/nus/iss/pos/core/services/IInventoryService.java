@@ -18,13 +18,15 @@ public interface IInventoryService {
     
     Category addCategory(String id, String name);
     
+    Iterable<Category> getAllCategory();
+    
     void deleteCategory(String categoryId);
 
     Product addProduct(Category category, 
                         String name, 
                         String description, 
                         int availableQuantity,
-                        int price,
+                        float price,
                         String barcodeNumber,
                         int reorderQuantity,
                         int orderQuantity);
