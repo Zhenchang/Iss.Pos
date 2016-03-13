@@ -20,10 +20,9 @@ public interface ISalesService {
     
     TransactionDetail addToCart(Transaction transaction, Product product, int quantity) throws Exception;
     
-    /**
-     * this should save the transaction to disk, and increase members points, and possibly redeem his points.
-     * @param transaction
-     * @param useLoyaltyPoints if true loyalty points should be used to decrease the final price.
-     */
-    void checkout(Transaction transaction, boolean useLoyaltyPoints) throws Exception;
+    void checkout(Transaction transaction, float discount, boolean useLoyaltyPoints) throws Exception;
+    
+    float getFinalPrice(Transaction transaction,float discount, boolean useLoyaltyPoints) throws Exception;
+    
+    public float getPriceAfterDiscount(Transaction transaction, float discount) throws Exception;
 }
