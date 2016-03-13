@@ -70,4 +70,8 @@ public class Transaction implements IEntity {
         if(transactionDetail == null) throw new IllegalArgumentException("transactionDetail"); 
         transactionDetails.remove(transactionDetail);
     }
+    
+    public float getTotalWithoutDiscount(){
+        return 0;
+    }
 }
