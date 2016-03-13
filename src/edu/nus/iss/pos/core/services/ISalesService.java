@@ -16,14 +16,14 @@ import edu.nus.iss.pos.core.TransactionDetail;
  */
 public interface ISalesService {
     
-    Transaction beginTransaction(Member member);
+    Transaction beginTransaction(Member member) throws Exception;
     
-    TransactionDetail addToCart(Transaction transaction, Product product, int quantity);
+    TransactionDetail addToCart(Transaction transaction, Product product, int quantity) throws Exception;
     
     /**
      * this should save the transaction to disk, and increase members points, and possibly redeem his points.
      * @param transaction
      * @param useLoyaltyPoints if true loyalty points should be used to decrease the final price.
      */
-    void checkout(Transaction transaction, boolean useLoyaltyPoints);
+    void checkout(Transaction transaction, boolean useLoyaltyPoints) throws Exception;
 }

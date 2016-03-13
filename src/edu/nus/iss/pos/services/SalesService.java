@@ -6,6 +6,14 @@ import edu.nus.iss.pos.core.Transaction;
 import edu.nus.iss.pos.core.TransactionDetail;
 import edu.nus.iss.pos.core.dao.IUnitOfWork;
 import edu.nus.iss.pos.core.services.ISalesService;
+import edu.nus.iss.pos.dao.format.FileType;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Date;
+import edu.nus.iss.pos.core.dao.IRepository;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 public class SalesService implements ISalesService {
 	
@@ -17,21 +25,31 @@ public class SalesService implements ISalesService {
     }
     
 	@Override
-	public Transaction beginTransaction(Member member) {
-		// TODO Auto-generated method stub
-		return null;
+	public Transaction beginTransaction(Member member) throws Exception {
+            return new Transaction(getNewId(),new Date(),member);
 	}
 
 	@Override
 	public TransactionDetail addToCart(Transaction transaction, Product product, int quantity) {
-		// TODO Auto-generated method stub
-		return null;
+            TransactionDetail transactionDetail = new TransactionDetail(transaction, product, quantity);
+            transaction.addTransactionDetail(transactionDetail);
+            return transactionDetail;
 	}
 
 	@Override
 	public void checkout(Transaction transaction, boolean useLoyaltyPoints) {
-		// TODO Auto-generated method stub
-
+           
 	}
-
+        
+        private int getNewId() throws Exception{
+            int maxId = 0;
+            IRepository repository = unitOfWork.getRepository(FileType.Transaction);
+            Iterable<Transaction> transaction =  repository.getAll();
+            for(Transaction tran : transaction) {
+                if(maxId < tran.getId()){
+                    maxId = tran.getId();
+                }
+            }
+            return maxId + 1;
+        }
 }
