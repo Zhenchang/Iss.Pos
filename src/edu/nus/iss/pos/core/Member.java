@@ -41,7 +41,7 @@ public class Member extends Customer{
         return loyaltyPoints;
     }
     
-    public float redeemPoints(float salePrice) throws Exception{
+    public float redeemPoints(float salePrice, boolean removePoints) throws Exception{
         float finalPrice = salePrice;
         if(salePrice < DOLLAR_PER_POINTS) return salePrice;
         
@@ -49,11 +49,12 @@ public class Member extends Customer{
         if(pointsValue < salePrice){
             finalPrice = salePrice - pointsValue;
             int points =(int) Math.floor((pointsValue / DOLLAR_PER_POINTS)*DOLLAR_TO_POINT);
-            removeLoyaltyPoints(points);
+            if(removePoints) removeLoyaltyPoints(points);
+            
         }else{
             int pointsNeeded = (int) (Math.floor(salePrice / DOLLAR_PER_POINTS) * POINT_TO_DOLLAR);
             finalPrice = salePrice - convertPointsToDollars(pointsNeeded);
-            removeLoyaltyPoints(pointsNeeded);
+            if(removePoints) removeLoyaltyPoints(pointsNeeded);
         }
         return finalPrice;
     }

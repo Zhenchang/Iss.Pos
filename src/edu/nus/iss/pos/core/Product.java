@@ -42,6 +42,7 @@ public class Product  implements IEntity {
         this.setPrice(price);
         this.setDescription(description);
         this.setReorderQuantity(reorderQuantity);
+        this.setBarcodeNumber(barcodeNumber);
         this.setOrderQuantity(orderQuantity);
     }
     

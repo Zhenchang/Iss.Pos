@@ -4,85 +4,205 @@ import java.util.Collection;
 
 import edu.nus.iss.pos.core.Category;
 import edu.nus.iss.pos.core.Product;
+import edu.nus.iss.pos.core.Transaction;
 import edu.nus.iss.pos.core.Vendor;
+import edu.nus.iss.pos.core.dao.IRepository;
 import edu.nus.iss.pos.core.dao.IUnitOfWork;
 import edu.nus.iss.pos.core.services.IInventoryService;
 import edu.nus.iss.pos.dao.format.FileType;
-import java.util.logging.Level;
-import java.util.logging.Logger;
+import java.util.ArrayList;
+import java.util.List;
 
+/**
+ *
+ * @author Vishnu
+ */
 public class InventoryService implements IInventoryService {
 
-	private final IUnitOfWork unitOfWork;
+    private final IUnitOfWork unitOfWork;
     
     public InventoryService(IUnitOfWork unitOfWork){
         if(unitOfWork == null) throw new IllegalArgumentException("unitOfWork");
         this.unitOfWork = unitOfWork;
     }
     
-    
-	@Override
-	public Category addCategory(String id, String name) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public void deleteCategory(String categoryId) {
-		// TODO Auto-generated method stub
-
-	}
-
-	@Override
-	public Product addProduct(Category category, String name, String description, int availableQuantity, float price,
-			String barcodeNumber, int reorderQuantity, int orderQuantity) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public void deleteProduct(String productId) {
-		// TODO Auto-generated method stub
-
-	}
-
-	@Override
-	public void reorderProduct(Product product, Vendor vendor) {
-		// TODO Auto-generated method stub
-
-	}
-
-	@Override
-	public Collection<Product> searchProductByName(String name) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public Product searchProductByBarcode(String barcode) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public Collection<Product> getProductsBelowThreshold() {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public Collection<Product> getProductsByCategoryId(String categoryId) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
+    /**
+     * Adds a category
+     * @param id
+     * @param name
+     * @return
+     * @throws Exception 
+     */
     @Override
-    public Iterable<Category> getAllCategory() {
-            try {
-                return unitOfWork.getRepository(FileType.Category).getAll();
-            } catch (Exception ex) {
-                Logger.getLogger(InventoryService.class.getName()).log(Level.SEVERE, null, ex);
+    public Category addCategory(String id, String name) throws Exception  {
+        Category category = new Category(id, name);
+        try {
+            unitOfWork.add(category);
+            return category;
+        } catch (Exception ex) {
+            throw ex;
+        }
+        
+    }
+
+    /**
+     * Deletes a category
+     * @param categoryId
+     * @throws Exception 
+     */
+    @Override
+    public void deleteCategory(String categoryId) throws Exception {
+       
+        Category category = (Category) unitOfWork.getRepository(FileType.Category).getByKey(categoryId);
+        unitOfWork.delete(category);
+    }
+
+    /**
+     * Adds a new product
+     * @param category
+     * @param name
+     * @param description
+     * @param availableQuantity
+     * @param price
+     * @param barcodeNumber
+     * @param reorderQuantity
+     * @param orderQuantity
+     * @return
+     * @throws Exception 
+     */
+    @Override
+    public Product addProduct(Category category, String name, String description, int availableQuantity, float price,
+                    String barcodeNumber, int reorderQuantity, int orderQuantity) throws Exception {
+
+        
+        Product product = new Product(category, getNewId(), name, description, availableQuantity, price, barcodeNumber, reorderQuantity, orderQuantity);
+        IRepository repository = unitOfWork.getRepository(FileType.Product);
+        repository.add(product);
+        return product;
+    }
+
+    private int getNewId() throws Exception{
+        int maxId = 0;
+        IRepository repository = unitOfWork.getRepository(FileType.Product);
+        Iterable<Product> products =  repository.getAll();
+        for(Product p : products) {
+            int index = Integer.parseInt(p.getKey().split("/")[1]);
+            if(maxId < index){
+                maxId = index;
             }
-            return null;
+        }
+        return maxId + 1;
+    }
+    
+    /**
+     * Deletes the product from the file of a particular product id
+     * @param productId
+     * @throws Exception 
+     */
+    @Override
+    public void deleteProduct(String productId) throws Exception {
+            
+        Product product = (Product) unitOfWork.getRepository(FileType.Product).getByKey(productId);
+        unitOfWork.delete(product);
+    }
+
+    /**
+     * 
+     * @param product
+     * @param vendor
+     * @throws Exception 
+     */
+    @Override
+    public void reorderProduct(Product product, Vendor vendor) throws Exception {
+        
+        if(product.getQuantity() < product.getReorderQuantity()){
+            int newQuantity = product.getQuantity()+ product.getOrderQuantity();
+            product.setQuantity(newQuantity);
+            IRepository repository = unitOfWork.getRepository(FileType.Product);
+            repository.update(product.getKey(), product);
+        }
+    }
+
+    /**
+     * Will return a list of products on passing a string as input
+     * @param name
+     * @return Collection of Products
+     * @throws Exception 
+     */
+    @Override
+    public Collection<Product> searchProductByName(String name) throws Exception {
+            
+        IRepository repository = unitOfWork.getRepository(FileType.Product);
+        Iterable<Product> products = repository.getAll();
+        List<Product> productList = new ArrayList<Product>();
+        for(Product product : products){
+            if(product.getName().contains(name)){
+                productList.add(product);
+            }              
+        }    
+        return productList;
+    }
+
+    /**
+     * Searches a product by its bar code
+     * @param barcode
+     * @return
+     * @throws Exception 
+     */
+    @Override
+    public Product searchProductByBarcode(String barcode) throws Exception {
+            
+        IRepository repository = unitOfWork.getRepository(FileType.Product);
+        Iterable<Product> products = repository.getAll();
+        for(Product product : products){
+            if(product.getBarcodeNumber().equals(barcode)){
+                return product;
+            }              
+        }    
+        return null;
+    }
+
+    /**
+     * Returns a list of product using quantity is below threshold quantity
+     * @return
+     * @throws Exception 
+     */
+    @Override
+    public Collection<Product> getProductsBelowThreshold() throws Exception {
+        
+        IRepository repository = unitOfWork.getRepository(FileType.Product);
+        Iterable<Product> products = repository.getAll();
+        List<Product> productList = new ArrayList<Product>();
+        for(Product product : products){
+            if(product.getQuantity() < product.getReorderQuantity()){
+                productList.add(product);
+            }
+        }
+        return productList;
+    }
+
+    /**
+     * Returns a list of product having a particular category id
+     * @param categoryId
+     * @return
+     * @throws Exception 
+     */
+    @Override
+    public Collection<Product> getProductsByCategoryId(String categoryId) throws Exception {
+        
+        IRepository repository = unitOfWork.getRepository(FileType.Product);
+        Iterable<Product> products = repository.getAll();
+        List<Product> productList = new ArrayList<Product>();
+        for(Product product : products){
+            if(product.getCategory().equals(categoryId)){
+                productList.add(product);
+            }
+        }
+        return productList;
+    }
+    
+     @Override
+    public Iterable<Category> getAllCategory() throws Exception{
+        return unitOfWork.getRepository(FileType.Category).getAll();
     }
 }

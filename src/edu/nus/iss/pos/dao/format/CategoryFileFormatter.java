@@ -28,7 +28,7 @@ public class CategoryFileFormatter implements IFileFormatter<Category>{
         String[] lines = data.split("\n");
         if(lines.length == 0) throw new Exception("Cannot map data to entity!");
         String[] params = lines[0].split(",");
-        if(params.length != 0) throw new Exception("Cannot map data to entity!");
+        if(params.length == 0) throw new Exception("Cannot map data to entity!");
         String categoryId = params[0];
         String name = params[1];
         return new Category(categoryId, name);

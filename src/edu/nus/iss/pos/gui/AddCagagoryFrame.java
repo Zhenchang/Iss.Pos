@@ -6,6 +6,8 @@
 package edu.nus.iss.pos.gui;
 
 import edu.nus.iss.pos.core.services.IInventoryService;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  *
@@ -145,8 +147,12 @@ public class AddCagagoryFrame extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void confirmBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_confirmBtnActionPerformed
-        // TODO add your handling code here:
-        inventoryService.addCategory(idTxt.getText(), nameTxt.getText());
+        try {
+            inventoryService.addCategory(idTxt.getText(), nameTxt.getText());
+        } catch (Exception ex) {
+            // ### Error Messages
+            Logger.getLogger(AddCagagoryFrame.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }//GEN-LAST:event_confirmBtnActionPerformed
 
     private void cancelBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cancelBtnActionPerformed

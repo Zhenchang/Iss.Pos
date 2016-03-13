@@ -8,6 +8,8 @@ package edu.nus.iss.pos.gui;
 import edu.nus.iss.pos.core.Category;
 import edu.nus.iss.pos.core.services.IInventoryService;
 import java.util.Iterator;
+import java.util.logging.Level;
+import java.util.logging.Logger;
    
 /**
  *
@@ -20,14 +22,12 @@ public class AddProductFrame extends javax.swing.JFrame {
      * Creates new form AddProductFrame
      * @param inventoryService
      */
-    public AddProductFrame(IInventoryService inventoryService) {
+    public AddProductFrame(IInventoryService inventoryService) throws Exception {
         initComponents();
         this.inventoryService = inventoryService;
-        Iterator categoriesIter = inventoryService.getAllCategory().iterator();
-        while(categoriesIter.hasNext()) {
-            String id = ((Category)categoriesIter.next()).getKey();
-            String name = ((Category)categoriesIter.next()).getName();
-            categoryComboBox.addItem(id + "/" + name);
+        Iterable<Category> categories = inventoryService.getAllCategory();
+        for(Category c : categories){
+            categoryComboBox.addItem(c);
         }
     }
 
@@ -66,7 +66,6 @@ public class AddProductFrame extends javax.swing.JFrame {
         jLabel1.setHorizontalAlignment(javax.swing.SwingConstants.TRAILING);
         jLabel1.setText("Category:");
 
-        categoryComboBox.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
         categoryComboBox.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 categoryComboBoxActionPerformed(evt);
@@ -216,11 +215,13 @@ public class AddProductFrame extends javax.swing.JFrame {
 
     private void confirmBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_confirmBtnActionPerformed
         // TODO add your handling code here:
-        String[] temp = categoryComboBox.getSelectedItem().toString().split("/");
-        String id = temp[0];
-        String name = temp[1];
-        Category category = new Category(id, name);
-        inventoryService.addProduct(category, nameTxt.getText(), descriptionTxt.getText(), Integer.parseInt(availableQuantityTxt.getText()), Float.parseFloat(priceTxt.getText()), barCodeTxt.getText(), Integer.parseInt(reorderQuantity.getText()), Integer.parseInt(orderQuantity.getText()));
+        Category category = (Category) categoryComboBox.getSelectedItem();
+        try {
+            inventoryService.addProduct(category, nameTxt.getText(), descriptionTxt.getText(), Integer.parseInt(availableQuantityTxt.getText()), Float.parseFloat(priceTxt.getText()), barCodeTxt.getText(), Integer.parseInt(reorderQuantity.getText()), Integer.parseInt(orderQuantity.getText()));
+        } catch (Exception ex) {
+            // ### add Error Messages 
+            Logger.getLogger(AddProductFrame.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }//GEN-LAST:event_confirmBtnActionPerformed
 
 //    /**
@@ -261,7 +262,7 @@ public class AddProductFrame extends javax.swing.JFrame {
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JTextField availableQuantityTxt;
     private javax.swing.JTextField barCodeTxt;
-    private javax.swing.JComboBox<String> categoryComboBox;
+    private javax.swing.JComboBox<Category> categoryComboBox;
     private javax.swing.JButton cnacelBtn;
     private javax.swing.JButton confirmBtn;
     private javax.swing.JTextField descriptionTxt;
