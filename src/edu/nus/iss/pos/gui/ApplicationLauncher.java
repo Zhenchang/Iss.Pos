@@ -50,6 +50,14 @@ public class ApplicationLauncher {
                     new LoginFrame(usersService).setVisible(true);
                 }
             });
+            
+            
+            usersService.addUser("Eric", "123456");
+            usersService.addUser("Vishnu", "Test*123");
+            usersService.addUser("Ankan", "0000");
+            usersService.addUser("Liu", "123abc");
+            usersService.addUser("Zaid", "NUS-ISS");
+            
             //db.getRepository(FileType.User).add( new User("omari", "132456"));
             
             //db.getRepository(FileType.User).update("zaid", new User("zaid", "1324"));
