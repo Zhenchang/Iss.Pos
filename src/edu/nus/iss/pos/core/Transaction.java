@@ -70,4 +70,13 @@ public class Transaction implements IEntity {
         if(transactionDetail == null) throw new IllegalArgumentException("transactionDetail"); 
         transactionDetails.remove(transactionDetail);
     }
+    
+    public float getTotalWithoutDiscount(){
+        float sum = 0;
+        Iterable<TransactionDetail> transactionDetails =  this.getTransactionDetails();
+        for(TransactionDetail detail : transactionDetails){
+            sum += detail.getProduct().getPrice();
+        }
+        return sum;
+    }
 }
