@@ -5,8 +5,10 @@
  */
 package edu.nus.iss.pos.dao.format;
 
+import edu.nus.iss.pos.core.Category;
 import edu.nus.iss.pos.core.Product;
 import edu.nus.iss.pos.core.dao.IFileFormatter;
+import edu.nus.iss.pos.core.dao.IUnitOfWork;
 
 /**
  *
@@ -14,11 +16,13 @@ import edu.nus.iss.pos.core.dao.IFileFormatter;
  */
 public class ProductFileFormatter implements IFileFormatter<Product>{
     
-    public static final ProductFileFormatter singleton = new ProductFileFormatter();
+    private static final ProductFileFormatter singleton = new ProductFileFormatter();
+    private static IUnitOfWork unitOfWork;
     
     private ProductFileFormatter(){}
     
-    public static ProductFileFormatter getInstance(){
+    public static ProductFileFormatter getInstance(IUnitOfWork unitOfWork){
+        ProductFileFormatter.unitOfWork = unitOfWork;
         return singleton;
     }
 
@@ -41,6 +45,9 @@ public class ProductFileFormatter implements IFileFormatter<Product>{
         String param[] = lines[0].split(",");
         if(param.length != 8) throw new Exception("Cannot map the data to entity!");
         String key = param[0];
+        String categoryId = key.split("/")[0];
+        int index = Integer.parseInt(key.split("/")[1]);
+        Category c = (Category) unitOfWork.getRepository(FileType.Category).getByKey(categoryId);
         String name = param[1];
         String description = param[2];
         int quantity = Integer.parseInt(param[3]);
@@ -48,7 +55,7 @@ public class ProductFileFormatter implements IFileFormatter<Product>{
         String barcodeNumber = param[5];
         int recordQuantity = Integer.parseInt(param[6]);
         int orderQuantity = Integer.parseInt(param[7]);
-        return new Product(key, name, description, quantity, price, barcodeNumber, recordQuantity, orderQuantity);
+        return new Product(c, index, name, description, quantity, price, barcodeNumber, recordQuantity, orderQuantity);
     }
     
     @Override

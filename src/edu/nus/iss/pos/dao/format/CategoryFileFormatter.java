@@ -7,6 +7,7 @@ package edu.nus.iss.pos.dao.format;
 
 import edu.nus.iss.pos.core.dao.IFileFormatter;
 import edu.nus.iss.pos.core.*;
+import edu.nus.iss.pos.core.dao.IUnitOfWork;
 
 /**
  *
@@ -14,9 +15,7 @@ import edu.nus.iss.pos.core.*;
  */
 public class CategoryFileFormatter implements IFileFormatter<Category>{
     
-    public static final CategoryFileFormatter singleton = new CategoryFileFormatter();
-    
-    
+    private static final CategoryFileFormatter singleton = new CategoryFileFormatter();
     private CategoryFileFormatter(){
     
     }

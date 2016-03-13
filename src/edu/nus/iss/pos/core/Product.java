@@ -34,9 +34,9 @@ public class Product  implements IEntity {
         this.transactions = new HashSet<>();
     }
 
-    public Product(String id, String name, String description, int availableQuantity, float price, String barcodeNumber, int reorderQuantity, int orderQuantity) {
-        this.setId(id);
-        this.setName(name);;
+    public Product(Category c, int index, String name, String description, int availableQuantity, float price, String barcodeNumber, int reorderQuantity, int orderQuantity) {
+        this(c, index);
+        this.setName(name);
         this.setDescription(description);
         this.setQuantity(orderQuantity);;
         this.setPrice(price);

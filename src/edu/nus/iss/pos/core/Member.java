@@ -9,8 +9,7 @@ package edu.nus.iss.pos.core;
  *
  * @author Zaid
  */
-public class Member implements IEntity {
-    private String id;
+public class Member extends Customer{
     private String name;
     private int loyaltyPoints;
     
@@ -70,11 +69,7 @@ public class Member implements IEntity {
         return (points < loyaltyPoints);
     }
     
-    private void setId(String id){
-        if(id.length() < 3) throw new IllegalArgumentException("id");
-        this.id = id;
-    }
-    
+  
     public void setName(String name){
         if(name.length() < 2) throw new IllegalArgumentException("name");
         this.name = name;
@@ -92,8 +87,5 @@ public class Member implements IEntity {
     public int getLoyaltyPoints(){
         return this.loyaltyPoints;
     }
-    
-    public String getKey(){
-        return this.id;
-    }
+
 }

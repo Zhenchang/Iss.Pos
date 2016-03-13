@@ -11,21 +11,16 @@ import java.util.Date;
  *
  * @author Zaid
  */
-public class Discount implements IEntity {
+public abstract class Discount implements IEntity {
     private String code;
     private String description;
-    private Date startDate;
-    private int discountPeriod; // -1: Always, 1..*: days.
-    private int percentage;
-    private boolean forMembers;
+    private float percentage;
 
-    public Discount(String code, String description, Date startDate, int discountPeriod, int percentage, boolean forMembers){
+    public Discount(String code, String description, float percentage){
         setCode(code);
         setDescription(description);
-        setStartDate(startDate);
-        setDiscountPeriod(discountPeriod);
         setPercentage(percentage);
-        setForMembers(forMembers);
+
     }
     
     @Override
@@ -49,40 +44,12 @@ public class Discount implements IEntity {
         this.description = description;
     }
 
-    public Date getStartDate() {
-        return startDate;
-    }
-
-    public final void setStartDate(Date startDate) {
-        this.startDate = startDate;
-    }
-
-    public int getDiscountPeriod() {
-        return discountPeriod;
-    }
-
-    public final void setDiscountPeriod(int discountPeriod) {
-        this.discountPeriod = discountPeriod;
-    }
-
-    public int getPercentage() {
+    public float getPercentage() {
         return percentage;
     }
 
-    public final void setPercentage(int percentage) {
+    public final void setPercentage(float percentage) {
         this.percentage = percentage;
-    }
-
-    public boolean isForMembers() {
-        return forMembers;
-    }
-
-    public final void setForMembers(boolean forMembers) {
-        this.forMembers = forMembers;
-    }
-    
-    public boolean getForMembers(){
-        return this.forMembers;
     }
     
 }

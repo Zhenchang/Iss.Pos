@@ -16,20 +16,13 @@ public class Transaction implements IEntity {
 
     private int id;
     private Date date;
-    private Member member;
-    private String memberId;
+    private Customer customer;
     private Collection<TransactionDetail> transactionDetails;
     
-    public Transaction(int id, Date date, Member member){
+    public Transaction(int id, Date date, Customer customer){
         setId(id);
         setDate(date);
-        setMember(member);
-    }
-    
-    public Transaction(int id, Date date, String memberId){
-        setId(id);
-        setDate(date);
-        setMemberId(memberId);
+        setCustomer(customer);
     }
     
     @Override
@@ -46,14 +39,10 @@ public class Transaction implements IEntity {
         return transactionDetails;
     }
    
-    public Member getMember() {
-        return member;
+    public Customer getCustomer() {
+        return customer;
     }
     
-    public String getMemberId() {
-        return memberId;
-    }
-
     public Date getDate() {
         return date;
     }
@@ -62,14 +51,9 @@ public class Transaction implements IEntity {
         this.date = date;
     }
 
-    public final void setMember(Member member) {
-        if(member == null) throw new IllegalArgumentException("member");
-        this.memberId = member.getKey();
-        this.member = member;
-    }
-    
-    public final void setMemberId(String memberId){
-        this.memberId = memberId;
+    public final void setCustomer(Customer customer) {
+        if(customer == null) throw new IllegalArgumentException("member");
+        this.customer = customer;
     }
     
     public int getId() {

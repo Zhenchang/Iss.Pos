@@ -5,9 +5,13 @@
  */
 package edu.nus.iss.pos.dao.format;
 
+import edu.nus.iss.pos.core.Customer;
+import edu.nus.iss.pos.core.Member;
+import edu.nus.iss.pos.core.Product;
 import edu.nus.iss.pos.core.Transaction;
 import edu.nus.iss.pos.core.TransactionDetail;
 import edu.nus.iss.pos.core.dao.IFileFormatter;
+import edu.nus.iss.pos.core.dao.IUnitOfWork;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -19,21 +23,24 @@ import java.util.Date;
 public class TransactionFileFormatter implements IFileFormatter<Transaction>{
 
     private static final TransactionFileFormatter singleton =  new TransactionFileFormatter();
+    private static IUnitOfWork unitOfWork;
+    private static SimpleDateFormat dateFormatter = new SimpleDateFormat("yyyy-MM-dd");
+
     private TransactionFileFormatter(){
         
     }
-    public static TransactionFileFormatter getInstance(){
+    public static TransactionFileFormatter getInstance(IUnitOfWork unitOfWork){
+        TransactionFileFormatter.unitOfWork = unitOfWork;
         return singleton;
     }
     
     @Override
     public String format(Transaction entity) {
         String str = "";
-        SimpleDateFormat dateFormatter = new SimpleDateFormat("yyyy-MM-dd");
         for(TransactionDetail detail : entity.getTransactionDetails()){
             str += entity.getKey() + "," +  
-                    detail.getProductId() + "," + 
-                    entity.getMemberId() + "," + 
+                    detail.getProduct().getKey() + "," + 
+                    entity.getCustomer().getKey() + "," + 
                     detail.getQuantityPurchased() + "," +
                     dateFormatter.format(entity.getDate()) + "\n";
         }
@@ -43,7 +50,6 @@ public class TransactionFileFormatter implements IFileFormatter<Transaction>{
     public Transaction readEntity(String data) throws Exception {
         String[] lines = data.split("\n");
         if(lines.length == 0) throw new Exception("Cannot map data to entity!");
-        SimpleDateFormat dateFormatter = new SimpleDateFormat("yyyy-MM-dd");
         Transaction result = null;
         for(String line : lines){
             String[] params = line.split(",");
@@ -54,10 +60,17 @@ public class TransactionFileFormatter implements IFileFormatter<Transaction>{
             if(result == null){
                 String memberId = params[2];
                 Date purchasedDate = dateFormatter.parse(params[4]);
-                result = new Transaction(id, purchasedDate, memberId);
+                Customer c ;
+                if(memberId.equals("PUBLIC")){
+                    c = new Customer();
+                }else{
+                    c = (Member) unitOfWork.getRepository(FileType.Member).getByKey(memberId);
+                }
+                result = new Transaction(id, purchasedDate, c);
             }
             if(result.getId() == id){
-                TransactionDetail d = new TransactionDetail(result, productId, quantity);
+                Product p = (Product) unitOfWork.getRepository(FileType.Product).getByKey(productId);
+                TransactionDetail d = new TransactionDetail(result,p , quantity);
                 result.addTransactionDetail(d);
             }
         }

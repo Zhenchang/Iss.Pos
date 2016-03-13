@@ -29,7 +29,7 @@ public class Repository<T extends IEntity> implements IRepository<T>{
     public Repository(IUnitOfWork unitOfWork, FileType fileType, String filename) throws Exception{
         this.setFileType(fileType);
         this.setFileName(filename);
-        this.formatter = FileFormatterFactory.getFormatter(fileType);
+        this.formatter = FileFormatterFactory.getFormatter(fileType, unitOfWork);
         this.unitOfWork = unitOfWork;
     }
     

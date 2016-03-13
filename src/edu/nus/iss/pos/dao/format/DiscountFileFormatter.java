@@ -5,8 +5,13 @@
  */
 package edu.nus.iss.pos.dao.format;
 
+import edu.nus.iss.pos.core.AlwaysDiscount;
 import edu.nus.iss.pos.core.Discount;
+import edu.nus.iss.pos.core.FirstPurchaseDiscount;
+import edu.nus.iss.pos.core.PeriodDiscount;
+import edu.nus.iss.pos.core.SubsequentPurchaseDiscount;
 import edu.nus.iss.pos.core.dao.IFileFormatter;
+import java.text.SimpleDateFormat;
 import java.util.Date;
 
 
@@ -18,7 +23,8 @@ public class DiscountFileFormatter implements IFileFormatter<Discount>{
     
     private DiscountFileFormatter(){}
     
-    public static final DiscountFileFormatter singleton = new DiscountFileFormatter();
+    private static final DiscountFileFormatter singleton = new DiscountFileFormatter();
+    private static final SimpleDateFormat dateFormatter = new SimpleDateFormat("yyyy-MM-dd");
     
     public static DiscountFileFormatter getInstance(){
         return singleton;
@@ -27,13 +33,23 @@ public class DiscountFileFormatter implements IFileFormatter<Discount>{
 
     @Override
     public String format(Discount entity) {
-        return entity.getCode() + "," + 
-                entity.getDiscountPeriod() + "," +
-                entity.getStartDate() + "," + 
-                entity.getDiscountPeriod() + "," + 
+        if(entity instanceof AlwaysDiscount){
+            return entity.getCode() + "," +
+                    entity.getDescription() + "," +
+                    "ALWAYS" + 
+                    "ALWAYS" + 
+                    entity.getPercentage() + "," +
+                    "M";
+        }
+        PeriodDiscount exactEntity = (PeriodDiscount) entity;
+        return entity.getCode() + "," +
+                entity.getDescription() + "," +
+                dateFormatter.format(exactEntity.getStartDate()) + "," + 
+                exactEntity.getDiscountPeriod() + "," + 
                 entity.getPercentage() + "," +
-                entity.getForMembers() + "\n";
-    }
+                (exactEntity.getForMembers() ? "M" : "A");
+        
+     }
 
     @Override
     public Discount readEntity(String data) throws Exception {
@@ -43,12 +59,18 @@ public class DiscountFileFormatter implements IFileFormatter<Discount>{
         if(params.length != 6) throw new Exception("Cannot map the data to entity!");
         String code = params[0];
         String description = params[1];
-        Date startDate = new Date(params[2]);
-        int discountPeriod = Integer.parseInt(params[3]); // -1: Always, 1..*: days.
-        int percentage = Integer.parseInt(params[5]);
-        boolean forMembers = Boolean.parseBoolean(params[6]);
+        float percentage = Float.parseFloat(params[5]);
         
-        return new Discount(code, description, startDate, discountPeriod, percentage, forMembers);
+        if(code.equals("MEMBER_FIEST")){
+            return new FirstPurchaseDiscount(code, description, percentage);
+        }else if(code.equals("MEMBER_SUBSEQ")){
+            return new SubsequentPurchaseDiscount(code, description, percentage);
+        }else{
+            Date startDate = dateFormatter.parse(params[2]);
+            int discountPeriod = Integer.parseInt(params[3]);
+            boolean forMembers = Boolean.parseBoolean(params[6]);
+            return new PeriodDiscount(code, description, percentage, startDate, discountPeriod, forMembers);
+        }
     }
     
     @Override
