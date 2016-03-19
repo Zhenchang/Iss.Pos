@@ -111,7 +111,11 @@ public class LoginFrame extends javax.swing.JFrame {
 
     private void btnLoginActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnLoginActionPerformed
         try {
-            currentUser = usersService.Login(txtUsername.getText(), Arrays.toString(txtPassword.getPassword()));
+            String pwd = "";
+            for(char s : txtPassword.getPassword()) {
+                pwd += s;
+            }
+            currentUser = usersService.Login(txtUsername.getText(), pwd);
         } catch (Exception ex) {
             System.out.println("Username or password is not correct!");
         }

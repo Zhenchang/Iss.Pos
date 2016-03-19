@@ -51,7 +51,8 @@ public class ApplicationLauncher {
             java.awt.EventQueue.invokeLater(new Runnable() {
                 public void run() {
                     try {
-                        new AddProductFrame(inventoryService).setVisible(true);
+                        new LoginFrame(usersService).setVisible(true);
+//                        new AddProductFrame(inventoryService).setVisible(true);
                     } catch (Exception ex) {
                         Logger.getLogger(ApplicationLauncher.class.getName()).log(Level.SEVERE, null, ex);
                     }
