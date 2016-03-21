@@ -11,7 +11,7 @@ package edu.nus.iss.pos.core;
  */
 public class FirstPurchaseDiscount extends AlwaysDiscount {
 
-    public FirstPurchaseDiscount(String code, String description, float percentage) {
+    public FirstPurchaseDiscount(String code, String description, int percentage) {
         super(code, description, percentage);
     }
     

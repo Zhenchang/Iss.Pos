@@ -14,9 +14,9 @@ import java.util.Date;
 public abstract class Discount implements IEntity {
     private String code;
     private String description;
-    private float percentage;
+    private int percentage;
 
-    public Discount(String code, String description, float percentage){
+    public Discount(String code, String description, int percentage){
         setCode(code);
         setDescription(description);
         setPercentage(percentage);
@@ -48,7 +48,7 @@ public abstract class Discount implements IEntity {
         return percentage;
     }
 
-    public final void setPercentage(float percentage) {
+    public final void setPercentage(int percentage) {
         this.percentage = percentage;
     }
     

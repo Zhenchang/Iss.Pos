@@ -36,10 +36,10 @@ public class DiscountFileFormatter implements IFileFormatter<Discount>{
         if(entity instanceof AlwaysDiscount){
             return entity.getCode() + "," +
                     entity.getDescription() + "," +
-                    "ALWAYS" + 
-                    "ALWAYS" + 
+                    "ALWAYS" + "," + 
+                    "ALWAYS" + "," + 
                     entity.getPercentage() + "," +
-                    "M";
+                    "M" + "\n";
         }
         PeriodDiscount exactEntity = (PeriodDiscount) entity;
         return entity.getCode() + "," +
@@ -47,8 +47,7 @@ public class DiscountFileFormatter implements IFileFormatter<Discount>{
                 dateFormatter.format(exactEntity.getStartDate()) + "," + 
                 exactEntity.getDiscountPeriod() + "," + 
                 entity.getPercentage() + "," +
-                (exactEntity.getForMembers() ? "M" : "A");
-        
+                (exactEntity.getForMembers() ? "M" : "A") + "\n";
      }
 
     @Override
@@ -59,7 +58,7 @@ public class DiscountFileFormatter implements IFileFormatter<Discount>{
         if(params.length != 6) throw new Exception("Cannot map the data to entity!");
         String code = params[0];
         String description = params[1];
-        float percentage = Float.parseFloat(params[5]);
+        int percentage = Integer.parseInt(params[5]);
         
         if(code.equals("MEMBER_FIEST")){
             return new FirstPurchaseDiscount(code, description, percentage);

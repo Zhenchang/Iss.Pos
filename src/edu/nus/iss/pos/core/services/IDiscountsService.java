@@ -5,6 +5,7 @@
  */
 package edu.nus.iss.pos.core.services;
 
+import edu.nus.iss.pos.core.Discount;
 import edu.nus.iss.pos.core.Transaction;
 
 /**
@@ -16,4 +17,6 @@ public interface IDiscountsService {
     
     // Calculate discount for transaction
     void applyDiscountForTransaction(Transaction transaction);
+    
+    public void addDiscount(Discount discount) throws Exception;
 }

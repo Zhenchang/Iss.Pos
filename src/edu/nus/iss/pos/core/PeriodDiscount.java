@@ -15,7 +15,7 @@ public class PeriodDiscount extends Discount {
     private Date startDate;
     private int discountPeriod;
     private boolean forMembers;
-    public PeriodDiscount(String code, String description, float percentage,Date startDate, int discountPeriod, boolean forMembers){
+    public PeriodDiscount(String code, String description, int percentage,Date startDate, int discountPeriod, boolean forMembers){
         super(code, description,percentage);
         setStartDate(startDate);
         setDiscountPeriod(discountPeriod);

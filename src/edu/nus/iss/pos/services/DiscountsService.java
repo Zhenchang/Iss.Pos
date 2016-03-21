@@ -4,13 +4,10 @@ import edu.nus.iss.pos.core.*;
 import edu.nus.iss.pos.core.dao.IUnitOfWork;
 import edu.nus.iss.pos.core.services.IDiscountsService;
 import edu.nus.iss.pos.dao.format.FileType;
-import java.text.SimpleDateFormat;
 import java.util.Date;
-import java.util.List;
 
 public class DiscountsService implements IDiscountsService {
-
-
+    
     private final IUnitOfWork unitOfWork;
     
     public DiscountsService(IUnitOfWork unitOfWork){
@@ -121,4 +118,8 @@ public class DiscountsService implements IDiscountsService {
             
     }
 
+    @Override
+    public void addDiscount(Discount discount) throws Exception {
+        unitOfWork.getRepository(FileType.Discount).add(discount);
+    }
 }

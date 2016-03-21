@@ -13,7 +13,7 @@ import java.util.Date;
  */
 public abstract class AlwaysDiscount extends Discount {
     
-    public AlwaysDiscount(String code, String description, float percentage){
+    public AlwaysDiscount(String code, String description, int percentage){
         super(code, description,percentage);
         
     }
