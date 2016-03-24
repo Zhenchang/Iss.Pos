@@ -21,7 +21,7 @@ public class Member extends Customer{
     public Member(String id, String name){
         setId(id);
         setName(name);
-        setLoyaltyPoints(0);
+        setLoyaltyPoints(-1);
     }
     
     public Member(String id, String name, int loyaltyPoints){
@@ -77,8 +77,7 @@ public class Member extends Customer{
     }
     
     private void setLoyaltyPoints(int loyaltyPoints){
-        if(loyaltyPoints == -1) this.loyaltyPoints = 0;
-        else if(loyaltyPoints > -1) this.loyaltyPoints = loyaltyPoints;
+        if(loyaltyPoints > -2) this.loyaltyPoints = loyaltyPoints;
         else throw new IllegalArgumentException("loyaltyPoints");
     }
     
