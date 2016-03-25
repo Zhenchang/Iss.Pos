@@ -113,14 +113,9 @@ public class InventoryService implements IInventoryService {
      * @throws Exception 
      */
     @Override
-    public void reorderProduct(Product product, Vendor vendor) throws Exception {
-        
-        if(product.getQuantity() < product.getReorderQuantity()){
-            int newQuantity = product.getQuantity()+ product.getOrderQuantity();
-            product.setQuantity(newQuantity);
-            IRepository repository = unitOfWork.getRepository(FileType.Product);
-            repository.update(product.getKey(), product);
-        }
+    public void reorderProduct(Product product) throws Exception {
+        IRepository repository = unitOfWork.getRepository(FileType.Product);
+        repository.update(product.getKey(), product);
     }
 
     /**
@@ -172,7 +167,7 @@ public class InventoryService implements IInventoryService {
         
         IRepository repository = unitOfWork.getRepository(FileType.Product);
         Iterable<Product> products = repository.getAll();
-        List<Product> productList = new ArrayList<Product>();
+        List<Product> productList = new ArrayList<>();
         for(Product product : products){
             if(product.getQuantity() < product.getReorderQuantity()){
                 productList.add(product);

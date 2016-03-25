@@ -31,6 +31,10 @@ public class Category implements IEntity{
         setName(name);
     }
     
+    public Category(String id) {
+        setId(id);
+    }
+    
     public Iterable<Product> getProducts(){
         return products;
     }

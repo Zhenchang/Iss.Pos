@@ -34,7 +34,7 @@ public interface IInventoryService {
     void deleteProduct(String productId) throws Exception;
     
     
-    void reorderProduct(Product product, Vendor vendor) throws Exception;
+    void reorderProduct(Product product) throws Exception;
     
     /*Similar to wildcard search*/
     Collection<Product> searchProductByName(String name) throws Exception;
