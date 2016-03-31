@@ -4,7 +4,7 @@ import edu.nus.iss.pos.core.Member;
 import edu.nus.iss.pos.core.dao.IRepository;
 import edu.nus.iss.pos.core.dao.IUnitOfWork;
 import edu.nus.iss.pos.core.services.IMembershipService;
-import edu.nus.iss.pos.dao.format.FileType;
+import edu.nus.iss.pos.dao.format.RepoType;
 
 public class MembershipService implements IMembershipService {
 
@@ -26,7 +26,7 @@ public class MembershipService implements IMembershipService {
 	@Override
 	public Member searchMemberByName(String name) throws Exception {
 		
-		IRepository repository = unitOfWork.getRepository(FileType.Member);
+		IRepository repository = unitOfWork.getRepository(RepoType.Member);
 		Iterable<Member> members =  repository.getAll();
 		for(Member m : members) {
 			if(m.getName().equals(name)){
@@ -39,7 +39,7 @@ public class MembershipService implements IMembershipService {
 	@Override
 	public Member searchMemberById(String id) throws Exception {
 		
-		IRepository repository = unitOfWork.getRepository(FileType.Member);
+		IRepository repository = unitOfWork.getRepository(RepoType.Member);
 		Member member = (Member) repository.getByKey(id);
 		return member;
 	}

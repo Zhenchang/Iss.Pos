@@ -8,7 +8,7 @@ package edu.nus.iss.pos.services;
 import edu.nus.iss.pos.core.User;
 import edu.nus.iss.pos.core.dao.IUnitOfWork;
 import edu.nus.iss.pos.core.services.IUsersService;
-import edu.nus.iss.pos.dao.format.FileType;
+import edu.nus.iss.pos.dao.format.RepoType;
 
 /**
  *
@@ -55,7 +55,7 @@ public class UsersService implements IUsersService {
 
     @Override
     public User getUserByName(String username) throws Exception {
-        return (User) unitOfWork.getRepository(FileType.User).getByKey(username);
+        return (User) unitOfWork.getRepository(RepoType.User).getByKey(username);
     }  
 
     @Override

@@ -10,7 +10,7 @@ import edu.nus.iss.pos.core.dao.IFileFormatter;
 import edu.nus.iss.pos.core.dao.IRepository;
 import edu.nus.iss.pos.core.dao.IUnitOfWork;
 import edu.nus.iss.pos.dao.format.FileFormatterFactory;
-import edu.nus.iss.pos.dao.format.FileType;
+import edu.nus.iss.pos.dao.format.RepoType;
 import java.io.*;
 import java.util.Collection;
 import java.util.HashSet;
@@ -21,24 +21,23 @@ import java.util.HashSet;
  */
 public class Repository<T extends IEntity> implements IRepository<T>{
     
-    private FileType fileType;
+    private RepoType fileType;
     private String fileName;
     private final IFileFormatter formatter;
     private final IUnitOfWork unitOfWork;
     
-    public Repository(IUnitOfWork unitOfWork, FileType fileType, String filename) throws Exception{
+    public Repository(IUnitOfWork unitOfWork, RepoType fileType, String filename) throws Exception{
         this.setFileType(fileType);
         this.setFileName(filename);
         this.formatter = FileFormatterFactory.getFormatter(fileType, unitOfWork);
         this.unitOfWork = unitOfWork;
     }
     
-    private void setFileType(FileType fileType){
+    private void setFileType(RepoType fileType){
         this.fileType = fileType;
     }
-    
-    @Override
-    public final void setFileName(String fileName) throws IOException{
+
+    protected final void setFileName(String fileName) throws IOException{
         if(fileName.length() != 0){
             new File(fileName).createNewFile();
             this.fileName = fileName;
@@ -154,7 +153,7 @@ public class Repository<T extends IEntity> implements IRepository<T>{
     }
 
     @Override
-    public FileType getFileType() {
+    public RepoType getFileType() {
         return this.fileType;
     }
     

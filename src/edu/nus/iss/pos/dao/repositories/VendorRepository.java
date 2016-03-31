@@ -8,7 +8,7 @@ package edu.nus.iss.pos.dao.repositories;
 import edu.nus.iss.pos.core.Category;
 import edu.nus.iss.pos.core.Vendor;
 import edu.nus.iss.pos.core.dao.IUnitOfWork;
-import edu.nus.iss.pos.dao.format.FileType;
+import edu.nus.iss.pos.dao.format.RepoType;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -20,7 +20,7 @@ public class VendorRepository extends Repository<Vendor>{
     
     private String fileNamePrefix = "";
     public VendorRepository(IUnitOfWork unitOfWork, String fileNamePrefix) throws Exception {
-        super(unitOfWork, FileType.Vendor, "");
+        super(unitOfWork, RepoType.Vendor, "");
         this.fileNamePrefix = fileNamePrefix;
         
     }
@@ -28,14 +28,14 @@ public class VendorRepository extends Repository<Vendor>{
     @Override
     public void add(Vendor entity) throws Exception {
         for(Category category : entity.getCategories()){
-            this.setFileName(fileNamePrefix + category.getKey() + ".dat");
+            setFileName(fileNamePrefix + category.getKey() + ".dat");
             super.update(entity.getKey(), entity);
         }
     }
     
     @Override
     public void update(String oldKey, Vendor entity) throws Exception {
-        Iterable<Category> categories = this.getUnitOfWork().getRepository(FileType.Category).getAll();
+        Iterable<Category> categories = this.getUnitOfWork().getRepository(RepoType.Category).getAll();
         Iterable<Category> vendorCategories = entity.getCategories();
         List<Category> shouldBeDeleted = new ArrayList();
         for(Category category : categories){
@@ -59,7 +59,7 @@ public class VendorRepository extends Repository<Vendor>{
     
     @Override
     public void delete(Vendor entity) throws Exception {
-        Iterable<Category> categories = this.getUnitOfWork().getRepository(FileType.Category).getAll();
+        Iterable<Category> categories = this.getUnitOfWork().getRepository(RepoType.Category).getAll();
         for(Category category : categories){
             this.setFileName(fileNamePrefix + category.getKey() + ".dat");
             super.delete(entity);
@@ -69,7 +69,7 @@ public class VendorRepository extends Repository<Vendor>{
     @Override
     public Iterable<Vendor> getAll() throws Exception {
         List<Vendor> vendors = new ArrayList();
-        Iterable<Category> categories = this.getUnitOfWork().getRepository(FileType.Category).getAll();
+        Iterable<Category> categories = this.getUnitOfWork().getRepository(RepoType.Category).getAll();
         for(Category category : categories){
             this.setFileName(fileNamePrefix + category.getKey() + ".dat");
             super.getAll().forEach((v)->{

@@ -6,7 +6,7 @@ import edu.nus.iss.pos.core.Transaction;
 import edu.nus.iss.pos.core.TransactionDetail;
 import edu.nus.iss.pos.core.dao.IUnitOfWork;
 import edu.nus.iss.pos.core.services.ISalesService;
-import edu.nus.iss.pos.dao.format.FileType;
+import edu.nus.iss.pos.dao.format.RepoType;
 import java.util.Date;
 import edu.nus.iss.pos.core.dao.IRepository;
 
@@ -39,12 +39,12 @@ public class SalesService implements ISalesService {
             Member member = (Member) transaction.getCustomer();
             member.redeemPoints(price, true);
        }
-       unitOfWork.getRepository(FileType.Transaction).update(transaction.getKey(), transaction);
+       unitOfWork.getRepository(RepoType.Transaction).update(transaction.getKey(), transaction);
     }
         
     private int getNewId() throws Exception{
         int maxId = 0;
-        IRepository repository = unitOfWork.getRepository(FileType.Transaction);
+        IRepository repository = unitOfWork.getRepository(RepoType.Transaction);
         Iterable<Transaction> transaction =  repository.getAll();
         for(Transaction tran : transaction) {
             if(maxId < tran.getId()){

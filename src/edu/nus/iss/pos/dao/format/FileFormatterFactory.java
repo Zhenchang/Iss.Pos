@@ -13,7 +13,7 @@ import edu.nus.iss.pos.core.dao.IUnitOfWork;
  * @author Liu Zhenchang
  */
 public class FileFormatterFactory {    
-    public static IFileFormatter getFormatter(FileType type, IUnitOfWork unitOfWork) throws Exception{
+    public static IFileFormatter getFormatter(RepoType type, IUnitOfWork unitOfWork) throws Exception{
         switch(type){
             case User: return UserFileFormatter.getInstance();
             case Member: return MemberFileFormatter.getInstance();

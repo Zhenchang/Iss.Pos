@@ -6,7 +6,7 @@
 package edu.nus.iss.pos.core.dao;
 
 import edu.nus.iss.pos.core.IEntity;
-import edu.nus.iss.pos.dao.format.FileType;
+import edu.nus.iss.pos.dao.format.RepoType;
 import java.io.IOException;
 
 /**
@@ -21,8 +21,7 @@ public interface IRepository<T extends IEntity> {
      
      T getByKey(String key) throws Exception;
      Iterable<T> getAll() throws Exception;
-     FileType getFileType();
+     RepoType getFileType();
      IUnitOfWork getUnitOfWork();
-     void setFileName(String fileName) throws IOException;
              
 }

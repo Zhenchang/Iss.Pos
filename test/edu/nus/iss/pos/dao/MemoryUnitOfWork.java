@@ -3,8 +3,9 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package edu.nus.iss.pos.dao.repositories;
+package edu.nus.iss.pos.dao;
 
+import edu.nus.iss.pos.dao.repositories.*;
 import edu.nus.iss.pos.core.*;
 import edu.nus.iss.pos.core.dao.IRepository;
 import edu.nus.iss.pos.core.dao.IUnitOfWork;
@@ -16,18 +17,18 @@ import java.util.List;
  *
  * @author zz
  */
-public class UnitOfWork implements IUnitOfWork {
+public class MemoryUnitOfWork implements IUnitOfWork {
 
     private final List<IRepository> repositories;
-    public UnitOfWork() throws Exception{
+    public MemoryUnitOfWork() throws Exception{
         repositories = new ArrayList();
-        repositories.add(new Repository<>(this, RepoType.User, "Storekeepers.dat"));
-        repositories.add(new Repository<>(this, RepoType.Member, "Members.dat"));
-        repositories.add(new Repository<>(this, RepoType.Category, "Category.dat"));
-        repositories.add(new Repository<>(this, RepoType.Product, "Products.dat"));
-        repositories.add(new Repository<>(this, RepoType.Transaction, "Transactions.dat"));
-        repositories.add(new Repository<>(this, RepoType.Discount, "Discounts.dat"));
-        repositories.add(new VendorRepository(this, "Vendors"));
+        repositories.add(new MemoryRepository<>(this, RepoType.User, "Storekeepers.dat"));
+        repositories.add(new MemoryRepository<>(this, RepoType.Member, "Members.dat"));
+        repositories.add(new MemoryRepository<>(this, RepoType.Category, "Category.dat"));
+        repositories.add(new MemoryRepository<>(this, RepoType.Product, "Products.dat"));
+        repositories.add(new MemoryRepository<>(this, RepoType.Transaction, "Transactions.dat"));
+        repositories.add(new MemoryRepository<>(this, RepoType.Discount, "Discounts.dat"));
+        repositories.add(new MemoryRepository<>(this, RepoType.Vendor, "Vendors.dat"));
     }
     
     @Override

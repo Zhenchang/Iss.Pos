@@ -3,7 +3,7 @@ package edu.nus.iss.pos.services;
 import edu.nus.iss.pos.core.*;
 import edu.nus.iss.pos.core.dao.IUnitOfWork;
 import edu.nus.iss.pos.core.services.IDiscountsService;
-import edu.nus.iss.pos.dao.format.FileType;
+import edu.nus.iss.pos.dao.format.RepoType;
 import java.util.Date;
 
 public class DiscountsService implements IDiscountsService {
@@ -35,7 +35,7 @@ public class DiscountsService implements IDiscountsService {
      * @throws Exception 
      */
     private float getOtherDiscount(Transaction transaction) throws Exception {
-        Iterable<Discount> discounts = unitOfWork.getRepository(FileType.Discount).getAll();
+        Iterable<Discount> discounts = unitOfWork.getRepository(RepoType.Discount).getAll();
         FirstPurchaseDiscount maxDiscount = null;
         if(this.ifFirstDiscount(transaction)){
             for(Discount discount : discounts){
@@ -69,7 +69,7 @@ public class DiscountsService implements IDiscountsService {
      * @return 
      */
     private boolean ifFirstDiscount(Transaction transaction) throws Exception{
-        Iterable<Transaction> transactions = unitOfWork.getRepository(FileType.Transaction).getAll();
+        Iterable<Transaction> transactions = unitOfWork.getRepository(RepoType.Transaction).getAll();
         for(Transaction item : transactions){
             if(item.getCustomer().getKey().equals(transaction.getCustomer().getKey())){
                 return true;
@@ -89,7 +89,7 @@ public class DiscountsService implements IDiscountsService {
         boolean isMember = customer instanceof Member; 
         PeriodDiscount maxDiscount = null;
         Date today = new Date();
-        Iterable<PeriodDiscount> discounts = unitOfWork.getRepository(FileType.Discount).getAll();
+        Iterable<PeriodDiscount> discounts = unitOfWork.getRepository(RepoType.Discount).getAll();
         for(PeriodDiscount discount : discounts){
             //check if today is in the discount period
             if(discount.getStartDate().before(new Date(today.getTime() + discount.getDiscountPeriod() * 24 * 60 * 60 * 1000))){
@@ -120,6 +120,6 @@ public class DiscountsService implements IDiscountsService {
 
     @Override
     public void addDiscount(Discount discount) throws Exception {
-        unitOfWork.getRepository(FileType.Discount).add(discount);
+        unitOfWork.getRepository(RepoType.Discount).add(discount);
     }
 }

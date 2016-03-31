@@ -9,7 +9,7 @@ import edu.nus.iss.pos.core.Vendor;
 import edu.nus.iss.pos.core.dao.IRepository;
 import edu.nus.iss.pos.core.dao.IUnitOfWork;
 import edu.nus.iss.pos.core.services.IInventoryService;
-import edu.nus.iss.pos.dao.format.FileType;
+import edu.nus.iss.pos.dao.format.RepoType;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -53,7 +53,7 @@ public class InventoryService implements IInventoryService {
     @Override
     public void deleteCategory(String categoryId) throws Exception {
        
-        Category category = (Category) unitOfWork.getRepository(FileType.Category).getByKey(categoryId);
+        Category category = (Category) unitOfWork.getRepository(RepoType.Category).getByKey(categoryId);
         unitOfWork.delete(category);
     }
 
@@ -76,14 +76,14 @@ public class InventoryService implements IInventoryService {
 
         
         Product product = new Product(category, getNewId(), name, description, availableQuantity, price, barcodeNumber, reorderQuantity, orderQuantity);
-        IRepository repository = unitOfWork.getRepository(FileType.Product);
+        IRepository repository = unitOfWork.getRepository(RepoType.Product);
         repository.add(product);
         return product;
     }
 
     private int getNewId() throws Exception{
         int maxId = 0;
-        IRepository repository = unitOfWork.getRepository(FileType.Product);
+        IRepository repository = unitOfWork.getRepository(RepoType.Product);
         Iterable<Product> products =  repository.getAll();
         for(Product p : products) {
             int index = Integer.parseInt(p.getKey().split("/")[1]);
@@ -102,7 +102,7 @@ public class InventoryService implements IInventoryService {
     @Override
     public void deleteProduct(String productId) throws Exception {
             
-        Product product = (Product) unitOfWork.getRepository(FileType.Product).getByKey(productId);
+        Product product = (Product) unitOfWork.getRepository(RepoType.Product).getByKey(productId);
         unitOfWork.delete(product);
     }
 
@@ -114,7 +114,7 @@ public class InventoryService implements IInventoryService {
      */
     @Override
     public void reorderProduct(Product product) throws Exception {
-        IRepository repository = unitOfWork.getRepository(FileType.Product);
+        IRepository repository = unitOfWork.getRepository(RepoType.Product);
         repository.update(product.getKey(), product);
     }
 
@@ -127,7 +127,7 @@ public class InventoryService implements IInventoryService {
     @Override
     public Collection<Product> searchProductByName(String name) throws Exception {
             
-        IRepository repository = unitOfWork.getRepository(FileType.Product);
+        IRepository repository = unitOfWork.getRepository(RepoType.Product);
         Iterable<Product> products = repository.getAll();
         List<Product> productList = new ArrayList<Product>();
         for(Product product : products){
@@ -147,7 +147,7 @@ public class InventoryService implements IInventoryService {
     @Override
     public Product searchProductByBarcode(String barcode) throws Exception {
             
-        IRepository repository = unitOfWork.getRepository(FileType.Product);
+        IRepository repository = unitOfWork.getRepository(RepoType.Product);
         Iterable<Product> products = repository.getAll();
         for(Product product : products){
             if(product.getBarcodeNumber().equals(barcode)){
@@ -165,7 +165,7 @@ public class InventoryService implements IInventoryService {
     @Override
     public Collection<Product> getProductsBelowThreshold() throws Exception {
         
-        IRepository repository = unitOfWork.getRepository(FileType.Product);
+        IRepository repository = unitOfWork.getRepository(RepoType.Product);
         Iterable<Product> products = repository.getAll();
         List<Product> productList = new ArrayList<>();
         for(Product product : products){
@@ -185,7 +185,7 @@ public class InventoryService implements IInventoryService {
     @Override
     public Collection<Product> getProductsByCategoryId(String categoryId) throws Exception {
         
-        IRepository repository = unitOfWork.getRepository(FileType.Product);
+        IRepository repository = unitOfWork.getRepository(RepoType.Product);
         Iterable<Product> products = repository.getAll();
         List<Product> productList = new ArrayList<Product>();
         for(Product product : products){
@@ -198,6 +198,6 @@ public class InventoryService implements IInventoryService {
     
      @Override
     public Iterable<Category> getAllCategory() throws Exception{
-        return unitOfWork.getRepository(FileType.Category).getAll();
+        return unitOfWork.getRepository(RepoType.Category).getAll();
     }
 }

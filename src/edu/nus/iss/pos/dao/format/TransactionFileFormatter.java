@@ -64,12 +64,12 @@ public class TransactionFileFormatter implements IFileFormatter<Transaction>{
                 if(memberId.equals("PUBLIC")){
                     c = new Customer();
                 }else{
-                    c = (Member) unitOfWork.getRepository(FileType.Member).getByKey(memberId);
+                    c = (Member) unitOfWork.getRepository(RepoType.Member).getByKey(memberId);
                 }
                 result = new Transaction(id, purchasedDate, c);
             }
             if(result.getId() == id){
-                Product p = (Product) unitOfWork.getRepository(FileType.Product).getByKey(productId);
+                Product p = (Product) unitOfWork.getRepository(RepoType.Product).getByKey(productId);
                 TransactionDetail d = new TransactionDetail(result,p , quantity);
                 result.addTransactionDetail(d);
             }

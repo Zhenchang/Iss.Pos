@@ -9,7 +9,7 @@ package edu.nus.iss.pos.dao.format;
  *
  * @author Zaid
  */
-public enum FileType {
+public enum RepoType {
     User,
     Member,
     Category,

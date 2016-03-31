@@ -47,7 +47,7 @@ public class ProductFileFormatter implements IFileFormatter<Product>{
         String key = param[0];
         String categoryId = key.split("/")[0];
         int index = Integer.parseInt(key.split("/")[1]);
-        Category c = (Category) unitOfWork.getRepository(FileType.Category).getByKey(categoryId);
+        Category c = (Category) unitOfWork.getRepository(RepoType.Category).getByKey(categoryId);
         String name = param[1];
         String description = param[2];
         int quantity = Integer.parseInt(param[3]);
