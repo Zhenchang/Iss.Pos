@@ -115,6 +115,7 @@ public class InventoryService implements IInventoryService {
     @Override
     public void reorderProduct(Product product) throws Exception {
         IRepository repository = unitOfWork.getRepository(RepoType.Product);
+        product.setQuantity(product.getQuantity() + product.getOrderQuantity());
         repository.update(product.getKey(), product);
     }
 

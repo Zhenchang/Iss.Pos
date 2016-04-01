@@ -5,8 +5,6 @@
  */
 package edu.nus.iss.pos.core;
 
-import java.util.Date;
-
 /**
  *
  * @author Zaid
@@ -44,7 +42,7 @@ public abstract class Discount implements IEntity {
         this.description = description;
     }
 
-    public float getPercentage() {
+    public int getPercentage() {
         return percentage;
     }
 

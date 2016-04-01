@@ -13,7 +13,7 @@ import edu.nus.iss.pos.core.Transaction;
  * @author Zaid
  */
 public interface IDiscountsService {
-    float getDiscountForTransaction(Transaction transaction) throws Exception;
+    int getDiscountForTransaction(Transaction transaction) throws Exception;
     
     // Calculate discount for transaction
     void applyDiscountForTransaction(Transaction transaction);
