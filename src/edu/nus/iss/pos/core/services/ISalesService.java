@@ -9,6 +9,8 @@ import edu.nus.iss.pos.core.Customer;
 import edu.nus.iss.pos.core.Product;
 import edu.nus.iss.pos.core.Transaction;
 import edu.nus.iss.pos.core.TransactionDetail;
+import java.util.Date;
+import java.util.List;
 
 /**
  *
@@ -24,5 +26,6 @@ public interface ISalesService {
     
     float getFinalPrice(Transaction transaction,int discount, boolean useLoyaltyPoints) throws Exception;
     
+    public List<Transaction> getTransactions(Date startDate, Date endDate) throws Exception;
     public float getPriceAfterDiscount(Transaction transaction, int discount) throws Exception;
 }

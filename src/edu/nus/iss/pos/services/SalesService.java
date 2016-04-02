@@ -10,6 +10,8 @@ import edu.nus.iss.pos.core.services.ISalesService;
 import edu.nus.iss.pos.dao.format.RepoType;
 import java.util.Date;
 import edu.nus.iss.pos.core.dao.IRepository;
+import java.util.ArrayList;
+import java.util.List;
 
 public class SalesService implements ISalesService {
 
@@ -75,5 +77,16 @@ public class SalesService implements ISalesService {
             price = member.redeemPoints(price, false);
        }
        return price;
+    }
+
+    @Override
+    public List<Transaction> getTransactions(Date startDate, Date endDate) throws Exception {
+        Iterable<Transaction> transactions = unitOfWork.getRepository(RepoType.Transaction).getAll();
+        List<Transaction> transactionsInPeriod = new ArrayList();
+        for(Transaction trans : transactions) {
+            if(trans.getDate().after(startDate) && trans.getDate().before(endDate))
+                transactionsInPeriod.add(trans);
+        }
+        return transactionsInPeriod;
     }
 }
