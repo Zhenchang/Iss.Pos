@@ -23,10 +23,8 @@ import java.util.logging.Logger;
 import javax.swing.AbstractButton;
 import javax.swing.JComponent;
 import javax.swing.JPanel;
-import javax.swing.text.DateFormatter;
 import org.jdatepicker.JDateComponentFactory;
 import org.jdatepicker.JDatePicker;
-import org.jdatepicker.impl.JDatePickerImpl;
 
 /**
  *

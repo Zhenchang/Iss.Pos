@@ -7,7 +7,6 @@ package edu.nus.iss.pos.core.services;
 
 import edu.nus.iss.pos.core.Category;
 import edu.nus.iss.pos.core.Product;
-import edu.nus.iss.pos.core.Vendor;
 import java.util.Collection;
 
 /**

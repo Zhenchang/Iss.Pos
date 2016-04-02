@@ -5,8 +5,9 @@
  */
 package edu.nus.iss.pos.core;
 
-import java.util.Collection;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 /**
  *
@@ -17,12 +18,13 @@ public class Transaction implements IEntity {
     private int id;
     private Date date;
     private Customer customer;
-    private Collection<TransactionDetail> transactionDetails;
+    private List<TransactionDetail> transactionDetails;
     
     public Transaction(int id, Date date, Customer customer){
         setId(id);
         setDate(date);
         setCustomer(customer);
+        transactionDetails = new ArrayList();
     }
     
     @Override
@@ -35,7 +37,7 @@ public class Transaction implements IEntity {
         this.id = id;
     }
 
-    public Iterable<TransactionDetail> getTransactionDetails() {
+    public List<TransactionDetail> getTransactionDetails() {
         return transactionDetails;
     }
    

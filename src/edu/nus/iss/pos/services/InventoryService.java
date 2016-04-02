@@ -4,8 +4,6 @@ import java.util.Collection;
 
 import edu.nus.iss.pos.core.Category;
 import edu.nus.iss.pos.core.Product;
-import edu.nus.iss.pos.core.Transaction;
-import edu.nus.iss.pos.core.Vendor;
 import edu.nus.iss.pos.core.dao.IRepository;
 import edu.nus.iss.pos.core.dao.IUnitOfWork;
 import edu.nus.iss.pos.core.services.IInventoryService;
@@ -109,7 +107,6 @@ public class InventoryService implements IInventoryService {
     /**
      * 
      * @param product
-     * @param vendor
      * @throws Exception 
      */
     @Override
@@ -130,7 +127,7 @@ public class InventoryService implements IInventoryService {
             
         IRepository repository = unitOfWork.getRepository(RepoType.Product);
         Iterable<Product> products = repository.getAll();
-        List<Product> productList = new ArrayList<Product>();
+        List<Product> productList = new ArrayList();
         for(Product product : products){
             if(product.getName().contains(name)){
                 productList.add(product);
@@ -188,7 +185,7 @@ public class InventoryService implements IInventoryService {
         
         IRepository repository = unitOfWork.getRepository(RepoType.Product);
         Iterable<Product> products = repository.getAll();
-        List<Product> productList = new ArrayList<Product>();
+        List<Product> productList = new ArrayList();
         for(Product product : products){
             if(product.getCategory().equals(categoryId)){
                 productList.add(product);

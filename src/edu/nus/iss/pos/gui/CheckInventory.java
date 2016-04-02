@@ -174,6 +174,7 @@ public class CheckInventory extends JFrame {
             return columns.length;
         }
         
+        //Set this ceil editable.
         @Override
         public boolean isCellEditable(int row, int col) {
             if(products.get(row).getQuantity() < products.get(row).getReorderQuantity())
@@ -184,6 +185,7 @@ public class CheckInventory extends JFrame {
         public void setValueAt(Object value, int row, int col) {
             if(col == 7)
                 products.get(row).setOrderQuantity(Integer.parseInt(value.toString()));
+            //Make the changes displayed in the table.
             fireTableCellUpdated(row, col);
         }
 
