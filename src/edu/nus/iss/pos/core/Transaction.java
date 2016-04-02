@@ -5,6 +5,7 @@
  */
 package edu.nus.iss.pos.core;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Date;
 
@@ -23,6 +24,7 @@ public class Transaction implements IEntity {
         setId(id);
         setDate(date);
         setCustomer(customer);
+        transactionDetails = new ArrayList();
     }
     
     @Override

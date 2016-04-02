@@ -75,81 +75,85 @@ public class UsersServiceTest {
         try {
             result = service.Login(username, password);
         } catch (Exception ex) {
+            ex.printStackTrace();
         }
         assertNull(result);
     }
-/*
+
     /**
      * Test of ChangePassword method, of class UsersService.
      */
-//    @Test
-//    public void testChangePassword() throws Exception {
-//        System.out.println("ChangePassword");
-//        String username = "";
-//        String oldPassword = "";
-//        String newPassword = "";
-//        UsersService instance = null;
-//        instance.ChangePassword(username, oldPassword, newPassword);
-//        // TODO review the generated test code and remove the default call to fail.
-//        fail("The test case is a prototype.");
-//    }
-//
-//    /**
-//     * Test of addUser method, of class UsersService.
-//     */
-//    @Test
-//    public void testAddUser() throws Exception {
-//        System.out.println("addUser");
-//        String username = "";
-//        String password = "";
-//        UsersService instance = null;
-//        User expResult = null;
-//        User result = instance.addUser(username, password);
-//        assertEquals(expResult, result);
-//        // TODO review the generated test code and remove the default call to fail.
-//        fail("The test case is a prototype.");
-//    }
-//
-//    /**
-//     * Test of deleteUser method, of class UsersService.
-//     */
-//    @Test
-//    public void testDeleteUser() throws Exception {
-//        System.out.println("deleteUser");
-//        String username = "";
-//        UsersService instance = null;
-//        instance.deleteUser(username);
-//        // TODO review the generated test code and remove the default call to fail.
-//        fail("The test case is a prototype.");
-//    }
-//
-//    /**
-//     * Test of getUserByName method, of class UsersService.
-//     */
-//    @Test
-//    public void testGetUserByName() throws Exception {
-//        System.out.println("getUserByName");
-//        String username = "";
-//        UsersService instance = null;
-//        User expResult = null;
-//        User result = instance.getUserByName(username);
-//        assertEquals(expResult, result);
-//        // TODO review the generated test code and remove the default call to fail.
-//        fail("The test case is a prototype.");
-//    }
-//
-//    /**
-//     * Test of checkPasswordComplexity method, of class UsersService.
-//     */
-//    @Test
-//    public void testCheckPasswordComplexity() throws Exception {
-//        System.out.println("checkPasswordComplexity");
-//        String password = "";
-//        UsersService instance = null;
-//        boolean expResult = false;
-//        boolean result = instance.checkPasswordComplexity(password);
-//        assertEquals(expResult, result);
-//        // TODO review the generated test code and remove the default call to fail.
-//        fail("The test case is a prototype.");
-//    }
+    @Test
+    public void testChangePassword() throws Exception {
+        System.out.println("ChangePassword");
+        String username = "Zaid";
+        String oldPassword = "123456";
+        String newPassword = "654321";
+        IUsersService instance = this.service;
+        this.unitOfWork.add(new User(username, oldPassword));
+        instance.ChangePassword(username, oldPassword, newPassword);
+        assertEquals(instance.getUserByName(username).getPassword(),newPassword);
+        // TODO review the generated test code and remove the default call to fail.
+        
+    }
+
+    /**
+     * Test of addUser method, of class UsersService.
+     */
+    @Test
+    public void testAddUser() throws Exception {
+        System.out.println("addUser");
+        String username = "Zaid";
+        String password = "123456";
+        IUsersService instance = this.service;
+        User result = instance.addUser(username, password);
+        assertNotNull(result);
+    }
+
+    /**
+     * Test of deleteUser method, of class UsersService.
+     */
+    @Test
+    public void testDeleteUser() throws Exception {
+        System.out.println("deleteUser");
+        String username = "Zaid";
+        String password = "123456";
+        IUsersService instance = this.service;
+        assertNotNull(instance.addUser(username, password));
+        instance.deleteUser(username);
+        assertNull(instance.getUserByName("Ziad"));
+        
+    }
+
+    /**
+     * Test of getUserByName method, of class UsersService.
+     */
+    @Test
+    public void testGetUserByName() throws Exception {
+        System.out.println("getUserByName");
+        String username = "Zaid";
+        String password = "123456";
+        IUsersService instance = this.service;
+        service.addUser(username, password);
+        User result = instance.getUserByName(username);
+        result.verify(username, password);
+    }
+
+    /**
+     * Test of checkPasswordComplexity method, of class UsersService.
+     */
+    @Test
+    public void testCheckPasswordComplexity() throws Exception {
+        System.out.println("checkPasswordComplexity");
+        String password = "123456";
+        IUsersService instance = this.service;
+        boolean expResult = true;
+        boolean result = instance.checkPasswordComplexity(password);
+        assertEquals(expResult, result);
+        expResult = false;
+        String password1 = "123";
+        result = instance.checkPasswordComplexity(password1);
+        assertEquals(expResult, result);
+
+    }
 }

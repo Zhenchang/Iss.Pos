@@ -44,4 +44,8 @@ public interface IInventoryService {
     Collection<Product> getProductsBelowThreshold() throws Exception;
     
     Collection<Product> getProductsByCategoryId(String categoryId) throws Exception;
+    
+    public void updateProduct(Product product) throws Exception;
+    
+    public void updateCategory(Category category) throws Exception;
 }

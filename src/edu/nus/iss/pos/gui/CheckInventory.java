@@ -5,7 +5,6 @@
  */
 package edu.nus.iss.pos.gui;
 
-import edu.nus.iss.pos.core.Category;
 import edu.nus.iss.pos.core.Product;
 import edu.nus.iss.pos.core.services.IInventoryService;
 import edu.nus.iss.pos.dao.repositories.UnitOfWork;
@@ -16,7 +15,6 @@ import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -28,7 +26,6 @@ import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.JTextField;
 import javax.swing.table.AbstractTableModel;
-import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableCellEditor;
 import javax.swing.table.TableCellRenderer;
 import javax.swing.table.TableColumn;
@@ -63,7 +60,7 @@ public class CheckInventory extends JFrame {
         TableColumn tc2 = productsTable.getColumnModel().getColumn(7);
         tc2.setCellRenderer(new TextFieldRender());
         jScrollPane1 = new JScrollPane(productsTable);
-         productsTable.setFillsViewportHeight(true);
+        productsTable.setFillsViewportHeight(true);
         jScrollPane1.setPreferredSize(new Dimension(1000, 200));
         jPanel1 = new JPanel();
         jPanel1.add(jScrollPane1);
@@ -113,7 +110,9 @@ public class CheckInventory extends JFrame {
         public void actionPerformed(ActionEvent e) {
             ProductTableModel model = (ProductTableModel) table.getModel();
             try {
-                inventoryService.reorderProduct( model.getproductAt(row));
+                inventoryService.reorderProduct(model.getproductAt(row));
+                int newQuantity = Integer.parseInt(table.getModel().getValueAt(row, 3).toString()) + Integer.parseInt(table.getModel().getValueAt(row, 7).toString());
+                table.setValueAt(newQuantity, row, 3);
             } catch (Exception ex) {
                 Logger.getLogger(CheckInventory.class.getName()).log(Level.SEVERE, null, ex);
             }
@@ -153,7 +152,7 @@ public class CheckInventory extends JFrame {
     
     class ProductTableModel extends AbstractTableModel {
         
-        private List<Product> products;
+        private List<Product> products = null;
         private final String[] columns = {"Product id", "Product name", "Description", "Quantity available", "Price", "Bar code number", 
                 "Reorder quantity", "Order quantity", ""};
         
@@ -164,6 +163,7 @@ public class CheckInventory extends JFrame {
                 this.products.add(p);
             }
         }
+        
         @Override
         public int getRowCount() {
             return this.products.size();
@@ -172,6 +172,19 @@ public class CheckInventory extends JFrame {
         @Override
         public int getColumnCount() {
             return columns.length;
+        }
+        
+        @Override
+        public boolean isCellEditable(int row, int col) {
+            if(products.get(row).getQuantity() < products.get(row).getReorderQuantity())
+                return col>columns.length-3;
+            return false;
+        }
+        @Override
+        public void setValueAt(Object value, int row, int col) {
+            if(col == 7)
+                products.get(row).setOrderQuantity(Integer.parseInt(value.toString()));
+            fireTableCellUpdated(row, col);
         }
 
         @Override
@@ -197,6 +210,7 @@ public class CheckInventory extends JFrame {
                     return (products.get(rowIndex).getQuantity() < products.get(rowIndex).getReorderQuantity());
             }
         }
+        
         public Product getproductAt(int rowIndex){
             return products.get(rowIndex);
         }

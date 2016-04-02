@@ -1,5 +1,6 @@
 package edu.nus.iss.pos.services;
 
+import edu.nus.iss.pos.core.Customer;
 import edu.nus.iss.pos.core.Member;
 import edu.nus.iss.pos.core.Product;
 import edu.nus.iss.pos.core.Transaction;
@@ -20,8 +21,8 @@ public class SalesService implements ISalesService {
     }
 
     @Override
-    public Transaction beginTransaction(Member member) throws Exception {
-        return new Transaction(getNewId(),new Date(),member);
+    public Transaction beginTransaction(Customer customer) throws Exception {
+        return new Transaction(getNewId(),new Date(),customer);
     }
 
     @Override
@@ -32,13 +33,18 @@ public class SalesService implements ISalesService {
     }
 
     @Override
-    public void checkout(Transaction transaction,float discount, boolean useLoyaltyPoints) throws Exception {
+    public void checkout(Transaction transaction,int discount, boolean useLoyaltyPoints) throws Exception {
         boolean isMember = transaction.getCustomer() instanceof Member;
         float price = getPriceAfterDiscount(transaction, discount);
         if(isMember && useLoyaltyPoints){
             Member member = (Member) transaction.getCustomer();
             member.redeemPoints(price, true);
-       }
+        }
+        IRepository<Product> productRepo = unitOfWork.getRepository(RepoType.Product);
+        for(TransactionDetail d : transaction.getTransactionDetails()){
+            d.getProduct().setQuantity(d.getProduct().getQuantity() - d.getQuantityPurchased());
+            productRepo.update(d.getProduct().getKey(), d.getProduct());
+        }
        unitOfWork.getRepository(RepoType.Transaction).update(transaction.getKey(), transaction);
     }
         
@@ -54,14 +60,14 @@ public class SalesService implements ISalesService {
         return maxId + 1;
     }
     
-    public float getPriceAfterDiscount(Transaction transaction, float discount) throws Exception {
+    public float getPriceAfterDiscount(Transaction transaction, int discount) throws Exception {
        float price = transaction.getTotalWithoutDiscount();
        price -=  price * (discount/100);
        return price;
     }
 
     @Override
-    public float getFinalPrice(Transaction transaction, float discount, boolean useLoyaltyPoints) throws Exception {
+    public float getFinalPrice(Transaction transaction, int discount, boolean useLoyaltyPoints) throws Exception {
        boolean isMember = transaction.getCustomer() instanceof Member;
        float price = getPriceAfterDiscount(transaction, discount);
        if(isMember && useLoyaltyPoints){
