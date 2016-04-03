@@ -11,6 +11,7 @@ import edu.nus.iss.pos.dao.repositories.UnitOfWork;
 import edu.nus.iss.pos.services.InventoryService;
 import java.awt.Color;
 import java.awt.Component;
+import java.awt.Container;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
@@ -19,8 +20,11 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.AbstractCellEditor;
 import javax.swing.JButton;
+import javax.swing.JFrame;
 import javax.swing.JTable;
 import javax.swing.JTextField;
+import javax.swing.event.TableModelEvent;
+import javax.swing.event.TableModelListener;
 import javax.swing.table.AbstractTableModel;
 import javax.swing.table.TableCellEditor;
 import javax.swing.table.TableCellRenderer;
@@ -125,6 +129,11 @@ public class CategoryReportFrame extends javax.swing.JFrame {
         @Override
         public int getRowCount() {
             return this.categoryList.size();
+        }
+        
+        @Override
+        public String getColumnName(int cloumnIndex){
+            return this.columns[cloumnIndex];
         }
 
         @Override

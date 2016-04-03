@@ -81,7 +81,7 @@ public class SalesServiceTest {
         int index=3;
         Date date = new Date();
         Category category= new Category("CLO", "colthing");
-        Customer customer= new Customer();
+        Customer customer= Customer.getInstance();
         Transaction transaction = new Transaction(1, date , customer);
         Product product = new Product(category, index, "Clothes", "Really Nice",327, id,"558944", 56, 100);
         int quantity = 3;

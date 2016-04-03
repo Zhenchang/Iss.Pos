@@ -38,9 +38,8 @@ public class Product  implements IEntity {
         this(c, index);
         this.setName(name);
         this.setDescription(description);
-        this.setQuantity(orderQuantity);;
+        this.setQuantity(availableQuantity);
         this.setPrice(price);
-        this.setDescription(description);
         this.setReorderQuantity(reorderQuantity);
         this.setBarcodeNumber(barcodeNumber);
         this.setOrderQuantity(orderQuantity);

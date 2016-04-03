@@ -13,9 +13,9 @@ public class Member extends Customer{
     private String name;
     private int loyaltyPoints;
     
-    private final float DOLLAR_TO_POINT = 10;
-    private final float POINT_TO_DOLLAR = 100;
-    private final int   DOLLAR_PER_POINTS = 5;
+    private static float DOLLAR_TO_POINT = 10;
+    private static float POINT_TO_DOLLAR = 100;
+    private static int   DOLLAR_PER_POINTS = 5;
     
     
     public Member(String id, String name){
@@ -41,33 +41,36 @@ public class Member extends Customer{
         return loyaltyPoints;
     }
     
+    public int pointsAvaliableForRedeemtion(float salePrice){
+        float pointsValue = convertPointsToDollars(this.loyaltyPoints);
+        if(pointsValue < salePrice){
+            return (int) Math.floor((pointsValue / DOLLAR_PER_POINTS)*POINT_TO_DOLLAR);
+        }else{
+            return (int) (Math.floor(salePrice / DOLLAR_PER_POINTS) * POINT_TO_DOLLAR);
+        }
+    }
+    
     public float redeemPoints(float salePrice, boolean removePoints) throws Exception{
         float finalPrice = salePrice;
         if(salePrice < DOLLAR_PER_POINTS) return salePrice;
         
-        float pointsValue = convertPointsToDollars(this.loyaltyPoints);
-        if(pointsValue < salePrice){
-            finalPrice = salePrice - pointsValue;
-            int points =(int) Math.floor((pointsValue / DOLLAR_PER_POINTS)*DOLLAR_TO_POINT);
-            if(removePoints) removeLoyaltyPoints(points);
-            
-        }else{
-            int pointsNeeded = (int) (Math.floor(salePrice / DOLLAR_PER_POINTS) * POINT_TO_DOLLAR);
-            finalPrice = salePrice - convertPointsToDollars(pointsNeeded);
-            if(removePoints) removeLoyaltyPoints(pointsNeeded);
-        }
+        int points = pointsAvaliableForRedeemtion(salePrice);
+        float pointsValue = convertPointsToDollars(points);
+        
+        finalPrice = salePrice - pointsValue;
+        if(removePoints) removeLoyaltyPoints(points);
         return finalPrice;
     }
     
-    public int convertPointsToDollars(int points){
+    public static int convertPointsToDollars(int points){
         return DOLLAR_PER_POINTS * (int) Math.floor(points / POINT_TO_DOLLAR) ;
     }
-    public int convertDollarsToPoints(float dollars){
+    public static int convertDollarsToPoints(float dollars){
         return (int) Math.floor(dollars / DOLLAR_TO_POINT);
     }
     
     public boolean checkPoints(int points){
-        return (points < loyaltyPoints);
+        return (points <= loyaltyPoints);
     }
     
   

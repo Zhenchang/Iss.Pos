@@ -10,11 +10,19 @@ import edu.nus.iss.pos.core.Product;
 import edu.nus.iss.pos.core.services.IInventoryService;
 import edu.nus.iss.pos.dao.repositories.UnitOfWork;
 import edu.nus.iss.pos.services.InventoryService;
+import java.awt.Component;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.swing.AbstractCellEditor;
+import javax.swing.JButton;
+import javax.swing.JTable;
 import javax.swing.table.AbstractTableModel;
+import javax.swing.table.TableCellEditor;
+import javax.swing.table.TableCellRenderer;
 import javax.swing.table.TableColumn;
 import javax.swing.table.TableModel;
 
@@ -36,8 +44,68 @@ public class ProductsReportFrame extends javax.swing.JFrame {
         this.inventoryService = inventoryService;
         TableModel tableModel = new ProductTableModel(this.getAllProducts());
         this.jTable1.setModel(tableModel);
+        
+        TableColumn tc = this.jTable1.getColumnModel().getColumn(8);
+
+        tc.setCellEditor(new ButtonEditor());
+        tc.setCellRenderer(new ButtonRenderer());
 
     }
+    
+    class ButtonEditor extends AbstractCellEditor implements TableCellEditor, ActionListener{
+        
+        private JButton jButton;
+        private JTable jTable;
+        private int row;
+        private int column;
+        
+        public ButtonEditor(){
+            this.jButton = new JButton("save");
+            jButton.setOpaque(true);
+            jButton.addActionListener(this);
+        }
+
+        @Override
+        public Object getCellEditorValue() {
+            return "";
+        }
+
+        @Override
+        public Component getTableCellEditorComponent(JTable table, Object value, boolean isSelected, int row, int column) {
+            this.jTable = table;
+            this.row = row;
+            this.column = column;
+            return this.jButton;
+        }
+
+        @Override
+        public void actionPerformed(ActionEvent e) {
+            System.out.println("clicked");
+            ProductTableModel tableMode = (ProductTableModel)this.jTable.getModel();
+            Product product = tableMode.getProductAt(this.row);
+            try {
+                inventoryService.updateProduct(product);
+            } catch (Exception ex) {
+                Logger.getLogger(ProductsReportFrame.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
+    }
+    
+        
+    class ButtonRenderer implements TableCellRenderer {
+        
+        JButton button = null;
+        
+        public ButtonRenderer() {
+            button = new JButton("save");
+        }
+        @Override
+        public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, boolean hasFocus, int row, int column) {
+           // button.setEnabled((boolean) value);
+            return button;
+        }
+    }
+    
     
     private Iterable<Product> getAllProducts() throws Exception{
         this.products = new ArrayList<Product>();
@@ -57,7 +125,7 @@ public class ProductsReportFrame extends javax.swing.JFrame {
     class ProductTableModel extends AbstractTableModel {
         
         private List<Product> productList;
-        private final String [] columns = {"id ","name","description", "quantity available","Prce","Bar code number","threshold","orderQuantity"};
+        private final String [] columns = {"id ","name","description", "quantity available","Prce","Bar code number","threshold","orderQuantity",""};
         
         public ProductTableModel(Iterable<Product> productList){
             super();
@@ -84,12 +152,61 @@ public class ProductsReportFrame extends javax.swing.JFrame {
                     return this.productList.get(rowIndex).getKey();
                 case 1:
                     return this.productList.get(rowIndex).getName();
+                case 2:
+                    return this.productList.get(rowIndex).getDescription();
+                case 3:
+                    return this.productList.get(rowIndex).getQuantity();
+                case 4:
+                    return this.productList.get(rowIndex).getPrice();
+                case 5:
+                    return this.productList.get(rowIndex).getBarcodeNumber();
+                case 6:
+                    return this.productList.get(rowIndex).getReorderQuantity();
+                case 7:
+                    return this.productList.get(rowIndex).getOrderQuantity();
                 default:
                     return null;
             }
         }
         
-        public Product getCategoryAt(int rowIndex){
+        @Override
+        public void setValueAt(Object value, int row, int column){
+            System.out.println(column);
+            switch(column){
+                case 1:
+                    this.productList.get(row).setName(value.toString());
+                    break;
+                case 2:
+                    this.productList.get(row).setDescription(value.toString());
+                    break;
+                case 3:
+                    this.productList.get(row).setQuantity(Integer.parseInt(value.toString()));
+                    break;
+                case 4:
+                    this.productList.get(row).setPrice(Float.parseFloat(value.toString()));
+                    break;
+                case 5:
+                    this.productList.get(row).setBarcodeNumber(value.toString());
+                    break;
+                case 6:
+                    this.productList.get(row).setReorderQuantity(Integer.parseInt(value.toString()));
+                    break;
+                case 7:
+                    this.productList.get(row).setOrderQuantity(Integer.parseInt(value.toString()));
+                    break;
+                default:
+            }
+            fireTableCellUpdated(row, column);
+        }
+
+        @Override
+        public String getColumnName(int column) {
+            return this.columns[column];//To change body of generated methods, choose Tools | Templates.
+        }
+        
+        
+        
+        public Product getProductAt(int rowIndex){
             return this.productList.get(rowIndex);
         }
         
@@ -139,16 +256,16 @@ public class ProductsReportFrame extends javax.swing.JFrame {
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(jButton2)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jButton1)
-                .addContainerGap())
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 375, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(19, Short.MAX_VALUE))
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                        .addGap(0, 0, Short.MAX_VALUE)
+                        .addComponent(jButton2)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(jButton1))
+                    .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 746, Short.MAX_VALUE))
+                .addContainerGap())
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
