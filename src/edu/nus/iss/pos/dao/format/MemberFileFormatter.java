@@ -24,7 +24,7 @@ public class MemberFileFormatter implements IFileFormatter<Member>{
     
     @Override
     public String format(Member entity) {
-        return entity.getKey() + "," + entity.getName() + "," + String.valueOf(entity.getLoyaltyPoints()) + "\n";
+        return entity.getName() + "," + entity.getKey() + "," + String.valueOf(entity.getLoyaltyPoints()) + "\n";
     }
 
     @Override
@@ -33,18 +33,15 @@ public class MemberFileFormatter implements IFileFormatter<Member>{
         if(lines.length == 0) throw new Exception("Cannot map data to entity!");
         String[] params = lines[0].split(",");
         if(params.length != 3) throw new Exception("Cannot map data to entity!");
-        String id = params[0];
-        String name = params[1];
+        String id = params[1];
+        String name = params[0];
         int loyaltyPoints = Integer.parseInt(params[2]);
         return new Member(id, name, loyaltyPoints);
     }
     
     @Override
     public String getKey(String data) throws Exception{
-        int pos = data.indexOf(",");
-        if(pos < 1) throw new Exception("No key found!"); 
-        String key = data.substring(0, pos);
-        return key;
+        return data.split(",")[1];
     }
     
     

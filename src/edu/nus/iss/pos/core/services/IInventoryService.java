@@ -36,6 +36,10 @@ public interface IInventoryService {
     
     void reorderProduct(Product product) throws Exception;
     
+    void updateProduct(Product product) throws Exception;
+    
+    void updateCategory(Category category) throws Exception;
+    
     /*Similar to wildcard search*/
     Collection<Product> searchProductByName(String name) throws Exception;
     

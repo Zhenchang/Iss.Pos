@@ -80,6 +80,18 @@ public class InventoryService implements IInventoryService {
         repository.add(product);
         return product;
     }
+    
+    @Override
+    public void updateProduct(Product product) throws Exception{
+        IRepository repository = unitOfWork.getRepository(RepoType.Product);
+        repository.update(product.getKey(), product);
+    }
+    
+    @Override
+    public void updateCategory(Category category) throws Exception {
+        IRepository repository = unitOfWork.getRepository(RepoType.Category);
+        repository.update(category.getKey(), category);
+    }
 
     private int getNewId() throws Exception{
         int maxId = 0;
@@ -115,6 +127,7 @@ public class InventoryService implements IInventoryService {
     @Override
     public void reorderProduct(Product product) throws Exception {
         IRepository repository = unitOfWork.getRepository(RepoType.Product);
+        product.setQuantity(product.getQuantity() + product.getOrderQuantity());
         repository.update(product.getKey(), product);
     }
 
@@ -189,7 +202,7 @@ public class InventoryService implements IInventoryService {
         Iterable<Product> products = repository.getAll();
         List<Product> productList = new ArrayList<Product>();
         for(Product product : products){
-            if(product.getCategory().equals(categoryId)){
+            if(product.getCategory().getKey().equals(categoryId)){
                 productList.add(product);
             }
         }

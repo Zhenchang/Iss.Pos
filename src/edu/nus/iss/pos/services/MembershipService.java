@@ -44,4 +44,15 @@ public class MembershipService implements IMembershipService {
 		return member;
 	}
 
+    @Override
+    public void updateMember(Member member)throws Exception {
+        IRepository repository = unitOfWork.getRepository(RepoType.Member);
+        repository.update(member.getKey(), member);
+    }
+
+    @Override
+    public Iterable<Member> getAllMembers()throws Exception {
+      return unitOfWork.getRepository(RepoType.Member).getAll();  
+    }
+
 }
