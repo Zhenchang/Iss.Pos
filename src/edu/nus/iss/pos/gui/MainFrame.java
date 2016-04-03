@@ -775,17 +775,17 @@ public class MainFrame extends javax.swing.JFrame {
                 if(result != JOptionPane.OK_OPTION){
                     this.jTextField1.requestFocus();
                 }else{
-                    MemberRegistration newMemberFrame = new MemberRegistration(this, true, membershipService);
-                    newMemberFrame.setVisible(true);
-                    Member m = newMemberFrame.getMember();
-                    if(m==null){
+                    //MemberRegistration newMemberFrame = new MemberRegistration(this, true, membershipService);
+                    //newMemberFrame.setVisible(true);
+                    //Member m = newMemberFrame.getMember();
+                    //if(m==null){
                         this.jTextField1.requestFocus();
-                    }else{
-                        try {
-                            setMember(m);
-                        } catch (Exception ex) {
-                        }
-                    }
+                    //}else{
+                        //try {
+                        //    setMember(m);
+                        //} catch (Exception ex) {
+                        //}
+                    //}
                 }
             }
         }
