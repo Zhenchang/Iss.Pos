@@ -28,7 +28,7 @@ public class DiscountsService implements IDiscountsService {
         // TODO Auto-generated method stub
         int periodDiscount = this.getPeriodDiscountForTransaction(transaction);
         int otherDiscount = this.getOtherDiscount(transaction);
-        return periodDiscount > otherDiscount ? otherDiscount : periodDiscount;
+        return periodDiscount < otherDiscount ? otherDiscount : periodDiscount;
     }
     
     /**
@@ -51,7 +51,7 @@ public class DiscountsService implements IDiscountsService {
                 }
             }
             if(maxDiscount == null)
-                return -1;
+                return 0;
             return maxDiscount.getPercentage();
         } else {
             SubsequentPurchaseDiscount maxDiscount = null;
@@ -65,7 +65,7 @@ public class DiscountsService implements IDiscountsService {
                 }
             }
             if(maxDiscount == null)
-                return -1;
+                return 0;
             return maxDiscount.getPercentage();
         }
     }
@@ -123,7 +123,7 @@ public class DiscountsService implements IDiscountsService {
             }
         }
         if(maxDiscount == null)
-            return -1;
+            return 0;
         return maxDiscount.getPercentage();
     }
 

@@ -11,9 +11,14 @@ package edu.nus.iss.pos.core;
  */
 public class Customer implements IEntity  {
     private String id;
+    private final static Customer instance = new Customer();
     
-    public Customer(){
+    protected Customer(){
         setId("PUBLIC");
+    }
+    
+    public static Customer getInstance(){
+        return instance;
     }
     
     protected void setId(String id){

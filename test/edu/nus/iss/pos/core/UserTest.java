@@ -123,7 +123,7 @@ public class UserTest {
         assertEquals(expResult, result);
         password = "654321";
         result = instance.verify(username, password);
-        assertNotEquals(expResult, result);
+        assertNotSame(expResult, result);
     }
     
 }
