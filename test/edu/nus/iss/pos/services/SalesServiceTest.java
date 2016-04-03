@@ -7,6 +7,7 @@ package edu.nus.iss.pos.services;
 
 import edu.nus.iss.pos.core.Category;
 import edu.nus.iss.pos.core.Customer;
+import edu.nus.iss.pos.core.CustomerTest;
 import edu.nus.iss.pos.core.Member;
 import edu.nus.iss.pos.core.Product;
 import edu.nus.iss.pos.core.Transaction;
@@ -33,6 +34,14 @@ public class SalesServiceTest {
     
     private IUnitOfWork unitOfWork;
     private ISalesService service;
+    private int id;
+    private int index;
+    private Date date;
+    private Customer customer;
+    private Transaction transaction;
+    private Product product;
+    private Category category;
+    private TransactionDetail transactionDetail;
     
     public SalesServiceTest() {
     }
@@ -77,64 +86,77 @@ public class SalesServiceTest {
     @Test
     public void testAddToCart()throws Exception {
         System.out.println("addToCart");
-        int id=3;
-        int index=3;
-        Date date = new Date();
-        Category category= new Category("CLO", "colthing");
-        Customer customer= Customer.getInstance();
-        Transaction transaction = new Transaction(1, date , customer);
-        Product product = new Product(category, index, "Clothes", "Really Nice",327, id,"558944", 56, 100);
+        id=3;
+        index=3;
+        date = new Date();
+        category= new Category("CLO", "colthing");
+        customer= Customer.getInstance();
+        transaction = new Transaction(1, date , customer);
+        product = new Product(category, index, "Clothes", "Really Nice",327, id,"558944", 56, 100);
         int quantity = 3;
         TransactionDetail result = service.addToCart(transaction, product, quantity);
         assertNotNull(result);
     }
-//
-//    /**
-//     * Test of checkout method, of class SalesService.
-//     */
-//    @Test
-//    public void testCheckout() throws Exception {
-//        System.out.println("checkout");
-//        Transaction transaction = null;
-//        float discount = 0.0F;
-//        boolean useLoyaltyPoints = false;
-//        SalesService instance = null;
-//        instance.checkout(transaction, discount, useLoyaltyPoints);
-//        // TODO review the generated test code and remove the default call to fail.
-//        fail("The test case is a prototype.");
-//    }
-//
-//    /**
-//     * Test of getPriceAfterDiscount method, of class SalesService.
-//     */
-//    @Test
-//    public void testGetPriceAfterDiscount() throws Exception {
-//        System.out.println("getPriceAfterDiscount");
-//        Transaction transaction = null;
-//        float discount = 0.0F;
-//        SalesService instance = null;
-//        float expResult = 0.0F;
-//        float result = instance.getPriceAfterDiscount(transaction, discount);
-//        assertEquals(expResult, result, 0.0);
-//        // TODO review the generated test code and remove the default call to fail.
-//        fail("The test case is a prototype.");
-//    }
-//
-//    /**
-//     * Test of getFinalPrice method, of class SalesService.
-//     */
-//    @Test
-//    public void testGetFinalPrice() throws Exception {
-//        System.out.println("getFinalPrice");
-//        Transaction transaction = null;
-//        float discount = 0.0F;
-//        boolean useLoyaltyPoints = false;
-//        SalesService instance = null;
-//        float expResult = 0.0F;
-//        float result = instance.getFinalPrice(transaction, discount, useLoyaltyPoints);
-//        assertEquals(expResult, result, 0.0);
-//        // TODO review the generated test code and remove the default call to fail.
-//        fail("The test case is a prototype.");
-//    }
-//    
+
+    /**
+     * Test of checkout method, of class SalesService.
+     */
+    @Test
+    public void testCheckout() throws Exception {
+        System.out.println("checkout");
+        date = new Date();
+        customer = new Member("Zaid", "111", 150);
+        category = new Category("CLO", "colthing");
+        index = 3;
+        product = new Product(category, index, "Clothes", "Really Nice",100, 100,"558944", 100, 100);
+        transaction = new Transaction(1, date, customer);
+        transactionDetail=new TransactionDetail(transaction,product, 3);
+        transaction.addTransactionDetail(transactionDetail);
+        int discount = 20;
+        service.checkout(transaction, discount, false);
+        assertEquals(product.getQuantity(), 97);
+    }
+
+    /**
+     * Test of getPriceAfterDiscount method, of class SalesService.
+     */
+    @Test
+    public void testGetPriceAfterDiscount() throws Exception {
+        System.out.println("getPriceAfterDiscount");
+        date = new Date();
+        customer= Customer.getInstance();
+        category= new Category("CLO", "colthing");
+        index=3;
+        product = new Product(category, index, "Clothes", "Really Nice",327, 100,"558944", 56, 100);
+        transaction = new Transaction(1, date, customer);
+        transactionDetail=new TransactionDetail(transaction,product, 3);
+        transaction.addTransactionDetail(transactionDetail);
+        int discount = 20;
+        float price = transaction.getTotalWithoutDiscount();
+        float expResult = (price-price*((float)discount/100));
+        float result = service.getPriceAfterDiscount(transaction, discount);
+        assertEquals(expResult, result,0.0F);       
+    }
+
+    /**
+     * Test of getFinalPrice method, of class SalesService.
+     */
+    @Test
+    public void testGetFinalPrice() throws Exception {
+        System.out.println("getFinalPrice");
+        date = new Date();
+        customer= Customer.getInstance();
+        transaction = new Transaction(1, date, customer);
+        category= new Category("CLO", "clothing");
+        index = 1;
+        product = new Product(category, index, "Clothes", "Really Nice",100, 100,"100", 100, 100);
+        transactionDetail = new TransactionDetail(transaction, product, 3);
+        transaction.addTransactionDetail(transactionDetail);
+        int discount = 20;
+        boolean useLoyaltyPoints = false;
+        float result = service.getFinalPrice(transaction, discount, useLoyaltyPoints);
+        System.out.println(result);
+        assertTrue(result == 240);
+    }
+    
 }
