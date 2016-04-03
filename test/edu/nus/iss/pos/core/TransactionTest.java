@@ -19,7 +19,7 @@ import static org.junit.Assert.*;
  * @author Zaid
  */
 public class TransactionTest {
-    
+
     private int id;
     private Date date;
     private Customer customer;
@@ -27,18 +27,18 @@ public class TransactionTest {
     private Product product;
     private Category category;
     private TransactionDetail transactionDetail;
-    
+
     public TransactionTest() {
     }
-    
+
     @BeforeClass
     public static void setUpClass() {
     }
-    
+
     @AfterClass
     public static void tearDownClass() {
     }
-    
+
     @Before
     public void setUp() {
         this.id = 1;
@@ -46,10 +46,10 @@ public class TransactionTest {
         this.customer = new Customer();
         this.transaction = new Transaction(this.id, this.date, this.customer);
         this.category = new Category("CLO", "clothing");
-        this.product = new Product(this.category, 1, "productA", "this is a product",  100, 100, "111", 100, 100);
+        this.product = new Product(this.category, 1, "productA", "this is a product", 100, 100, "111", 100, 100);
         this.transactionDetail = new TransactionDetail(this.transaction, this.product, 1);
     }
-    
+
     @After
     public void tearDown() {
     }
@@ -175,5 +175,5 @@ public class TransactionTest {
         float result = instance.getTotalWithoutDiscount();
         assertEquals(expResult, result, 0.0);
     }
-    
+
 }
