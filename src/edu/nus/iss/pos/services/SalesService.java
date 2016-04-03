@@ -69,8 +69,8 @@ public class SalesService implements ISalesService {
     
     public float getPriceAfterDiscount(Transaction transaction, int discount) throws Exception {
        float price = transaction.getTotalWithoutDiscount();
-       price -=  price * (discount/100);
-       return price;
+       float result =  price - price * (float)discount / 100;
+       return result;
     }
 
     @Override
