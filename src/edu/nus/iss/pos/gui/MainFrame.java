@@ -19,10 +19,11 @@ import edu.nus.iss.pos.services.DiscountsService;
 import edu.nus.iss.pos.services.InventoryService;
 import edu.nus.iss.pos.services.MembershipService;
 import edu.nus.iss.pos.services.SalesService;
+import java.awt.Color;
 import java.awt.Component;
 import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.util.ArrayList;
+import java.awt.event.FocusEvent;
+import java.awt.event.FocusListener;
 import java.util.Collection;
 import java.util.List;
 import java.util.logging.Level;
@@ -32,7 +33,14 @@ import javax.swing.JButton;
 import javax.swing.JOptionPane;
 import javax.swing.JSpinner;
 import javax.swing.JTable;
+import javax.swing.JTextField;
 import javax.swing.SpinnerNumberModel;
+import javax.swing.SwingConstants;
+import javax.swing.event.CellEditorListener;
+import javax.swing.event.ChangeEvent;
+import javax.swing.event.ChangeListener;
+import javax.swing.event.DocumentEvent;
+import javax.swing.event.DocumentListener;
 import javax.swing.table.AbstractTableModel;
 import javax.swing.table.TableCellEditor;
 import javax.swing.table.TableCellRenderer;
@@ -44,12 +52,12 @@ import javax.swing.table.TableColumn;
  */
 public class MainFrame extends javax.swing.JFrame {
 
-    private IMembershipService membershipService;
+    private final IMembershipService membershipService;
     private Customer customer;
-    private ISalesService salesService;
-    private IInventoryService inventoryService;
-    private Transaction currentTransaction;
-    private IDiscountsService discountsService;
+    private final ISalesService salesService;
+    private final IInventoryService inventoryService;
+    private final Transaction currentTransaction;
+    private final IDiscountsService discountsService;
     
     public MainFrame(IMembershipService membershipService, ISalesService salesService, IInventoryService inventoryService,IDiscountsService discountsService) throws Exception {
         initComponents();
@@ -58,67 +66,44 @@ public class MainFrame extends javax.swing.JFrame {
         this.inventoryService = inventoryService;
         this.salesService = salesService;
         this.membershipService = membershipService;
-        this.customer = new Customer();
+        this.customer = Customer.getInstance();
         currentTransaction = salesService.beginTransaction(customer);
-        
+        removeMember();
         mySetComponents();
+    
         
     }
     
-    public void mySetComponents(){
+    
+    
+    public final void mySetComponents(){
         this.jTextField1.setEditable(false);
+        this.jTextField1.getDocument().addDocumentListener(new DocumentListener() {
+            @Override
+            public void insertUpdate(DocumentEvent e) {
+               jTextFieldTextChanged();
+            }
+
+            @Override
+            public void removeUpdate(DocumentEvent e) {
+                jTextFieldTextChanged();
+            }
+
+            @Override
+            public void changedUpdate(DocumentEvent e) {
+                jTextFieldTextChanged();
+            }
+         });
         this.jTable1.setModel(new TransactionTableModel(this.currentTransaction));
         
         TableColumn tableColumn = this.jTable1.getColumnModel().getColumn(2);
         tableColumn.setCellEditor(new QuantityEditor());
         tableColumn.setCellRenderer(new QuantityRenderer());
         
-        TableColumn tableColumn2 = this.jTable1.getColumnModel().getColumn(3);
-        tableColumn2.setCellEditor(new ButtonEditor());
+        TableColumn tableColumn2 = this.jTable1.getColumnModel().getColumn(4);
         tableColumn2.setCellRenderer(new ButtonRenderer());
         
     }
-    class ButtonEditor extends AbstractCellEditor implements TableCellEditor, ActionListener{
-        
-        private JButton jButton;
-        private JTable jTable;
-        private int row;
-        private int column;
-        
-        public ButtonEditor(){
-            this.jButton = new JButton("delete");
-            jButton.setOpaque(true);
-            jButton.addActionListener(this);
-        }
-
-        @Override
-        public Object getCellEditorValue() {
-            return "";
-        }
-
-        @Override
-        public Component getTableCellEditorComponent(JTable table, Object value, boolean isSelected, int row, int column) {
-            this.jTable = table;
-            this.row = row;
-            this.column = column;
-            return this.jButton;
-        }
-
-        @Override
-        public void actionPerformed(ActionEvent e) {
-           int i=0;
-           for(TransactionDetail d : currentTransaction.getTransactionDetails()){
-               if(i == this.row){
-                   currentTransaction.removeTransactionDetail(d);
-                   break;
-               }
-               i++;
-           }
-            jTable.updateUI();
-            
-        }
-    }
-    
         
     class ButtonRenderer implements TableCellRenderer {
         
@@ -130,56 +115,101 @@ public class MainFrame extends javax.swing.JFrame {
         @Override
         public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, boolean hasFocus, int row, int column) {
            // button.setEnabled((boolean) value);
+            button.addActionListener((ActionEvent e) -> {
+                int i=0;
+                for(TransactionDetail d : currentTransaction.getTransactionDetails()){
+                    if(i == row){
+                        currentTransaction.removeTransactionDetail(d);
+                        break;
+                    }
+                    i++;
+                }
+                table.updateUI();
+            });
             return button;
         }
     }
     
+    
+    class CellJSpinner extends JSpinner{
+        public int row;
+        
+        public void clearListeners(){
+            for(ChangeListener l : this.getChangeListeners()){
+                this.removeChangeListener(l);
+            }
+        }
+    }
     class QuantityEditor extends AbstractCellEditor implements TableCellEditor{
 
-        private JTable jTable;
-        private int row;
-        private int column;
-        private JSpinner jSpinner;
+        private final CellJSpinner jSpinner;
         
         public QuantityEditor(){
-            this.jSpinner = new JSpinner();
+            this.jSpinner = new CellJSpinner();
             SpinnerNumberModel model = new SpinnerNumberModel();
             model.setMinimum(1);
             model.setMaximum(1);
             this.jSpinner.setModel(model);
+            ((JSpinner.DefaultEditor)jSpinner.getEditor()).getTextField().setHorizontalAlignment(JTextField.CENTER);
+            jSpinner.addChangeListener((ChangeEvent e) -> {
+                TransactionTableModel model1 = (TransactionTableModel) jTable1.getModel();
+                if (e.getSource().equals(jSpinner)) {
+                    model1.setValueAt(jSpinner.getValue(), jSpinner.row, 2);
+                    model1.fireTableDataChanged();
+                    try {
+                        refreshTotal();
+                    } catch (Exception ex) {
+                    }
+                }
+            });
         }
 
         @Override
         public Object getCellEditorValue() {
             return this.jSpinner.getValue();
         }
+        
 
         @Override
         public Component getTableCellEditorComponent(JTable table, Object value, boolean isSelected, int row, int column) {
-            this.jTable = table;
-            this.row = row;
-            this.column = column;
+            this.jSpinner.row = row;  
             this.jSpinner.setValue(Integer.parseInt(value.toString()));
-            int max = ((TransactionTableModel)table.getModel()).getTransactionDetailAt(row).getProduct().getQuantity();
+            TransactionTableModel model = (TransactionTableModel) jTable1.getModel();
+            TransactionDetail detail =  model.getTransactionDetailAt(row);
+            int max = detail.getProduct().getQuantity();
             ((SpinnerNumberModel)this.jSpinner.getModel()).setMaximum(max);
             return this.jSpinner;
         }
 
     }
     
+    protected void refreshTotal() throws Exception {
+        int discount = discountsService.getDiscountForTransaction(currentTransaction);
+        float finalPrice = this.salesService.getFinalPrice(currentTransaction, discount, this.jCheckBox1.isSelected());
+        if(this.customer instanceof Member){
+            
+            this.jLabel11.setText(((Member)this.customer).pointsAvaliableForRedeemtion(finalPrice) + "");
+            jLabel9.setText(Member.convertDollarsToPoints(finalPrice) + "");
+        }else{
+            jLabel9.setText("0");
+        }
         
+        jLabel2.setText(String.format("%.2f", finalPrice));
+        jLabel4.setText(String.format("%d%%", discount));
+    } 
+    
     class QuantityRenderer implements TableCellRenderer {
         
-        private JSpinner jSpinner;
+        private final JSpinner jSpinner;
         
-        public QuantityRenderer() {
+            public QuantityRenderer() {
             this.jSpinner = new JSpinner();
+            ((JSpinner.DefaultEditor)this.jSpinner.getEditor()).getTextField().setHorizontalAlignment(JTextField.CENTER);
         }
         @Override
         public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, boolean hasFocus, int row, int column) {
-           // button.setEnabled((boolean) value);
            this.jSpinner.setValue(Integer.parseInt(value.toString()));
-            return this.jSpinner;
+           return this.jSpinner;
         }
     }
     
@@ -200,8 +230,8 @@ public class MainFrame extends javax.swing.JFrame {
     
     class TransactionTableModel extends AbstractTableModel{
         
-        private String column[] = {"product name", "price", "quantity", "operation"};
-        private Transaction transaction;
+        private final String column[] = {"product name", "price", "quantity","sub total", "operation"};
+        private final Transaction transaction;
         
         public TransactionTableModel(Transaction transaction){
             this.transaction = transaction;
@@ -223,11 +253,13 @@ public class MainFrame extends javax.swing.JFrame {
            
             switch(columnIndex){
                 case 0:
-                    return c.get(rowIndex).getProduct().getName().toString();
+                    return c.get(rowIndex).getProduct().getName();
                 case 1:
                     return c.get(rowIndex).getProduct().getPrice();
                 case 2:
                     return c.get(rowIndex).getQuantityPurchased();
+                case 3:
+                    return c.get(rowIndex).getQuantityPurchased() * c.get(rowIndex).getProduct().getPrice();
                 default:
             }
             return null;
@@ -244,6 +276,10 @@ public class MainFrame extends javax.swing.JFrame {
             switch(columnIndex){
                 case 2:
                     c.get(rowIndex).setQuantityPurchased(Integer.parseInt(aValue.toString()));
+                    break;
+                case 3:
+                    super.setValueAt(aValue, rowIndex, columnIndex);
+                    break;
                 default:
             }
             fireTableCellUpdated(rowIndex, columnIndex);
@@ -251,7 +287,7 @@ public class MainFrame extends javax.swing.JFrame {
         
         @Override
         public boolean isCellEditable(int row, int column){
-            if(column == 2 || column == 3){
+            if(column == 2 || column == 4){
                 return true;
             }
             return false;
@@ -283,13 +319,15 @@ public class MainFrame extends javax.swing.JFrame {
         jDialog4 = new javax.swing.JDialog();
         jPanel3 = new javax.swing.JPanel();
         jPanel6 = new javax.swing.JPanel();
-        jCheckBox1 = new javax.swing.JCheckBox();
         jTextField1 = new javax.swing.JTextField();
-        jButton4 = new javax.swing.JButton();
+        jLabel5 = new javax.swing.JLabel();
+        jLabel6 = new javax.swing.JLabel();
+        jLabel7 = new javax.swing.JLabel();
         jPanel7 = new javax.swing.JPanel();
         jScrollPane1 = new javax.swing.JScrollPane();
         jTable1 = new javax.swing.JTable();
         jButton1 = new javax.swing.JButton();
+        jButton4 = new javax.swing.JButton();
         jPanel5 = new javax.swing.JPanel();
         jLabel1 = new javax.swing.JLabel();
         jLabel2 = new javax.swing.JLabel();
@@ -297,6 +335,11 @@ public class MainFrame extends javax.swing.JFrame {
         jLabel4 = new javax.swing.JLabel();
         jButton2 = new javax.swing.JButton();
         jButton3 = new javax.swing.JButton();
+        jCheckBox1 = new javax.swing.JCheckBox();
+        jLabel8 = new javax.swing.JLabel();
+        jLabel9 = new javax.swing.JLabel();
+        jLabel10 = new javax.swing.JLabel();
+        jLabel11 = new javax.swing.JLabel();
         jMenuBar1 = new javax.swing.JMenuBar();
         jMenu1 = new javax.swing.JMenu();
         jMenuItem1 = new javax.swing.JMenuItem();
@@ -383,33 +426,42 @@ public class MainFrame extends javax.swing.JFrame {
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
-        jCheckBox1.setText("Member");
-        jCheckBox1.addActionListener(new java.awt.event.ActionListener() {
+        jTextField1.setEditable(false);
+        jTextField1.setBackground(java.awt.Color.gray);
+        jTextField1.setForeground(new java.awt.Color(0, 153, 0));
+        jTextField1.addFocusListener(new java.awt.event.FocusAdapter() {
+            public void focusGained(java.awt.event.FocusEvent evt) {
+                jTextField1FocusGained(evt);
+            }
+            public void focusLost(java.awt.event.FocusEvent evt) {
+                jTextField1FocusLost(evt);
+            }
+        });
+        jTextField1.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jCheckBox1ActionPerformed(evt);
+                jTextField1ActionPerformed(evt);
             }
         });
 
-        jTextField1.setText("jTextField1");
+        jLabel5.setText("Member Name");
 
-        jButton4.setText("check");
-        jButton4.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton4ActionPerformed(evt);
-            }
-        });
+        jLabel6.setText("Points");
+
+        jLabel7.setText("Member ID");
 
         javax.swing.GroupLayout jPanel6Layout = new javax.swing.GroupLayout(jPanel6);
         jPanel6.setLayout(jPanel6Layout);
         jPanel6Layout.setHorizontalGroup(
             jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel6Layout.createSequentialGroup()
-                .addGap(21, 21, 21)
-                .addComponent(jCheckBox1)
+                .addContainerGap()
+                .addComponent(jLabel7)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, 224, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(jTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, 222, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jButton4)
+                .addComponent(jLabel5, javax.swing.GroupLayout.PREFERRED_SIZE, 94, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jLabel6)
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         jPanel6Layout.setVerticalGroup(
@@ -417,10 +469,11 @@ public class MainFrame extends javax.swing.JFrame {
             .addGroup(jPanel6Layout.createSequentialGroup()
                 .addGap(20, 20, 20)
                 .addGroup(jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jCheckBox1)
                     .addComponent(jTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jButton4))
-                .addContainerGap(35, Short.MAX_VALUE))
+                    .addComponent(jLabel5)
+                    .addComponent(jLabel6)
+                    .addComponent(jLabel7))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
         jTable1.setModel(new javax.swing.table.DefaultTableModel(
@@ -446,24 +499,35 @@ public class MainFrame extends javax.swing.JFrame {
             }
         });
 
+        jButton4.setText("Clear");
+        jButton4.setAlignmentY(0.0F);
+        jButton4.setAutoscrolls(true);
+        jButton4.setIconTextGap(0);
+        jButton4.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton4ActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout jPanel7Layout = new javax.swing.GroupLayout(jPanel7);
         jPanel7.setLayout(jPanel7Layout);
         jPanel7Layout.setHorizontalGroup(
             jPanel7Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addComponent(jScrollPane1, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 492, Short.MAX_VALUE)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel7Layout.createSequentialGroup()
-                .addGroup(jPanel7Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jScrollPane1)
-                    .addGroup(jPanel7Layout.createSequentialGroup()
-                        .addGap(166, 166, 166)
-                        .addComponent(jButton1)
-                        .addGap(0, 0, Short.MAX_VALUE)))
-                .addGap(0, 0, 0))
+                .addContainerGap()
+                .addComponent(jButton1)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(jButton4)
+                .addContainerGap())
         );
         jPanel7Layout.setVerticalGroup(
             jPanel7Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel7Layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(jButton1)
+                .addGroup(jPanel7Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jButton1)
+                    .addComponent(jButton4))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 223, Short.MAX_VALUE))
         );
@@ -493,6 +557,7 @@ public class MainFrame extends javax.swing.JFrame {
         jLabel3.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         jLabel3.setText("Discount");
 
+        jLabel4.setBackground(new java.awt.Color(255, 255, 204));
         jLabel4.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         jLabel4.setText("0.00");
 
@@ -510,29 +575,65 @@ public class MainFrame extends javax.swing.JFrame {
             }
         });
 
+        jCheckBox1.setText("Use Loyalty Points");
+        jCheckBox1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jCheckBox1ActionPerformed(evt);
+            }
+        });
+
+        jLabel8.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        jLabel8.setText("New Points");
+
+        jLabel9.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        jLabel9.setText("0");
+
+        jLabel10.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        jLabel10.setText("Consumed Points");
+
+        jLabel11.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        jLabel11.setText("0");
+
         javax.swing.GroupLayout jPanel5Layout = new javax.swing.GroupLayout(jPanel5);
         jPanel5.setLayout(jPanel5Layout);
         jPanel5Layout.setHorizontalGroup(
             jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel5Layout.createSequentialGroup()
+            .addGroup(jPanel5Layout.createSequentialGroup()
                 .addContainerGap()
-                .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addComponent(jButton2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(jLabel2, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(jLabel1, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(jLabel4, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(jLabel3, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 137, Short.MAX_VALUE)
-                    .addComponent(jButton3, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jButton2, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(jLabel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(jLabel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(jLabel4, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(jLabel3, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(jButton3, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addGroup(jPanel5Layout.createSequentialGroup()
+                        .addComponent(jCheckBox1)
+                        .addGap(0, 0, Short.MAX_VALUE))
+                    .addComponent(jLabel8, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(jLabel9, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(jLabel10, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(jLabel11, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addContainerGap())
         );
         jPanel5Layout.setVerticalGroup(
             jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel5Layout.createSequentialGroup()
-                .addGap(132, 132, 132)
+                .addGap(14, 14, 14)
                 .addComponent(jLabel3)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jLabel4)
-                .addGap(27, 27, 27)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 42, Short.MAX_VALUE)
+                .addComponent(jCheckBox1)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jLabel8)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jLabel9, javax.swing.GroupLayout.PREFERRED_SIZE, 16, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jLabel10, javax.swing.GroupLayout.PREFERRED_SIZE, 16, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jLabel11, javax.swing.GroupLayout.PREFERRED_SIZE, 16, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jLabel1)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jLabel2)
@@ -540,7 +641,7 @@ public class MainFrame extends javax.swing.JFrame {
                 .addComponent(jButton2)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jButton3)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addContainerGap())
         );
 
         jMenu1.setText("Inventory");
@@ -634,40 +735,17 @@ public class MainFrame extends javax.swing.JFrame {
         // TODO add your handling code here:
     }//GEN-LAST:event_jButton3ActionPerformed
 
-    private void jCheckBox1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jCheckBox1ActionPerformed
-        this.jTextField1.setEditable(this.jCheckBox1.isSelected());
-    }//GEN-LAST:event_jCheckBox1ActionPerformed
-
-    private void jButton4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton4ActionPerformed
-        try {
-            // TODO add your handling code here:
-            //if the input is not a member, then show a message dialog
-            Member m = this.membershipService.searchMemberByName(this.jTextField1.getText());
-            if(m == null){
-                Object[] options = { "OK", "CANCEL" }; 
-                    JOptionPane.showOptionDialog(null, "No souch member, do you want to add a new Member?", "Warning", 
-                    JOptionPane.DEFAULT_OPTION, JOptionPane.WARNING_MESSAGE, 
-                    null, options, options[0]); 
-                    
-            } else {
-               this.customer = m;
-               this.currentTransaction.setCustomer(customer);
-            }
-        } catch (Exception ex) {
-            Logger.getLogger(MainFrame.class.getName()).log(Level.SEVERE, null, ex);
-        }
-    }//GEN-LAST:event_jButton4ActionPerformed
-
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
         try {
             // TODO add your handling code here:
-            String barcode = JOptionPane.showInputDialog("Please input the barcode for the product");
+            String barcode = JOptionPane.showInputDialog("Please input the barcode of the product");
             Product product = this.searchProduct(barcode);
             if(product != null){
                 this.salesService.addToCart(currentTransaction, product, 1);
                 this.jTable1.updateUI();
+                this.jLabel2.setText(this.currentTransaction.getTotalWithoutDiscount() + "");
             } else {
-                JOptionPane.showMessageDialog(null, "no such product", "no such product", JOptionPane.ERROR_MESSAGE); 
+                JOptionPane.showMessageDialog(null, "No such product", "No such product", JOptionPane.ERROR_MESSAGE); 
             }
         } catch (Exception ex) {
             Logger.getLogger(MainFrame.class.getName()).log(Level.SEVERE, null, ex);
@@ -678,12 +756,101 @@ public class MainFrame extends javax.swing.JFrame {
         try {
             // TODO add your handling code here:
             int discount = this.discountsService.getDiscountForTransaction(currentTransaction);
-            this.salesService.checkout(currentTransaction, discount, false);
+            this.salesService.checkout(currentTransaction, discount, this.jCheckBox1.isSelected());
         } catch (Exception ex) {
             Logger.getLogger(MainFrame.class.getName()).log(Level.SEVERE, null, ex);
         }
     }//GEN-LAST:event_jButton2ActionPerformed
 
+    private void jTextField1FocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_jTextField1FocusLost
+        if(this.jTextField1.getText().equals("")){
+            this.jTextField1.setEditable(false);
+            this.jTextField1.setBackground(Color.gray);
+        }else{
+            if(!(this.customer instanceof Member)){
+                Object[] options = { "OK", "CANCEL" };
+                int result = JOptionPane.showOptionDialog(null, "No souch member, do you want to add a new Member?", "Warning",
+                        JOptionPane.DEFAULT_OPTION, JOptionPane.WARNING_MESSAGE,
+                        null, options, options[0]);
+                if(result != JOptionPane.OK_OPTION){
+                    this.jTextField1.requestFocus();
+                }else{
+                    //MemberRegistration newMemberFrame = new MemberRegistration(this, true, membershipService);
+                    //newMemberFrame.setVisible(true);
+                    //Member m = newMemberFrame.getMember();
+                    //if(m==null){
+                        this.jTextField1.requestFocus();
+                    //}else{
+                        //try {
+                        //    setMember(m);
+                        //} catch (Exception ex) {
+                        //}
+                    //}
+                }
+            }
+        }
+    }//GEN-LAST:event_jTextField1FocusLost
+
+    private void removeMember(){
+        this.customer = Customer.getInstance();
+        this.currentTransaction.setCustomer(customer);
+        jLabel5.setText("   ");
+        jLabel4.setText(String.format("%d%%", 0));
+        jLabel6.setText("   ");
+    }
+    private void setMember(Member m) throws Exception{
+        if(m != null){
+            this.customer = m;
+            this.currentTransaction.setCustomer(customer);
+            jLabel5.setText(m.getName());
+            jLabel6.setText(m.getLoyaltyPoints() + "");
+            int discount = discountsService.getDiscountForTransaction(currentTransaction);
+            jLabel4.setText(String.format("%d%%", discount));
+            refreshTotal();
+            
+        }else{
+            removeMember();
+        }
+    }
+    private void jTextField1FocusGained(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_jTextField1FocusGained
+        // TODO add your handling code here:
+        this.jTextField1.setEditable(true);
+        this.jTextField1.setBackground(Color.white);
+    }//GEN-LAST:event_jTextField1FocusGained
+
+    private void jTextField1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jTextField1ActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_jTextField1ActionPerformed
+
+    private void jButton4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton4ActionPerformed
+        // TODO add your handling code here:
+        currentTransaction.clearTransactionDetail();
+        jTable1.updateUI();
+    }//GEN-LAST:event_jButton4ActionPerformed
+
+    private void jCheckBox1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jCheckBox1ActionPerformed
+        // TODO add your handling code here:
+        this.jLabel10.setVisible(this.jCheckBox1.isSelected());
+        this.jLabel11.setVisible(this.jCheckBox1.isSelected());
+        try {
+            refreshTotal();
+        } catch (Exception ex) {
+        }
+    }//GEN-LAST:event_jCheckBox1ActionPerformed
+
+    private void jTextFieldTextChanged(){
+        try {
+            Member m = this.membershipService.searchMemberById(this.jTextField1.getText());
+            setMember(m);
+        } catch (Exception ex) {
+        }
+        if(this.customer instanceof Member){
+            this.jTextField1.setForeground(new Color(0,153,0));
+        }else{
+            this.jTextField1.setForeground(Color.red);
+        }
+    }
+    
     private Product searchProduct(String barcode) throws Exception{
         Product product = this.inventoryService.searchProductByBarcode(barcode);
         return product;
@@ -700,9 +867,16 @@ public class MainFrame extends javax.swing.JFrame {
     private javax.swing.JDialog jDialog3;
     private javax.swing.JDialog jDialog4;
     private javax.swing.JLabel jLabel1;
+    private javax.swing.JLabel jLabel10;
+    private javax.swing.JLabel jLabel11;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
+    private javax.swing.JLabel jLabel5;
+    private javax.swing.JLabel jLabel6;
+    private javax.swing.JLabel jLabel7;
+    private javax.swing.JLabel jLabel8;
+    private javax.swing.JLabel jLabel9;
     private javax.swing.JMenu jMenu1;
     private javax.swing.JMenu jMenu2;
     private javax.swing.JMenu jMenu3;

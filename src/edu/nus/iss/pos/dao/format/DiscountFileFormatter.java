@@ -58,8 +58,7 @@ public class DiscountFileFormatter implements IFileFormatter<Discount>{
         if(params.length != 6) throw new Exception("Cannot map the data to entity!");
         String code = params[0];
         String description = params[1];
-        int percentage = Integer.parseInt(params[5]);
-        
+        int percentage = Integer.parseInt(params[4]);
         if(code.equals("MEMBER_FIEST")){
             return new FirstPurchaseDiscount(code, description, percentage);
         }else if(code.equals("MEMBER_SUBSEQ")){
@@ -67,7 +66,7 @@ public class DiscountFileFormatter implements IFileFormatter<Discount>{
         }else{
             Date startDate = dateFormatter.parse(params[2]);
             int discountPeriod = Integer.parseInt(params[3]);
-            boolean forMembers = Boolean.parseBoolean(params[6]);
+            boolean forMembers = "M".equals(params[5]);
             return new PeriodDiscount(code, description, percentage, startDate, discountPeriod, forMembers);
         }
     }

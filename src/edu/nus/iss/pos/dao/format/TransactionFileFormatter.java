@@ -62,7 +62,7 @@ public class TransactionFileFormatter implements IFileFormatter<Transaction>{
                 Date purchasedDate = dateFormatter.parse(params[4]);
                 Customer c ;
                 if(memberId.equals("PUBLIC")){
-                    c = new Customer();
+                    c = Customer.getInstance();
                 }else{
                     c = (Member) unitOfWork.getRepository(RepoType.Member).getByKey(memberId);
                 }

@@ -74,11 +74,15 @@ public class Transaction implements IEntity {
         transactionDetails.remove(transactionDetail);
     }
     
+    public void clearTransactionDetail(){
+        transactionDetails.clear();
+    }
+    
     public float getTotalWithoutDiscount(){
         float sum = 0;
         Iterable<TransactionDetail> transactionDetails =  this.getTransactionDetails();
         for(TransactionDetail detail : transactionDetails){
-            sum += detail.getProduct().getPrice();
+            sum += detail.getProduct().getPrice() * detail.getQuantityPurchased();
         }
         return sum;
     }

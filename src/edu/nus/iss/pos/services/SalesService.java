@@ -38,16 +38,21 @@ public class SalesService implements ISalesService {
     public void checkout(Transaction transaction,int discount, boolean useLoyaltyPoints) throws Exception {
         boolean isMember = transaction.getCustomer() instanceof Member;
         float price = getPriceAfterDiscount(transaction, discount);
-        if(isMember && useLoyaltyPoints){
+        if(isMember){
             Member member = (Member) transaction.getCustomer();
-            member.redeemPoints(price, true);
+            if(useLoyaltyPoints){
+                price = member.redeemPoints(price, true);
+            }
+            member.addLoyaltyPoints(price);
+            unitOfWork.getRepository(RepoType.Member).update(member.getKey(), member);
         }
         IRepository<Product> productRepo = unitOfWork.getRepository(RepoType.Product);
         for(TransactionDetail d : transaction.getTransactionDetails()){
             d.getProduct().setQuantity(d.getProduct().getQuantity() - d.getQuantityPurchased());
             productRepo.update(d.getProduct().getKey(), d.getProduct());
         }
-       unitOfWork.getRepository(RepoType.Transaction).update(transaction.getKey(), transaction);
+        unitOfWork.getRepository(RepoType.Transaction).update(transaction.getKey(), transaction);
+       
     }
         
     private int getNewId() throws Exception{

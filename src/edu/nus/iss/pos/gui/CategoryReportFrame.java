@@ -130,6 +130,11 @@ public class CategoryReportFrame extends javax.swing.JFrame {
         public int getRowCount() {
             return this.categoryList.size();
         }
+        
+        @Override
+        public String getColumnName(int cloumnIndex){
+            return this.columns[cloumnIndex];
+        }
 
         @Override
         public int getColumnCount() {
