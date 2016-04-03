@@ -15,7 +15,7 @@ import java.util.logging.Logger;
  *
  * @author Liu Zhenchang
  */
-public class MemberRegistration extends javax.swing.JFrame {
+public class MemberRegistration extends CustomedFrame {
     
     private IMembershipService memberService = null;
     /**
@@ -44,6 +44,7 @@ public class MemberRegistration extends javax.swing.JFrame {
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setTitle("Member Registration");
+        setPreferredSize(new java.awt.Dimension(340, 200));
 
         jLabel1.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
         jLabel1.setText("Name:");

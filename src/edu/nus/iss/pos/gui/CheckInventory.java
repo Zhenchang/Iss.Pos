@@ -12,6 +12,7 @@ import edu.nus.iss.pos.services.InventoryService;
 import java.awt.Color;
 import java.awt.Component;
 import java.awt.Dimension;
+import java.awt.FlowLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
@@ -19,6 +20,7 @@ import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.AbstractCellEditor;
+import javax.swing.GroupLayout;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
@@ -34,7 +36,7 @@ import javax.swing.table.TableColumn;
  *
  * @author Liu Zhenchang
  */
-public class CheckInventory extends JFrame {
+public class CheckInventory extends CustomedFrame {
     
     private IInventoryService inventoryService = null;
     private JPanel jPanel1 = null;
@@ -52,10 +54,11 @@ public class CheckInventory extends JFrame {
         ProductTableModel model = new ProductTableModel(inventoryService.getProductsBelowThreshold());
         productsTable.setModel(model);
         
-        
         TableColumn tc = productsTable.getColumnModel().getColumn(8);
         tc.setCellEditor(new ButtonEditor());
         tc.setCellRenderer(new ButtonRenderer());
+        
+        super.getContentPane().setLayout(new FlowLayout());
         
         TableColumn tc2 = productsTable.getColumnModel().getColumn(7);
         tc2.setCellRenderer(new TextFieldRender());
@@ -64,10 +67,11 @@ public class CheckInventory extends JFrame {
         jScrollPane1.setPreferredSize(new Dimension(1000, 200));
         jPanel1 = new JPanel();
         jPanel1.add(jScrollPane1);
-        add(jPanel1);
-        setTitle("Check inventory");
-        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        pack();
+        super.setPreferredSize(new Dimension(1050, 300));
+        super.add(jPanel1);
+        super.setTitle("Check inventory");
+        super.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        super.pack();
     }
 
     

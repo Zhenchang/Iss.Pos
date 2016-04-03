@@ -36,13 +36,12 @@ import org.jdatepicker.JDatePicker;
  *
  * @author Liu Zhenchang
  */
-public class TransactionReport extends javax.swing.JFrame {
+public class TransactionReport extends CustomedFrame {
     
     private TransactionTableModel model = null;
     private List<TransactionDetail> details = null;
     private UnitOfWork unitOfWork = null;
     private ISalesService saleService = null;
-    private IInventoryService inventoryService = null;
     
     /**
      * Creates new form TransactionReport2
@@ -51,7 +50,6 @@ public class TransactionReport extends javax.swing.JFrame {
     TransactionReport() throws Exception {
         unitOfWork = new UnitOfWork();
         saleService = new SalesService(unitOfWork);
-        inventoryService = new InventoryService(unitOfWork);
         details = new ArrayList();
         Calendar c = Calendar.getInstance();
         Date end = c.getTime();
@@ -118,8 +116,6 @@ public class TransactionReport extends javax.swing.JFrame {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        jScrollPane1 = new javax.swing.JScrollPane();
-        jList1 = new javax.swing.JList<>();
         jPanel1 = new javax.swing.JPanel();
         jLabel1 = new javax.swing.JLabel();
         startDatePanel = new javax.swing.JPanel();
@@ -129,14 +125,9 @@ public class TransactionReport extends javax.swing.JFrame {
         jScrollPane2 = new javax.swing.JScrollPane();
         table = new javax.swing.JTable();
 
-        jList1.setModel(new javax.swing.AbstractListModel<String>() {
-            String[] strings = { "Item 1", "Item 2", "Item 3", "Item 4", "Item 5" };
-            public int getSize() { return strings.length; }
-            public String getElementAt(int i) { return strings[i]; }
-        });
-        jScrollPane1.setViewportView(jList1);
-
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setTitle("Transaction Report");
+        setPreferredSize(new java.awt.Dimension(500, 500));
 
         jLabel1.setText("Start date:");
 
@@ -181,7 +172,7 @@ public class TransactionReport extends javax.swing.JFrame {
                 .addComponent(endDatePanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(27, 27, 27)
                 .addComponent(queryBtn)
-                .addContainerGap(20, Short.MAX_VALUE))
+                .addContainerGap(240, Short.MAX_VALUE))
         );
 
         jPanel1Layout.linkSize(javax.swing.SwingConstants.HORIZONTAL, new java.awt.Component[] {jLabel1, jLabel2});
@@ -319,9 +310,7 @@ public class TransactionReport extends javax.swing.JFrame {
     private javax.swing.JPanel endDatePanel;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
-    private javax.swing.JList<String> jList1;
     private javax.swing.JPanel jPanel1;
-    private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JButton queryBtn;
     private javax.swing.JPanel startDatePanel;
