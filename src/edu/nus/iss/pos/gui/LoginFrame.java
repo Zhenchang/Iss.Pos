@@ -17,6 +17,7 @@ import java.util.logging.Logger;
  */
 public class LoginFrame extends javax.swing.JFrame {
 
+    public static String USER_NAME = "Eric";
     IUsersService usersService;
     private User currentUser = null;
     public LoginFrame(IUsersService usersService) {
@@ -66,6 +67,11 @@ public class LoginFrame extends javax.swing.JFrame {
         });
 
         txtPassword.setName("txtPassword"); // NOI18N
+        txtPassword.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                txtPasswordActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -116,6 +122,7 @@ public class LoginFrame extends javax.swing.JFrame {
                 pwd += s;
             }
             currentUser = usersService.Login(txtUsername.getText(), pwd);
+           // USER_NAME = txtUsername.getText();
         } catch (Exception ex) {
             System.out.println("Username or password is not correct!");
         }
@@ -125,6 +132,10 @@ public class LoginFrame extends javax.swing.JFrame {
         // TODO add your handling code here:
        
     }//GEN-LAST:event_btnCancelActionPerformed
+
+    private void txtPasswordActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtPasswordActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_txtPasswordActionPerformed
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnCancel;

@@ -6,6 +6,7 @@
 package edu.nus.iss.pos.core.services;
 
 import edu.nus.iss.pos.core.User;
+import java.util.List;
 
 
 
@@ -20,4 +21,5 @@ public interface IUsersService {
     User addUser(String username, String password) throws Exception;
     void deleteUser(String username) throws Exception;
     boolean checkPasswordComplexity(String password) throws Exception;
+    List<User> getAllUser() throws Exception;
 }

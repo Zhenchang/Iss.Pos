@@ -59,7 +59,7 @@ public class AddCagagoryFrame extends CustomedFrame {
 
         jDialog1.setTitle("Success!");
         jDialog1.setMinimumSize(new java.awt.Dimension(250, 130));
-        jDialog1.setPreferredSize(new java.awt.Dimension(221, 80));
+        jDialog1.setModal(true);
         jDialog1.setResizable(false);
 
         jLabel3.setText("Add successfully! Continue adding?");
@@ -230,13 +230,21 @@ public class AddCagagoryFrame extends CustomedFrame {
             errLabel1.setText("Category id must be 3 characters!");
             errLabel1.setVisible(true);
             return;
-        } else
+        } else if(idTxt.getText().contains(",")) {
+            errLabel1.setText("Category id can't contain comma!");
+            errLabel1.setVisible(true);
+            return;
+        }else
             errLabel1.setVisible(false);
         if (nameTxt.getText().equals("")) {
             errLabel2.setText("Category name can't be null!");
             errLabel2.setVisible(true);
             return;
-        } else
+        } else if(nameTxt.getText().equals(",")) {
+            errLabel2.setText("Category name can't contain comma!");
+            errLabel2.setVisible(true);
+            return;
+        }else
             errLabel2.setVisible(false);
         try {
             inventoryService.addCategory(idTxt.getText(), nameTxt.getText());

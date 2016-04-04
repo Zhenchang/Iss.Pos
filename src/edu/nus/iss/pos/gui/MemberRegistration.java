@@ -52,6 +52,7 @@ public class MemberRegistration extends CustomedFrame {
         jButton2 = new javax.swing.JButton();
 
         jDialog1.setTitle("Success!");
+        jDialog1.setModal(true);
         jDialog1.setResizable(false);
         jDialog1.setSize(new java.awt.Dimension(250, 130));
 
@@ -116,6 +117,12 @@ public class MemberRegistration extends CustomedFrame {
             }
         });
 
+        idTextField.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                idTextFieldActionPerformed(evt);
+            }
+        });
+
         jButton1.setText("Confirm");
         jButton1.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -168,7 +175,7 @@ public class MemberRegistration extends CustomedFrame {
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jLabel1)
                     .addComponent(nameTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
@@ -191,15 +198,24 @@ public class MemberRegistration extends CustomedFrame {
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
         if(nameTextField.getText().equals("")) {
+            err1.setText("Name can't be null!");
             err1.setVisible(true);
             return;
-        } else
+        } else if(nameTextField.getText().contains(",")) {
+            err1.setText("Name can't contain comma!");
+            err1.setVisible(true);
+            return;
+        }else
             err1.setVisible(false);
         if(idTextField.getText().equals("")) {
             err2.setText("Member id can't be null!");
             err2.setVisible(true);
             return;
-        } else
+        } else if(idTextField.getText().contains(",")) {
+            err2.setText("Member id can't contain comma!");
+            err2.setVisible(true);
+            return;
+        }else
             err2.setVisible(false);
         try {
             // TODO add your handling code here:
@@ -207,6 +223,7 @@ public class MemberRegistration extends CustomedFrame {
         } catch (Exception ex) {
             err2.setText("Member id already exists!");
             err2.setVisible(true);
+            return;
         }
         err1.setVisible(false);
         err2.setVisible(false);
@@ -232,6 +249,10 @@ public class MemberRegistration extends CustomedFrame {
         idTextField.setText("");
         nameTextField.setText("");
     }//GEN-LAST:event_jButton3ActionPerformed
+
+    private void idTextFieldActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_idTextFieldActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_idTextFieldActionPerformed
 
     /**
      * @param args the command line arguments

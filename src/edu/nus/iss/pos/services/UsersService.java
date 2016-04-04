@@ -9,6 +9,8 @@ import edu.nus.iss.pos.core.User;
 import edu.nus.iss.pos.core.dao.IUnitOfWork;
 import edu.nus.iss.pos.core.services.IUsersService;
 import edu.nus.iss.pos.dao.format.RepoType;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  *
@@ -62,5 +64,13 @@ public class UsersService implements IUsersService {
     public boolean checkPasswordComplexity(String password) throws Exception {
         if(password.length() < 4) return false;
         return true;
+    }
+
+    @Override
+    public List<User> getAllUser() throws Exception {
+        List<User> users = new ArrayList();
+        for(Object user : unitOfWork.getRepository(RepoType.User).getAll())
+            users.add((User)user);
+        return users;
     }
 }

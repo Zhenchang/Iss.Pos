@@ -4,6 +4,7 @@ import java.util.Collection;
 
 import edu.nus.iss.pos.core.Category;
 import edu.nus.iss.pos.core.Product;
+import edu.nus.iss.pos.core.Vendor;
 import edu.nus.iss.pos.core.dao.IRepository;
 import edu.nus.iss.pos.core.dao.IUnitOfWork;
 import edu.nus.iss.pos.core.services.IInventoryService;
@@ -209,5 +210,14 @@ public class InventoryService implements IInventoryService {
      @Override
     public Iterable<Category> getAllCategory() throws Exception{
         return unitOfWork.getRepository(RepoType.Category).getAll();
+    }
+
+    @Override
+    public List<Vendor> getAllVendors() throws Exception {
+        IRepository repository = unitOfWork.getRepository(RepoType.Vendor);
+        List<Vendor> vendors = new ArrayList();
+        for(Object vendor : repository.getAll())
+            vendors.add((Vendor)vendor);
+        return vendors;
     }
 }
