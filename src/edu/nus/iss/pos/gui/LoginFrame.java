@@ -6,10 +6,11 @@
 package edu.nus.iss.pos.gui;
 
 import edu.nus.iss.pos.core.User;
+import edu.nus.iss.pos.core.services.IDiscountsService;
+import edu.nus.iss.pos.core.services.IInventoryService;
+import edu.nus.iss.pos.core.services.IMembershipService;
+import edu.nus.iss.pos.core.services.ISalesService;
 import edu.nus.iss.pos.core.services.IUsersService;
-import java.util.Arrays;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 /**
  *
@@ -17,14 +18,30 @@ import java.util.logging.Logger;
  */
 public class LoginFrame extends javax.swing.JFrame {
 
-    public static String USER_NAME = "Eric";
-    IUsersService usersService;
+    public static String USER_NAME = "";
+    private final IMembershipService membershipService;
+    private final ISalesService salesService;
+    private final IInventoryService inventoryService;
+    private final IDiscountsService discountsService;
+    private final IUsersService usersService;
+    
     private User currentUser = null;
-    public LoginFrame(IUsersService usersService) {
+    
+    
+    public LoginFrame(IMembershipService membershipService, ISalesService salesService, IInventoryService inventoryService,IDiscountsService discountsService, IUsersService usersService) {
         initComponents();
+        this.discountsService = discountsService;
+        this.inventoryService = inventoryService;
+        this.salesService = salesService;
+        this.membershipService = membershipService;
         this.usersService = usersService;
+        logout();
     }
 
+    public final void logout(){
+        USER_NAME = "";
+        currentUser = null;
+    }
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -50,6 +67,7 @@ public class LoginFrame extends javax.swing.JFrame {
 
         jLabel2.setText("Password");
 
+        txtUsername.setText("Stacy");
         txtUsername.setName("txtUsername"); // NOI18N
 
         btnLogin.setText("Login");
@@ -66,6 +84,7 @@ public class LoginFrame extends javax.swing.JFrame {
             }
         });
 
+        txtPassword.setText("Dean56s");
         txtPassword.setName("txtPassword"); // NOI18N
         txtPassword.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -122,7 +141,9 @@ public class LoginFrame extends javax.swing.JFrame {
                 pwd += s;
             }
             currentUser = usersService.Login(txtUsername.getText(), pwd);
-           // USER_NAME = txtUsername.getText();
+            USER_NAME = txtUsername.getText();
+            new MainFrame(membershipService, salesService, inventoryService, discountsService, usersService).setVisible(true);
+            setVisible(false);
         } catch (Exception ex) {
             System.out.println("Username or password is not correct!");
         }

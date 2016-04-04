@@ -49,6 +49,11 @@ public class Category implements IEntity{
     public void removeProduct(Product p){
         products.remove(p);
     }
+    
+    public void clearVendors(){
+        vendors.clear();
+    }
+    
     public void addVendor(Vendor v){
         vendors.add(v);
     }

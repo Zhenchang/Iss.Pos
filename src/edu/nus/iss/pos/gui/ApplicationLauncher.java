@@ -4,7 +4,10 @@ import edu.nus.iss.pos.core.dao.*;
 import edu.nus.iss.pos.core.services.IInventoryService;
 import edu.nus.iss.pos.core.services.IUsersService;
 import edu.nus.iss.pos.dao.repositories.*;
+import edu.nus.iss.pos.services.DiscountsService;
 import edu.nus.iss.pos.services.InventoryService;
+import edu.nus.iss.pos.services.MembershipService;
+import edu.nus.iss.pos.services.SalesService;
 import edu.nus.iss.pos.services.UsersService;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -15,7 +18,6 @@ import java.util.logging.Logger;
  */
 public class ApplicationLauncher {
     
-    private String username = "";
     
      /**
      * @param args the command line arguments
@@ -45,43 +47,23 @@ public class ApplicationLauncher {
         //</editor-fold>
 
         try {
-            // TODO code application logic here
             IUnitOfWork db = new UnitOfWork();
-            IUsersService usersService = new UsersService(db);
-            IInventoryService inventoryService = new InventoryService(db);
-            /* Create and display the form */
             java.awt.EventQueue.invokeLater(new Runnable() {
                 public void run() {
                     try {
-                        new LoginFrame(usersService).setVisible(true);
-//                        new AddProductFrame(inventoryService).setVisible(true);
+                        new LoginFrame(
+                                new MembershipService(db),
+                                new SalesService(db),
+                                new InventoryService(db), 
+                                new DiscountsService(db), 
+                                new UsersService(db))
+                                .setVisible(true);
                     } catch (Exception ex) {
                         Logger.getLogger(ApplicationLauncher.class.getName()).log(Level.SEVERE, null, ex);
                     }
                     
                 }
             });
-            
-            
-//            usersService.addUser("Eric", "123456");
-//            usersService.addUser("Vishnu", "Test*123");
-//            usersService.addUser("Ankan", "0000");
-//            usersService.addUser("Liu", "123abc");
-//            usersService.addUser("Zaid", "NUS-ISS");
-            
-            //db.getRepository(FileType.User).add( new User("omari", "132456"));
-            
-            //db.getRepository(FileType.User).update("zaid", new User("zaid", "1324"));
-            
-            //db.getRepository(FileType.User).delete(new User("zaid", "1324"));
-            
-            // Iterable<User> users = (Iterable<User>) db.getRepository(FileType.User).getAll();
-//            for(User u : users){
-//               System.out.println(u.getUsername());
-//            }
-            
-//            User u = (User) db.getRepository(FileType.User).getByKey("zaid");
-//            System.out.println(u.getUsername() + u.getPassword());
             
         } catch (Exception ex) {
             Logger.getLogger(ApplicationLauncher.class.getName()).log(Level.SEVERE, null, ex);

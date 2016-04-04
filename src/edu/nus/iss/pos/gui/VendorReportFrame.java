@@ -37,6 +37,7 @@ public class VendorReportFrame extends javax.swing.JDialog {
         this.inventoryService = inventoryService;
         this.category = category;
         Collection<Vendor> vendors = this.inventoryService.getVendorsForCategory(this.category.getKey());
+        this.category.clearVendors();
         for(Vendor vendor : vendors){
             this.category.addVendor(vendor);
         }

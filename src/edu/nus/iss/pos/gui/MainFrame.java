@@ -14,11 +14,13 @@ import edu.nus.iss.pos.core.services.IDiscountsService;
 import edu.nus.iss.pos.core.services.IInventoryService;
 import edu.nus.iss.pos.core.services.IMembershipService;
 import edu.nus.iss.pos.core.services.ISalesService;
+import edu.nus.iss.pos.core.services.IUsersService;
 import edu.nus.iss.pos.dao.repositories.UnitOfWork;
 import edu.nus.iss.pos.services.DiscountsService;
 import edu.nus.iss.pos.services.InventoryService;
 import edu.nus.iss.pos.services.MembershipService;
 import edu.nus.iss.pos.services.SalesService;
+import edu.nus.iss.pos.services.UsersService;
 import java.awt.Color;
 import java.awt.Component;
 import java.awt.event.ActionEvent;
@@ -49,21 +51,26 @@ import javax.swing.table.TableColumn;
 public class MainFrame extends javax.swing.JFrame {
 
     private final IMembershipService membershipService;
-    private Customer customer;
     private final ISalesService salesService;
     private final IInventoryService inventoryService;
-    private Transaction currentTransaction;
     private final IDiscountsService discountsService;
+    private final IUsersService usersService;
+    
+    private Customer customer;
+    private Transaction currentTransaction;
+
     
        
-    public MainFrame(IMembershipService membershipService, ISalesService salesService, IInventoryService inventoryService,IDiscountsService discountsService) throws Exception {
+    public MainFrame(IMembershipService membershipService, ISalesService salesService, IInventoryService inventoryService,IDiscountsService discountsService, IUsersService usersService) throws Exception {
         initComponents();
         
         this.discountsService = discountsService;
         this.inventoryService = inventoryService;
         this.salesService = salesService;
         this.membershipService = membershipService;
+        this.usersService = usersService;
         this.customer = Customer.getInstance();
+        
         currentTransaction = salesService.beginTransaction(customer);
         removeMember();
         mySetComponents();
@@ -256,7 +263,7 @@ public class MainFrame extends javax.swing.JFrame {
             public void run() {
                 try {
                     UnitOfWork unitOfWork = new UnitOfWork();
-                    new MainFrame(new MembershipService(unitOfWork),new SalesService(unitOfWork),new InventoryService(unitOfWork), new DiscountsService(unitOfWork)).setVisible(true);
+                    new MainFrame(new MembershipService(unitOfWork),new SalesService(unitOfWork),new InventoryService(unitOfWork), new DiscountsService(unitOfWork), new UsersService(unitOfWork)).setVisible(true);
                 } catch (Exception ex) {
                     Logger.getLogger(CategoryReportFrame.class.getName()).log(Level.SEVERE, null, ex);
                 }
@@ -748,6 +755,11 @@ public class MainFrame extends javax.swing.JFrame {
         jMenu1.add(jMenuItem2);
 
         jMenuItem3.setText("Vendors");
+        jMenuItem3.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jMenuItem3ActionPerformed(evt);
+            }
+        });
         jMenu1.add(jMenuItem3);
         jMenu1.add(jSeparator1);
 
@@ -835,9 +847,19 @@ public class MainFrame extends javax.swing.JFrame {
         jMenu4.add(jSeparator5);
 
         jMenuItem14.setText("Change Password");
+        jMenuItem14.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jMenuItem14ActionPerformed(evt);
+            }
+        });
         jMenu4.add(jMenuItem14);
 
         jMenuItem15.setText("Logout");
+        jMenuItem15.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jMenuItem15ActionPerformed(evt);
+            }
+        });
         jMenu4.add(jMenuItem15);
         jMenu4.add(jSeparator6);
 
@@ -1022,7 +1044,7 @@ public class MainFrame extends javax.swing.JFrame {
     }//GEN-LAST:event_jMenuItem7ActionPerformed
 
     private void jMenuItem8ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem8ActionPerformed
-
+        new DiscountReport(discountsService).setVisible(true);
     }//GEN-LAST:event_jMenuItem8ActionPerformed
 
     private void jMenuItem9ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem9ActionPerformed
@@ -1030,7 +1052,10 @@ public class MainFrame extends javax.swing.JFrame {
     }//GEN-LAST:event_jMenuItem9ActionPerformed
 
     private void jMenuItem11ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem11ActionPerformed
-        
+        try {
+            new MemberReportFrame(membershipService).setVisible(true);
+        } catch (Exception ex) {
+        }
     }//GEN-LAST:event_jMenuItem11ActionPerformed
 
     private void jMenuItem12ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem12ActionPerformed
@@ -1038,6 +1063,8 @@ public class MainFrame extends javax.swing.JFrame {
     }//GEN-LAST:event_jMenuItem12ActionPerformed
 
     private void jMenuItem16ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem16ActionPerformed
+        setVisible(false);
+        this.dispose();
         System.exit(0);
     }//GEN-LAST:event_jMenuItem16ActionPerformed
 
@@ -1058,6 +1085,19 @@ public class MainFrame extends javax.swing.JFrame {
         }catch(Exception e){
         }
     }//GEN-LAST:event_jLabel6MouseClicked
+
+    private void jMenuItem3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem3ActionPerformed
+        new VendorReport(inventoryService).setVisible(true);
+    }//GEN-LAST:event_jMenuItem3ActionPerformed
+
+    private void jMenuItem15ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem15ActionPerformed
+        new LoginFrame(membershipService, salesService, inventoryService, discountsService, usersService);
+        this.setVisible(false);
+    }//GEN-LAST:event_jMenuItem15ActionPerformed
+
+    private void jMenuItem14ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem14ActionPerformed
+        new ChangePassword(null).setVisible(true);
+    }//GEN-LAST:event_jMenuItem14ActionPerformed
 
     private void paymentTextChanged(){
         float value = 0;
