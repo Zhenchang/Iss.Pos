@@ -38,7 +38,7 @@ public class VendorRepository extends Repository<Vendor>{
     public void add(Vendor entity) throws Exception {
         for(Category category : entity.getCategories()){
             setFileName(fileNamePrefix + category.getKey() + ".dat");
-            this.vendorFileName = fileNamePrefix + category.getKey() + ".dat";
+            this.vendorFileName = "data/" + fileNamePrefix + category.getKey() + ".dat";
             update(entity.getKey(), entity);
         }
     }

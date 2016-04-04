@@ -21,12 +21,12 @@ public class UnitOfWork implements IUnitOfWork {
     private final List<IRepository> repositories;
     public UnitOfWork() throws Exception{
         repositories = new ArrayList();
-        repositories.add(new Repository<>(this, RepoType.User, "Storekeepers.dat"));
-        repositories.add(new Repository<>(this, RepoType.Member, "Members.dat"));
-        repositories.add(new Repository<>(this, RepoType.Category, "Category.dat"));
-        repositories.add(new Repository<>(this, RepoType.Product, "Products.dat"));
-        repositories.add(new Repository<>(this, RepoType.Transaction, "Transactions.dat"));
-        repositories.add(new Repository<>(this, RepoType.Discount, "Discounts.dat"));
+        repositories.add(new Repository<>(this, RepoType.User, "data/Storekeepers.dat"));
+        repositories.add(new Repository<>(this, RepoType.Member, "data/Members.dat"));
+        repositories.add(new Repository<>(this, RepoType.Category, "data/Category.dat"));
+        repositories.add(new Repository<>(this, RepoType.Product, "data/Products.dat"));
+        repositories.add(new Repository<>(this, RepoType.Transaction, "data/Transactions.dat"));
+        repositories.add(new Repository<>(this, RepoType.Discount, "data/Discounts.dat"));
         repositories.add(new VendorRepository(this, "Vendors"));
     }
     

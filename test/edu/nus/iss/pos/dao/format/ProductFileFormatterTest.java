@@ -8,6 +8,7 @@ package edu.nus.iss.pos.dao.format;
 import edu.nus.iss.pos.core.Category;
 import edu.nus.iss.pos.core.Product;
 import edu.nus.iss.pos.core.dao.IUnitOfWork;
+import edu.nus.iss.pos.dao.MemoryUnitOfWork;
 import edu.nus.iss.pos.dao.repositories.UnitOfWork;
 import org.junit.After;
 import org.junit.AfterClass;
@@ -37,7 +38,7 @@ public class ProductFileFormatterTest {
     
     @Before
     public void setUp() throws Exception {
-        this.unitOfWork = new UnitOfWork();
+        this.unitOfWork = new MemoryUnitOfWork();
     }
     
     @After
@@ -50,7 +51,7 @@ public class ProductFileFormatterTest {
     @Test
     public void testGetInstance() throws Exception {
         System.out.println("getInstance");
-        unitOfWork = new UnitOfWork();
+        unitOfWork = new MemoryUnitOfWork();
         ProductFileFormatter result = ProductFileFormatter.getInstance(unitOfWork);
         assertTrue(result instanceof ProductFileFormatter);
     }
@@ -76,6 +77,7 @@ public class ProductFileFormatterTest {
     public void testReadEntity() throws Exception {
         System.out.println("readEntity");
         Category category = new Category("CLO","clothing");
+        unitOfWork.add(category);
         String data = "CLO/1,colthing,this is a description,100,50,100,100,100";
         ProductFileFormatter instance = ProductFileFormatter.getInstance(unitOfWork);
         Product expResult = new Product(category, 1, "clothing", "this is a description", 100, 50, "100", 100, 100);
