@@ -69,17 +69,8 @@ public class CheckInventory extends CustomedFrame {
         super.setPreferredSize(new Dimension(1050, 300));
         super.add(jPanel1);
         super.setTitle("Check inventory");
-        super.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        super.setDefaultCloseOperation(JFrame.HIDE_ON_CLOSE);
         super.pack();
-    }
-
-    
-    public static void main(String[] args) {
-                try {
-                    new CheckInventory(new InventoryService(new UnitOfWork())).setVisible(true);
-                } catch (Exception ex) {
-                    Logger.getLogger(CheckInventory.class.getName()).log(Level.SEVERE, null, ex);
-                }
     }
 
     public class ButtonEditor extends AbstractCellEditor implements TableCellEditor, ActionListener {
@@ -166,6 +157,12 @@ public class CheckInventory extends CustomedFrame {
                 this.products.add(p);
             }
         }
+
+        @Override
+        public String getColumnName(int column) {
+            return columns[column];
+        }
+        
         
         @Override
         public int getRowCount() {

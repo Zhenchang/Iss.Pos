@@ -7,10 +7,8 @@ package edu.nus.iss.pos.gui;
 
 import edu.nus.iss.pos.core.Transaction;
 import edu.nus.iss.pos.core.TransactionDetail;
-import edu.nus.iss.pos.core.services.IInventoryService;
 import edu.nus.iss.pos.core.services.ISalesService;
 import edu.nus.iss.pos.dao.repositories.UnitOfWork;
-import edu.nus.iss.pos.services.InventoryService;
 import edu.nus.iss.pos.services.SalesService;
 import java.awt.BorderLayout;
 import java.awt.event.ActionEvent;
@@ -48,6 +46,7 @@ public class TransactionReport extends CustomedFrame {
      * @throws java.lang.Exception
      */
     TransactionReport(ISalesService saleService) throws Exception {
+        super();
         initComponents();
         this.saleService = saleService;
         details = new ArrayList();
@@ -60,12 +59,13 @@ public class TransactionReport extends CustomedFrame {
             details.addAll((Collection<? extends TransactionDetail>) trans.getTransactionDetails());
         }        
         model = new TransactionTableModel(details);
-        
+        table.setModel(model);
     
         
         table.setAutoCreateRowSorter(true);
         TableRowSorter<TableModel> sorter = new TableRowSorter(table.getModel());
         table.setRowSorter(sorter);
+        
         List<RowSorter.SortKey> sortKeys = new ArrayList<>();
         int columnIndexToSort = 1;
         sortKeys.add(new RowSorter.SortKey(columnIndexToSort, SortOrder.ASCENDING));
@@ -125,9 +125,7 @@ public class TransactionReport extends CustomedFrame {
         jScrollPane2 = new javax.swing.JScrollPane();
         table = new javax.swing.JTable();
 
-        setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setTitle("Transaction Report");
-        setPreferredSize(new java.awt.Dimension(500, 500));
 
         jLabel1.setText("Start date:");
 
@@ -172,7 +170,7 @@ public class TransactionReport extends CustomedFrame {
                 .addComponent(endDatePanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(27, 27, 27)
                 .addComponent(queryBtn)
-                .addContainerGap(240, Short.MAX_VALUE))
+                .addContainerGap(464, Short.MAX_VALUE))
         );
 
         jPanel1Layout.linkSize(javax.swing.SwingConstants.HORIZONTAL, new java.awt.Component[] {jLabel1, jLabel2});
@@ -195,7 +193,6 @@ public class TransactionReport extends CustomedFrame {
 
         jPanel1Layout.linkSize(javax.swing.SwingConstants.VERTICAL, new java.awt.Component[] {endDatePanel, startDatePanel});
 
-        table.setModel(model);
         jScrollPane2.setViewportView(table);
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
@@ -217,46 +214,6 @@ public class TransactionReport extends CustomedFrame {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    /**
-     * @param args the command line arguments
-     */
-    public static void main(String args[]) {
-        /* Set the Nimbus look and feel */
-        //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
-        /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
-         * For details see http://download.oracle.com/javase/tutorial/uiswing/lookandfeel/plaf.html 
-         */
-        try {
-            for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
-                if ("Nimbus".equals(info.getName())) {
-                    javax.swing.UIManager.setLookAndFeel(info.getClassName());
-                    break;
-                }
-            }
-        } catch (ClassNotFoundException ex) {
-            java.util.logging.Logger.getLogger(TransactionReport.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (InstantiationException ex) {
-            java.util.logging.Logger.getLogger(TransactionReport.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (IllegalAccessException ex) {
-            java.util.logging.Logger.getLogger(TransactionReport.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (javax.swing.UnsupportedLookAndFeelException ex) {
-            java.util.logging.Logger.getLogger(TransactionReport.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        }
-        //</editor-fold>
-        //</editor-fold>
-
-        /* Create and display the form */
-        java.awt.EventQueue.invokeLater(new Runnable() {
-            public void run() {
-                try {
-                    new TransactionReport(new SalesService(new UnitOfWork())).setVisible(true);
-                } catch (Exception ex) {
-                    Logger.getLogger(TransactionReport.class.getName()).log(Level.SEVERE, null, ex);
-                }
-            }
-        });
-    }
-    
     class TransactionTableModel extends AbstractTableModel {
         
         private List<TransactionDetail> details = null;

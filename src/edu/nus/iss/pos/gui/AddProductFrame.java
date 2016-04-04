@@ -6,6 +6,7 @@
 package edu.nus.iss.pos.gui;
 
 import edu.nus.iss.pos.core.Category;
+import edu.nus.iss.pos.core.Product;
 import edu.nus.iss.pos.core.services.IInventoryService;
 import edu.nus.iss.pos.dao.repositories.UnitOfWork;
 import edu.nus.iss.pos.services.InventoryService;
@@ -24,10 +25,12 @@ public class AddProductFrame extends CustomedFrame {
      * @param inventoryService
      */
     public AddProductFrame(IInventoryService inventoryService) throws Exception {
+        super();
         initComponents();
         err1.setVisible(false);
         err2.setVisible(false);
         err3.setVisible(false);
+        err4.setVisible(false);
         this.inventoryService = inventoryService;
         Iterable<Category> categories = inventoryService.getAllCategory();
         for(Category c : categories){
@@ -50,7 +53,7 @@ public class AddProductFrame extends CustomedFrame {
         jButton2 = new javax.swing.JButton();
         jPanel1 = new javax.swing.JPanel();
         jLabel1 = new javax.swing.JLabel();
-        categoryComboBox = new javax.swing.JComboBox<>();
+        categoryComboBox = new javax.swing.JComboBox<Category>();
         jLabel2 = new javax.swing.JLabel();
         jLabel3 = new javax.swing.JLabel();
         jLabel4 = new javax.swing.JLabel();
@@ -121,7 +124,6 @@ public class AddProductFrame extends CustomedFrame {
                 .addContainerGap(33, Short.MAX_VALUE))
         );
 
-        setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setTitle("Add  Product");
         setMinimumSize(new java.awt.Dimension(400, 450));
         setPreferredSize(new java.awt.Dimension(400, 450));
@@ -167,13 +169,13 @@ public class AddProductFrame extends CustomedFrame {
             }
         });
 
-        jSpinner1.setModel(new javax.swing.SpinnerNumberModel(0, 0, null, 1));
+        jSpinner1.setModel(new javax.swing.SpinnerNumberModel(Integer.valueOf(0), Integer.valueOf(0), null, Integer.valueOf(1)));
 
-        jSpinner2.setModel(new javax.swing.SpinnerNumberModel(0.0f, 0.0f, null, 0.01f));
+        jSpinner2.setModel(new javax.swing.SpinnerNumberModel(Float.valueOf(0.0f), Float.valueOf(0.0f), null, Float.valueOf(0.01f)));
 
-        jSpinner3.setModel(new javax.swing.SpinnerNumberModel(0, 0, null, 1));
+        jSpinner3.setModel(new javax.swing.SpinnerNumberModel(Integer.valueOf(0), Integer.valueOf(0), null, Integer.valueOf(1)));
 
-        jSpinner4.setModel(new javax.swing.SpinnerNumberModel(0, 0, null, 1));
+        jSpinner4.setModel(new javax.swing.SpinnerNumberModel(Integer.valueOf(0), Integer.valueOf(0), null, Integer.valueOf(1)));
 
         err1.setForeground(java.awt.Color.red);
         err1.setText("Name can't be null!");
@@ -191,6 +193,12 @@ public class AddProductFrame extends CustomedFrame {
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(cnacelBtn)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(confirmBtn)
+                .addGap(82, 82, 82))
             .addGroup(jPanel1Layout.createSequentialGroup()
                 .addGap(10, 10, 10)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -204,28 +212,22 @@ public class AddProductFrame extends CustomedFrame {
                     .addComponent(jLabel8, javax.swing.GroupLayout.Alignment.TRAILING))
                 .addGap(28, 28, 28)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(categoryComboBox, javax.swing.GroupLayout.PREFERRED_SIZE, 119, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(nameTxt, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(err1, javax.swing.GroupLayout.DEFAULT_SIZE, 161, Short.MAX_VALUE)
-                    .addComponent(descriptionTxt)
-                    .addComponent(jSpinner1, javax.swing.GroupLayout.DEFAULT_SIZE, 68, Short.MAX_VALUE)
-                    .addComponent(jSpinner2)
-                    .addComponent(barCodeTxt, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jSpinner3)
-                    .addComponent(err3, javax.swing.GroupLayout.PREFERRED_SIZE, 137, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(err2, javax.swing.GroupLayout.PREFERRED_SIZE, 138, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jSpinner4, javax.swing.GroupLayout.DEFAULT_SIZE, 69, Short.MAX_VALUE))
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(cnacelBtn)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(confirmBtn)
-                .addGap(82, 82, 82))
-            .addGroup(jPanel1Layout.createSequentialGroup()
-                .addGap(130, 130, 130)
-                .addComponent(err4, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addComponent(err4, javax.swing.GroupLayout.DEFAULT_SIZE, 219, Short.MAX_VALUE)
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(categoryComboBox, javax.swing.GroupLayout.PREFERRED_SIZE, 119, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(nameTxt, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(err1, javax.swing.GroupLayout.DEFAULT_SIZE, 161, Short.MAX_VALUE)
+                            .addComponent(descriptionTxt)
+                            .addComponent(jSpinner1, javax.swing.GroupLayout.DEFAULT_SIZE, 68, Short.MAX_VALUE)
+                            .addComponent(jSpinner2)
+                            .addComponent(barCodeTxt, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jSpinner3)
+                            .addComponent(err3, javax.swing.GroupLayout.PREFERRED_SIZE, 137, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(err2, javax.swing.GroupLayout.PREFERRED_SIZE, 138, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jSpinner4, javax.swing.GroupLayout.DEFAULT_SIZE, 69, Short.MAX_VALUE))
+                        .addGap(0, 0, Short.MAX_VALUE)))
+                .addContainerGap())
         );
 
         jPanel1Layout.linkSize(javax.swing.SwingConstants.HORIZONTAL, new java.awt.Component[] {barCodeTxt, categoryComboBox, descriptionTxt, nameTxt});
@@ -253,9 +255,9 @@ public class AddProductFrame extends CustomedFrame {
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel3)
                     .addComponent(descriptionTxt, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(err4)
                 .addGap(3, 3, 3)
+                .addComponent(err4)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel4)
                     .addComponent(jSpinner1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
@@ -279,7 +281,7 @@ public class AddProductFrame extends CustomedFrame {
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel8)
                     .addComponent(jSpinner4, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 11, Short.MAX_VALUE)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(cnacelBtn)
                     .addComponent(confirmBtn)))
@@ -296,16 +298,16 @@ public class AddProductFrame extends CustomedFrame {
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, 301, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addContainerGap()
+                .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, 376, Short.MAX_VALUE)
+                .addContainerGap())
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, 394, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, 415, Short.MAX_VALUE)
+                .addContainerGap())
         );
 
         pack();
@@ -341,9 +343,16 @@ public class AddProductFrame extends CustomedFrame {
         } else
             err4.setVisible(false);
         try {
-            inventoryService.addProduct(category, nameTxt.getText(), descriptionTxt.getText(), 
+            Product dummy = inventoryService.searchProductByBarcode(barCodeTxt.getText());
+            if(dummy != null){
+                err3.setText("Already exist!");
+                err3.setVisible(true);
+                throw new Exception("");
+            }else{
+                  inventoryService.addProduct(category, nameTxt.getText(), descriptionTxt.getText(), 
                     Integer.parseInt(jSpinner1.getValue().toString()), Float.parseFloat(jSpinner2.getValue().toString()), 
                     barCodeTxt.getText(), Integer.parseInt(jSpinner3.getValue().toString()), Integer.parseInt(jSpinner4.getValue().toString()));
+            }
         } catch (Exception ex) {
             // ### add Error Messages 
             Logger.getLogger(AddProductFrame.class.getName()).log(Level.SEVERE, null, ex);
@@ -375,45 +384,6 @@ public class AddProductFrame extends CustomedFrame {
         jDialog1.dispose();
         dispose();
     }//GEN-LAST:event_jButton2ActionPerformed
-
-    /**
-     * @param args the command line arguments
-     */
-    public static void main(String args[]) {
-        /* Set the Nimbus look and feel */
-        //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
-        /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
-         * For details see http://download.oracle.com/javase/tutorial/uiswing/lookandfeel/plaf.html 
-         */
-        try {
-            for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
-                if ("Nimbus".equals(info.getName())) {
-                    javax.swing.UIManager.setLookAndFeel(info.getClassName());
-                    break;
-                }
-            }
-        } catch (ClassNotFoundException ex) {
-            java.util.logging.Logger.getLogger(AddProductFrame.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (InstantiationException ex) {
-            java.util.logging.Logger.getLogger(AddProductFrame.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (IllegalAccessException ex) {
-            java.util.logging.Logger.getLogger(AddProductFrame.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (javax.swing.UnsupportedLookAndFeelException ex) {
-            java.util.logging.Logger.getLogger(AddProductFrame.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        }
-        //</editor-fold>
-
-        /* Create and display the form */
-        java.awt.EventQueue.invokeLater(new Runnable() {
-            public void run() {
-                try {
-                    new AddProductFrame(new InventoryService(new UnitOfWork())).setVisible(true);
-                } catch (Exception ex) {
-                    Logger.getLogger(AddProductFrame.class.getName()).log(Level.SEVERE, null, ex);
-                }
-            }
-        });
-    }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JTextField barCodeTxt;

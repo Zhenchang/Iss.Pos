@@ -74,7 +74,7 @@ public class InventoryService implements IInventoryService {
                     String barcodeNumber, int reorderQuantity, int orderQuantity) throws Exception {
 
         
-        Product product = new Product(category, getNewId(), name, description, availableQuantity, price, barcodeNumber, reorderQuantity, orderQuantity);
+        Product product = new Product(category, getNewId(category), name, description, availableQuantity, price, barcodeNumber, reorderQuantity, orderQuantity);
         IRepository repository = unitOfWork.getRepository(RepoType.Product);
         repository.add(product);
         return product;
@@ -92,14 +92,16 @@ public class InventoryService implements IInventoryService {
         repository.update(category.getKey(), category);
     }
 
-    private int getNewId() throws Exception{
+    private int getNewId(Category c) throws Exception{
         int maxId = 0;
         IRepository repository = unitOfWork.getRepository(RepoType.Product);
         Iterable<Product> products =  repository.getAll();
         for(Product p : products) {
-            int index = Integer.parseInt(p.getKey().split("/")[1]);
-            if(maxId < index){
-                maxId = index;
+            if(p.getCategory().getKey().equals(c.getKey())){
+                int index = Integer.parseInt(p.getKey().split("/")[1]);
+                if(maxId < index){
+                    maxId = index;
+                }
             }
         }
         return maxId + 1;

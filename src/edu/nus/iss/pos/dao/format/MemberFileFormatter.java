@@ -36,6 +36,7 @@ public class MemberFileFormatter implements IFileFormatter<Member>{
         String id = params[1];
         String name = params[0];
         int loyaltyPoints = Integer.parseInt(params[2]);
+        if(loyaltyPoints == -1) loyaltyPoints = 0;
         return new Member(id, name, loyaltyPoints);
     }
     

@@ -256,21 +256,6 @@ public class MainFrame extends javax.swing.JFrame {
         }
     }
     
-    
-    
-    public static void main(String[] args) {
-        java.awt.EventQueue.invokeLater(new Runnable() {
-            public void run() {
-                try {
-                    UnitOfWork unitOfWork = new UnitOfWork();
-                    new MainFrame(new MembershipService(unitOfWork),new SalesService(unitOfWork),new InventoryService(unitOfWork), new DiscountsService(unitOfWork), new UsersService(unitOfWork)).setVisible(true);
-                } catch (Exception ex) {
-                    Logger.getLogger(CategoryReportFrame.class.getName()).log(Level.SEVERE, null, ex);
-                }
-            }
-        });
-    }
-    
     class TransactionTableModel extends AbstractTableModel{
         
         private final String column[] = {"product name", "price", "quantity","sub total", "operation"};
@@ -302,7 +287,7 @@ public class MainFrame extends javax.swing.JFrame {
                 case 2:
                     return c.get(rowIndex).getQuantityPurchased();
                 case 3:
-                    return c.get(rowIndex).getQuantityPurchased() * c.get(rowIndex).getProduct().getPrice();
+                    return String.format("%.2f", c.get(rowIndex).subTotal());
                 default:
             }
             return null;
@@ -408,6 +393,7 @@ public class MainFrame extends javax.swing.JFrame {
         jMenuItem12 = new javax.swing.JMenuItem();
         jMenu4 = new javax.swing.JMenu();
         jMenuItem13 = new javax.swing.JMenuItem();
+        jMenuItem17 = new javax.swing.JMenuItem();
         jSeparator5 = new javax.swing.JPopupMenu.Separator();
         jMenuItem14 = new javax.swing.JMenuItem();
         jMenuItem15 = new javax.swing.JMenuItem();
@@ -630,6 +616,11 @@ public class MainFrame extends javax.swing.JFrame {
         jLabel9.setText("0");
 
         jTextField2.setHorizontalAlignment(javax.swing.JTextField.LEFT);
+        jTextField2.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jTextField2ActionPerformed(evt);
+            }
+        });
 
         jLabel11.setText("Payment");
 
@@ -843,7 +834,20 @@ public class MainFrame extends javax.swing.JFrame {
         jMenu4.setText("System");
 
         jMenuItem13.setText("Store Keepers");
+        jMenuItem13.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jMenuItem13ActionPerformed(evt);
+            }
+        });
         jMenu4.add(jMenuItem13);
+
+        jMenuItem17.setText("New User");
+        jMenuItem17.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jMenuItem17ActionPerformed(evt);
+            }
+        });
+        jMenu4.add(jMenuItem17);
         jMenu4.add(jSeparator5);
 
         jMenuItem14.setText("Change Password");
@@ -951,23 +955,13 @@ public class MainFrame extends javax.swing.JFrame {
         }else{
             if(!(this.customer instanceof Member)){
                 Object[] options = { "OK", "CANCEL" };
-                int result = JOptionPane.showOptionDialog(null, "No souch member, do you want to add a new Member?", "Warning",
+                int result = JOptionPane.showOptionDialog(null, "No such member, do you want to add a new Member?", "Warning",
                         JOptionPane.DEFAULT_OPTION, JOptionPane.WARNING_MESSAGE,
                         null, options, options[0]);
                 if(result != JOptionPane.OK_OPTION){
                     this.jTextField1.requestFocus();
                 }else{
-                    //MemberRegistration newMemberFrame = new MemberRegistration(this, true, membershipService);
-                    //newMemberFrame.setVisible(true);
-                    //Member m = newMemberFrame.getMember();
-                    //if(m==null){
-                        this.jTextField1.requestFocus();
-                    //}else{
-                        //try {
-                        //    setMember(m);
-                        //} catch (Exception ex) {
-                        //}
-                    //}
+                    this.jTextField1.setText("");
                 }
             }
         }
@@ -1018,6 +1012,7 @@ public class MainFrame extends javax.swing.JFrame {
         try {
             new CategoryReportFrame(inventoryService).setVisible(true);
         } catch (Exception ex) {
+            Logger.getLogger(MainFrame.class.getName()).log(Level.SEVERE, null, ex);
         }
     }//GEN-LAST:event_jMenuItem1ActionPerformed
 
@@ -1040,6 +1035,7 @@ public class MainFrame extends javax.swing.JFrame {
         try {
             new TransactionReport(salesService).setVisible(rootPaneCheckingEnabled);
         } catch (Exception ex) {
+            Logger.getLogger(MainFrame.class.getName()).log(Level.SEVERE, null, ex);
         }
     }//GEN-LAST:event_jMenuItem7ActionPerformed
 
@@ -1099,13 +1095,34 @@ public class MainFrame extends javax.swing.JFrame {
         new ChangePassword(null).setVisible(true);
     }//GEN-LAST:event_jMenuItem14ActionPerformed
 
+    private void jTextField2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jTextField2ActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_jTextField2ActionPerformed
+
+    private void jMenuItem13ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem13ActionPerformed
+        // TODO add your handling code here:
+        try{
+            new UserReport(usersService).setVisible(true);
+        }catch(Exception ex){
+            Logger.getLogger(MainFrame.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }//GEN-LAST:event_jMenuItem13ActionPerformed
+
+    private void jMenuItem17ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem17ActionPerformed
+         try{
+            new AddUserFrame(usersService).setVisible(true);
+        }catch(Exception ex){
+            Logger.getLogger(MainFrame.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }//GEN-LAST:event_jMenuItem17ActionPerformed
+
     private void paymentTextChanged(){
         float value = 0;
         float total = 0;
         try{
             value = Float.parseFloat(jTextField2.getText());
             total = Float.parseFloat(jLabel2.getText().replace("$ ", ""));
-            if(total < value){
+            if(total <= value){
                 jTextField2.setForeground(Color.green);
                 jLabel14.setText(String.format("$ %.2f", value - total));
                 if(total > 0){
@@ -1173,6 +1190,7 @@ public class MainFrame extends javax.swing.JFrame {
     private javax.swing.JMenuItem jMenuItem14;
     private javax.swing.JMenuItem jMenuItem15;
     private javax.swing.JMenuItem jMenuItem16;
+    private javax.swing.JMenuItem jMenuItem17;
     private javax.swing.JMenuItem jMenuItem2;
     private javax.swing.JMenuItem jMenuItem3;
     private javax.swing.JMenuItem jMenuItem4;

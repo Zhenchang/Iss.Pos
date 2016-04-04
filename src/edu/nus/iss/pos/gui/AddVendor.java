@@ -37,6 +37,7 @@ public class AddVendor extends javax.swing.JDialog {
         this.jLabel4.setVisible(false);
         this.jLabel4.setForeground(Color.red);
         setLocationRelativeTo(null);
+        this.setDefaultCloseOperation(HIDE_ON_CLOSE);
     }
     
     public Vendor getVendor(){
@@ -61,8 +62,6 @@ public class AddVendor extends javax.swing.JDialog {
         jButton2 = new javax.swing.JButton();
         jLabel3 = new javax.swing.JLabel();
         jLabel4 = new javax.swing.JLabel();
-
-        setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
 
         jLabel1.setText("name");
 
@@ -192,52 +191,6 @@ public class AddVendor extends javax.swing.JDialog {
         // TODO add your handling code here:
         this.dispose();
     }//GEN-LAST:event_jButton2ActionPerformed
-
-    /**
-     * @param args the command line arguments
-     */
-    public static void main(String args[]) {
-        /* Set the Nimbus look and feel */
-        //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
-        /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
-         * For details see http://download.oracle.com/javase/tutorial/uiswing/lookandfeel/plaf.html 
-         */
-        try {
-            for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
-                if ("Nimbus".equals(info.getName())) {
-                    javax.swing.UIManager.setLookAndFeel(info.getClassName());
-                    break;
-                }
-            }
-        } catch (ClassNotFoundException ex) {
-            java.util.logging.Logger.getLogger(AddVendor.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (InstantiationException ex) {
-            java.util.logging.Logger.getLogger(AddVendor.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (IllegalAccessException ex) {
-            java.util.logging.Logger.getLogger(AddVendor.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (javax.swing.UnsupportedLookAndFeelException ex) {
-            java.util.logging.Logger.getLogger(AddVendor.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        }
-        //</editor-fold>
-
-        /* Create and display the dialog */
-        java.awt.EventQueue.invokeLater(new Runnable() {
-            public void run() {
-                try {
-                    AddVendor dialog = new AddVendor(new javax.swing.JFrame(), true, new InventoryService(new UnitOfWork()), new Category("CLO", "clothing"));
-                    dialog.addWindowListener(new java.awt.event.WindowAdapter() {
-                        @Override
-                        public void windowClosing(java.awt.event.WindowEvent e) {
-                            System.exit(0);
-                        }
-                    });
-                    dialog.setVisible(true);
-                } catch (Exception ex) {
-                    Logger.getLogger(AddVendor.class.getName()).log(Level.SEVERE, null, ex);
-                }
-            }
-        });
-    }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton jButton1;

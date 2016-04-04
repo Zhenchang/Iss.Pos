@@ -7,21 +7,24 @@ package edu.nus.iss.pos.gui;
 
 import java.awt.Image;
 import javax.swing.ImageIcon;
+import javax.swing.JFrame;
 
 /**
  *
  * @author Liu Zhenchang
  */
-public class CustomedFrame extends javax.swing.JFrame {
+public class CustomedFrame extends javax.swing.JDialog {
 
     /**
      * Creates new form CustomedFrame
      */
     public CustomedFrame() {
+        super((JFrame)null, true);
         initComponents();
         super.setIconImage(new ImageIcon("pic/icon.png").getImage());
         super.setLocationRelativeTo(null);
         super.setResizable(false);
+        this.setDefaultCloseOperation(JFrame.HIDE_ON_CLOSE);
     }
 
     /**
@@ -33,7 +36,6 @@ public class CustomedFrame extends javax.swing.JFrame {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setPreferredSize(new java.awt.Dimension(700, 400));
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());

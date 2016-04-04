@@ -39,6 +39,7 @@ public class UserReport extends CustomedFrame {
      * @param userService
      */
     public UserReport(IUsersService userService) throws Exception {
+        super();
         this.userService = userService;
         users = userService.getAllUser();
         try {
@@ -119,7 +120,6 @@ public class UserReport extends CustomedFrame {
                 .addContainerGap(19, Short.MAX_VALUE))
         );
 
-        setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
         jTable1.setModel(model);
         jScrollPane1.setViewportView(jTable1);
@@ -150,45 +150,6 @@ public class UserReport extends CustomedFrame {
         sureToDelete = false;
         jDialog1.setVisible(false);
     }//GEN-LAST:event_jButton2ActionPerformed
-
-    /**
-     * @param args the command line arguments
-     */
-    public static void main(String args[]) {
-        /* Set the Nimbus look and feel */
-        //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
-        /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
-         * For details see http://download.oracle.com/javase/tutorial/uiswing/lookandfeel/plaf.html 
-         */
-        try {
-            for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
-                if ("Nimbus".equals(info.getName())) {
-                    javax.swing.UIManager.setLookAndFeel(info.getClassName());
-                    break;
-                }
-            }
-        } catch (ClassNotFoundException ex) {
-            java.util.logging.Logger.getLogger(UserReport.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (InstantiationException ex) {
-            java.util.logging.Logger.getLogger(UserReport.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (IllegalAccessException ex) {
-            java.util.logging.Logger.getLogger(UserReport.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (javax.swing.UnsupportedLookAndFeelException ex) {
-            java.util.logging.Logger.getLogger(UserReport.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        }
-        //</editor-fold>
-
-        /* Create and display the form */
-        java.awt.EventQueue.invokeLater(new Runnable() {
-            public void run() {
-                try {
-                    new UserReport(new UsersService(new UnitOfWork())).setVisible(true);
-                } catch (Exception ex) {
-                    Logger.getLogger(UserReport.class.getName()).log(Level.SEVERE, null, ex);
-                }
-            }
-        });
-    }
 
     class UserTableModel extends AbstractTableModel {
 

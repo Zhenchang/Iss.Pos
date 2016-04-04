@@ -8,7 +8,6 @@ package edu.nus.iss.pos.gui;
 import edu.nus.iss.pos.core.User;
 import edu.nus.iss.pos.core.services.IUsersService;
 import edu.nus.iss.pos.dao.repositories.UnitOfWork;
-import edu.nus.iss.pos.services.InventoryService;
 import edu.nus.iss.pos.services.UsersService;
 import java.awt.Color;
 import java.util.logging.Level;
@@ -18,15 +17,17 @@ import java.util.logging.Logger;
  *
  * @author Liu Zhenchang
  */
-public class ChangePassword extends javax.swing.JFrame {
+public class ChangePassword extends  CustomedFrame {
 
     
     private final IUsersService service;
     private final String userName;
     /**
      * Creates new form ChangePassword
+     * @param usersService
      */
     public ChangePassword(IUsersService usersService) {
+        super();
         initComponents();
         jLabel4.setForeground(Color.red);
         
@@ -62,7 +63,6 @@ public class ChangePassword extends javax.swing.JFrame {
         jLabel7 = new javax.swing.JLabel();
         jPasswordField3 = new javax.swing.JPasswordField();
 
-        setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setTitle("Change password");
         setResizable(false);
         setSize(new java.awt.Dimension(509, 248));
@@ -208,45 +208,6 @@ public class ChangePassword extends javax.swing.JFrame {
     private void jTextField1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jTextField1ActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_jTextField1ActionPerformed
-
-    /**
-     * @param args the command line arguments
-     */
-    public static void main(String args[]) {
-        /* Set the Nimbus look and feel */
-        //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
-        /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
-         * For details see http://download.oracle.com/javase/tutorial/uiswing/lookandfeel/plaf.html 
-         */
-        try {
-            for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
-                if ("Nimbus".equals(info.getName())) {
-                    javax.swing.UIManager.setLookAndFeel(info.getClassName());
-                    break;
-                }
-            }
-        } catch (ClassNotFoundException ex) {
-            java.util.logging.Logger.getLogger(ChangePassword.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (InstantiationException ex) {
-            java.util.logging.Logger.getLogger(ChangePassword.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (IllegalAccessException ex) {
-            java.util.logging.Logger.getLogger(ChangePassword.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (javax.swing.UnsupportedLookAndFeelException ex) {
-            java.util.logging.Logger.getLogger(ChangePassword.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        }
-        //</editor-fold>
-
-        /* Create and display the form */
-        java.awt.EventQueue.invokeLater(new Runnable() {
-            public void run() {
-                try {
-                    new ChangePassword(new UsersService(new UnitOfWork())).setVisible(true);
-                } catch (Exception ex) {
-                    Logger.getLogger(ChangePassword.class.getName()).log(Level.SEVERE, null, ex);
-                }
-            }
-        });
-    }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton jButton1;
