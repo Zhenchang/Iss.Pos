@@ -90,7 +90,7 @@ public class SalesService implements ISalesService {
         Iterable<Transaction> transactions = unitOfWork.getRepository(RepoType.Transaction).getAll();
         List<Transaction> transactionsInPeriod = new ArrayList();
         for(Transaction trans : transactions) {
-            if(trans.getDate().after(startDate) && trans.getDate().before(endDate))
+            if(trans.getDate().equals(startDate) || (trans.getDate().after(startDate) && trans.getDate().before(endDate)))
                 transactionsInPeriod.add(trans);
         }
         return transactionsInPeriod;

@@ -40,6 +40,8 @@ public class TransactionReport extends CustomedFrame {
     private TransactionTableModel model = null;
     private List<TransactionDetail> details = null;
     private ISalesService saleService = null;
+    private JDatePicker picker ;
+    private JDatePicker picker2 ;
     
     /**
      * Creates new form TransactionReport2
@@ -72,8 +74,9 @@ public class TransactionReport extends CustomedFrame {
         sorter.setSortKeys(sortKeys);
         sorter.sort();
         
-        JDatePicker picker = new JDateComponentFactory().createJDatePicker();
-        JDatePicker picker2 = new JDateComponentFactory().createJDatePicker();
+        picker = new JDateComponentFactory().createJDatePicker();
+        picker.getModel().addDay(-30);
+        picker2 = new JDateComponentFactory().createJDatePicker();
         JPanel datePanel = new JPanel();
         JPanel datePanel2 = new JPanel();
         datePanel.add((JComponent)picker);
@@ -82,31 +85,34 @@ public class TransactionReport extends CustomedFrame {
         endDatePanel.setLayout(new BorderLayout());
         startDatePanel.add(datePanel);
         endDatePanel.add(datePanel2);
-        
+        populate();
         queryBtn.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                details = new ArrayList();
-                Calendar ca = (Calendar) picker.getModel().getValue();
-                Date startDate = ca.getTime();
-                ca = (Calendar) picker2.getModel().getValue();
-                Date endDate = ca.getTime();
-                List<Transaction> transactions = null;
-                try {
-                    transactions = saleService.getTransactions(startDate, endDate);
-                } catch (Exception ex) {
-                    Logger.getLogger(TransactionReport.class.getName()).log(Level.SEVERE, null, ex);
-                }
-                for(Transaction trans : transactions) {
-                    details.addAll((Collection<? extends TransactionDetail>) trans.getTransactionDetails());
-                }
-                model = new TransactionTableModel(details);
-                table.setModel(model);
-                ((TableRowSorter)table.getRowSorter()).sort();
+                populate();
             }
         });
     }
 
+    private void populate(){
+        details = new ArrayList();
+        Calendar ca = (Calendar) picker.getModel().getValue();
+        Date startDate = ca.getTime();
+        ca = (Calendar) picker2.getModel().getValue();
+        Date endDate = ca.getTime();
+        List<Transaction> transactions = null;
+        try {
+            transactions = saleService.getTransactions(startDate, endDate);
+        } catch (Exception ex) {
+            Logger.getLogger(TransactionReport.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        for(Transaction trans : transactions) {
+            details.addAll((Collection<? extends TransactionDetail>) trans.getTransactionDetails());
+        }
+        model = new TransactionTableModel(details);
+        table.setModel(model);
+        ((TableRowSorter)table.getRowSorter()).sort();
+    }
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
