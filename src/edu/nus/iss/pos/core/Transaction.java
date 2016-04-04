@@ -38,7 +38,7 @@ public class Transaction implements IEntity {
         this.id = id;
     }
 
-    public List<TransactionDetail> getTransactionDetails() {
+    public Iterable<TransactionDetail> getTransactionDetails() {
         return transactionDetails;
     }
    
@@ -86,4 +86,5 @@ public class Transaction implements IEntity {
         }
         return sum;
     }
+  
 }

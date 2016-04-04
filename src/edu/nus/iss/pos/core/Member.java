@@ -41,20 +41,9 @@ public class Member extends Customer{
         return loyaltyPoints;
     }
     
-    public int pointsAvaliableForRedeemtion(float salePrice){
-        float pointsValue = convertPointsToDollars(this.loyaltyPoints);
-        if(pointsValue < salePrice){
-            return (int) Math.floor((pointsValue / DOLLAR_PER_POINTS)*POINT_TO_DOLLAR);
-        }else{
-            return (int) (Math.floor(salePrice / DOLLAR_PER_POINTS) * POINT_TO_DOLLAR);
-        }
-    }
-    
-    public float redeemPoints(float salePrice, boolean removePoints) throws Exception{
+    public float redeemPoints(float salePrice, int points, boolean removePoints) throws Exception{
         float finalPrice = salePrice;
-        if(salePrice < DOLLAR_PER_POINTS) return salePrice;
         
-        int points = pointsAvaliableForRedeemtion(salePrice);
         float pointsValue = convertPointsToDollars(points);
         
         finalPrice = salePrice - pointsValue;
@@ -62,8 +51,8 @@ public class Member extends Customer{
         return finalPrice;
     }
     
-    public static int convertPointsToDollars(int points){
-        return DOLLAR_PER_POINTS * (int) Math.floor(points / POINT_TO_DOLLAR) ;
+    public static float convertPointsToDollars(int points){
+        return DOLLAR_PER_POINTS * (points / POINT_TO_DOLLAR) ;
     }
     public static int convertDollarsToPoints(float dollars){
         return (int) Math.floor(dollars / DOLLAR_TO_POINT);

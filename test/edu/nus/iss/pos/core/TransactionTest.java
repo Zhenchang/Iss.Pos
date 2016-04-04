@@ -5,6 +5,7 @@
  */
 package edu.nus.iss.pos.core;
 
+import java.util.Collection;
 import java.util.Date;
 import java.util.List;
 import org.junit.After;
@@ -66,16 +67,6 @@ public class TransactionTest {
         assertEquals(expResult, result);
     }
 
-    /**
-     * Test of getTransactionDetails method, of class Transaction.
-     */
-    @Test
-    public void testGetTransactionDetails() {
-        System.out.println("getTransactionDetails");
-        Transaction instance = this.transaction;
-        List<TransactionDetail> result = instance.getTransactionDetails();
-        assertTrue(result instanceof List);
-    }
 
     /**
      * Test of getCustomer method, of class Transaction.
@@ -146,7 +137,8 @@ public class TransactionTest {
         TransactionDetail transactionDetail = this.transactionDetail;
         Transaction instance = this.transaction;
         instance.addTransactionDetail(transactionDetail);
-        assertTrue(instance.getTransactionDetails().size() == 1);
+        Collection<TransactionDetail> details = (Collection<TransactionDetail>) instance.getTransactionDetails();
+        assertTrue(details.size() == 1);
     }
 
     /**
@@ -158,9 +150,10 @@ public class TransactionTest {
         TransactionDetail transactionDetail = this.transactionDetail;
         Transaction instance = this.transaction;
         instance.addTransactionDetail(transactionDetail);
-        assertTrue(instance.getTransactionDetails().size() == 1);
+        Collection<TransactionDetail> details = (Collection<TransactionDetail>) instance.getTransactionDetails();
+        assertTrue(1 == details.size());
         instance.removeTransactionDetail(transactionDetail);
-        assertTrue(instance.getTransactionDetails().size() == 0);
+        assertTrue(details.isEmpty());
     }
 
     /**

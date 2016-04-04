@@ -18,6 +18,7 @@ import java.awt.event.ActionListener;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Collection;
 import java.util.Date;
 import java.util.List;
 import java.util.logging.Level;
@@ -40,16 +41,15 @@ public class TransactionReport extends CustomedFrame {
     
     private TransactionTableModel model = null;
     private List<TransactionDetail> details = null;
-    private UnitOfWork unitOfWork = null;
     private ISalesService saleService = null;
     
     /**
      * Creates new form TransactionReport2
      * @throws java.lang.Exception
      */
-    TransactionReport() throws Exception {
-        unitOfWork = new UnitOfWork();
-        saleService = new SalesService(unitOfWork);
+    TransactionReport(ISalesService saleService) throws Exception {
+        initComponents();
+        this.saleService = saleService;
         details = new ArrayList();
         Calendar c = Calendar.getInstance();
         Date end = c.getTime();
@@ -57,11 +57,11 @@ public class TransactionReport extends CustomedFrame {
         Date start = c.getTime();
         List<Transaction> transactions = saleService.getTransactions(start, end);
         for(Transaction trans : transactions) {
-            details.addAll(trans.getTransactionDetails());
+            details.addAll((Collection<? extends TransactionDetail>) trans.getTransactionDetails());
         }        
         model = new TransactionTableModel(details);
         
-        initComponents();
+    
         
         table.setAutoCreateRowSorter(true);
         TableRowSorter<TableModel> sorter = new TableRowSorter(table.getModel());
@@ -98,7 +98,7 @@ public class TransactionReport extends CustomedFrame {
                     Logger.getLogger(TransactionReport.class.getName()).log(Level.SEVERE, null, ex);
                 }
                 for(Transaction trans : transactions) {
-                    details.addAll(trans.getTransactionDetails());
+                    details.addAll((Collection<? extends TransactionDetail>) trans.getTransactionDetails());
                 }
                 model = new TransactionTableModel(details);
                 table.setModel(model);
@@ -249,7 +249,7 @@ public class TransactionReport extends CustomedFrame {
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
                 try {
-                    new TransactionReport().setVisible(true);
+                    new TransactionReport(new SalesService(new UnitOfWork())).setVisible(true);
                 } catch (Exception ex) {
                     Logger.getLogger(TransactionReport.class.getName()).log(Level.SEVERE, null, ex);
                 }

@@ -35,13 +35,13 @@ public class SalesService implements ISalesService {
     }
 
     @Override
-    public void checkout(Transaction transaction,int discount, boolean useLoyaltyPoints) throws Exception {
+    public void checkout(Transaction transaction,int discount, int usePoints) throws Exception {
         boolean isMember = transaction.getCustomer() instanceof Member;
         float price = getPriceAfterDiscount(transaction, discount);
         if(isMember){
             Member member = (Member) transaction.getCustomer();
-            if(useLoyaltyPoints){
-                price = member.redeemPoints(price, true);
+            if(usePoints > 0){
+                price = member.redeemPoints(price, usePoints, true);
             }
             member.addLoyaltyPoints(price);
             unitOfWork.getRepository(RepoType.Member).update(member.getKey(), member);
@@ -69,17 +69,17 @@ public class SalesService implements ISalesService {
     
     public float getPriceAfterDiscount(Transaction transaction, int discount) throws Exception {
        float price = transaction.getTotalWithoutDiscount();
-       price -=  price * (discount/100);
+       price -=  price * (discount/100.0);
        return price;
     }
 
     @Override
-    public float getFinalPrice(Transaction transaction, int discount, boolean useLoyaltyPoints) throws Exception {
+    public float getFinalPrice(Transaction transaction, int discount, int usePoints) throws Exception {
        boolean isMember = transaction.getCustomer() instanceof Member;
        float price = getPriceAfterDiscount(transaction, discount);
-       if(isMember && useLoyaltyPoints){
+       if(isMember && usePoints > 0){
             Member member = (Member) transaction.getCustomer();
-            price = member.redeemPoints(price, false);
+            price = member.redeemPoints(price, usePoints, false);
        }
        return price;
     }

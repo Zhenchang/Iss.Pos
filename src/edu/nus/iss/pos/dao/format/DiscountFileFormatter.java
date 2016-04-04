@@ -59,7 +59,7 @@ public class DiscountFileFormatter implements IFileFormatter<Discount>{
         String code = params[0];
         String description = params[1];
         int percentage = Integer.parseInt(params[4]);
-        if(code.equals("MEMBER_FIEST")){
+        if(code.equals("MEMBER_FIRST")){
             return new FirstPurchaseDiscount(code, description, percentage);
         }else if(code.equals("MEMBER_SUBSEQ")){
             return new SubsequentPurchaseDiscount(code, description, percentage);

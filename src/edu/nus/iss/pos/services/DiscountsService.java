@@ -27,7 +27,10 @@ public class DiscountsService implements IDiscountsService {
     public int getDiscountForTransaction(Transaction transaction) throws Exception{
         // TODO Auto-generated method stub
         int periodDiscount = this.getPeriodDiscountForTransaction(transaction);
-        int otherDiscount = this.getOtherDiscount(transaction);
+        int otherDiscount = 0;
+        if(transaction.getCustomer() instanceof Member){
+             otherDiscount = this.getOtherDiscount(transaction);
+        }
         return periodDiscount < otherDiscount ? otherDiscount : periodDiscount;
     }
     

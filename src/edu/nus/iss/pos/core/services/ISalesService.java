@@ -22,10 +22,11 @@ public interface ISalesService {
     
     TransactionDetail addToCart(Transaction transaction, Product product, int quantity) throws Exception;
     
-    void checkout(Transaction transaction, int discount, boolean useLoyaltyPoints) throws Exception;
+    void checkout(Transaction transaction, int discount, int usePoints) throws Exception;
     
-    float getFinalPrice(Transaction transaction,int discount, boolean useLoyaltyPoints) throws Exception;
+    float getFinalPrice(Transaction transaction, int discount, int usePoints) throws Exception;
     
     public List<Transaction> getTransactions(Date startDate, Date endDate) throws Exception;
+    
     public float getPriceAfterDiscount(Transaction transaction, int discount) throws Exception;
 }

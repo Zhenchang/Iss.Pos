@@ -48,4 +48,8 @@ public class TransactionDetail {
         if(transaction == null) throw new IllegalArgumentException("member");
         this.transaction = transaction;
     }
+    
+    public float subTotal(){
+        return this.getQuantityPurchased() * this.getProduct().getPrice();
+    }
 }
