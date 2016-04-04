@@ -105,7 +105,7 @@ public class MembershipServiceTest {
         expResult.setName("Jack");
         service.updateMember(expResult);
         Member result= (Member)unitOfWork.getRepository(RepoType.Member).getByKey("EER111222");
-        assertNotEquals(expResult, result.getName());       
+        assertNotSame(expResult, result.getName());       
     }
 
     /**

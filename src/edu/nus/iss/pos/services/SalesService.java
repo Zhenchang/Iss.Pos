@@ -70,7 +70,7 @@ public class SalesService implements ISalesService {
     @Override
     public float getPriceAfterDiscount(Transaction transaction, int discount) throws Exception {
        float price = transaction.getTotalWithoutDiscount();
-       price -=  price * (discount/100.0);
+       price -=  price * (discount/100.0f);
        return price;
     }
 

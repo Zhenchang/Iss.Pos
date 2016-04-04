@@ -64,15 +64,14 @@ public class MemberTest {
     public void testRedeemPoints() throws Exception {
         System.out.println("redeemPoints");
         float salePrice = 300.0F;
-        boolean removePoints = false;
         float expResult = 300.0F;
-        float result = member.redeemPoints(salePrice, removePoints);
+        float result = member.redeemPoints(salePrice, 0, false);
         assertEquals(expResult, result,0.0F);
         int loyaltyPointsNeg = 100;
         Member instance = new Member(id, name, loyaltyPointsNeg);
         float expResultNeg = 300.0F;
-        float resultNeg = instance.redeemPoints(salePrice, removePoints);
-        assertNotEquals(expResultNeg, resultNeg);
+        float resultNeg = instance.redeemPoints(salePrice, 0, false);
+        assertNotSame(expResultNeg, resultNeg);
         
        
     }
@@ -83,10 +82,10 @@ public class MemberTest {
     @Test
     public void testConvertPointsToDollars() {
         System.out.println("convertPointsToDollars");
-        int points = 100;
-        int expResult = 5;
-        int result = member.convertPointsToDollars(points);
-        assertEquals(expResult, result);  
+        int points = 20;
+        float expResult = 1.0f;
+        float result = member.convertPointsToDollars(points);
+        assertEquals(expResult, result, 0.0f);  
     }
 
     /**

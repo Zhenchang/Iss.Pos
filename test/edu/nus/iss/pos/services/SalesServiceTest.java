@@ -113,7 +113,7 @@ public class SalesServiceTest {
         transactionDetail=new TransactionDetail(transaction,product, 3);
         transaction.addTransactionDetail(transactionDetail);
         int discount = 20;
-        service.checkout(transaction, discount, false);
+        service.checkout(transaction, discount, 0);
         assertEquals(product.getQuantity(), 97);
     }
 
@@ -153,8 +153,7 @@ public class SalesServiceTest {
         transactionDetail = new TransactionDetail(transaction, product, 3);
         transaction.addTransactionDetail(transactionDetail);
         int discount = 20;
-        boolean useLoyaltyPoints = false;
-        float result = service.getFinalPrice(transaction, discount, useLoyaltyPoints);
+        float result = service.getFinalPrice(transaction, discount, 0);
         System.out.println(result);
         assertTrue(result == 240);
     }

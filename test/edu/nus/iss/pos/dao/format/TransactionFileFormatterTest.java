@@ -64,7 +64,7 @@ public class TransactionFileFormatterTest {
     @Test
     public void testFormat() {
         System.out.println("format");
-        Transaction entity = new Transaction(1, new Date(), Customer.getInstance());
+        Transaction entity = new Transaction(1, new Date(116,03,03), Customer.getInstance());
         TransactionFileFormatter instance = TransactionFileFormatter.getInstance(unitOfWork);
         String expResult = "1,CLO/1,PUBLIC,1,2016-04-03\n";
         Category category = new Category("CLO", "clothing");

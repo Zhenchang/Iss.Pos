@@ -75,7 +75,6 @@ public class UsersServiceTest {
         try {
             result = service.Login(username, password);
         } catch (Exception ex) {
-            ex.printStackTrace();
         }
         assertNull(result);
     }

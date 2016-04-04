@@ -68,9 +68,9 @@ public class DiscountFileFormatterTest {
     @Test
     public void testReadEntity() throws Exception {
         System.out.println("readEntity");
-        String data = "MEMBER_FIEST,First purchase by member,ALWAYS,ALWAYS,10,M\n";
+        String data = "MEMBER_FIRST,First purchase by member,ALWAYS,ALWAYS,10,M\n";
         DiscountFileFormatter instance = DiscountFileFormatter.getInstance();
-        Discount expResult = new FirstPurchaseDiscount("MEMBER_FIEST","First purchase by member",10);
+        Discount expResult = new FirstPurchaseDiscount("MEMBER_FIRST","First purchase by member",10);
         Discount result = instance.readEntity(data);
         assertEquals(expResult.getKey(), result.getKey());
     }
