@@ -7,7 +7,9 @@ package edu.nus.iss.pos.core.services;
 
 import edu.nus.iss.pos.core.Category;
 import edu.nus.iss.pos.core.Product;
+import edu.nus.iss.pos.core.Vendor;
 import java.util.Collection;
+import java.util.List;
 
 /**
  *
@@ -35,6 +37,10 @@ public interface IInventoryService {
     
     void reorderProduct(Product product) throws Exception;
     
+    void updateProduct(Product product) throws Exception;
+    
+    void updateCategory(Category category) throws Exception;
+    
     /*Similar to wildcard search*/
     Collection<Product> searchProductByName(String name) throws Exception;
     
@@ -44,7 +50,9 @@ public interface IInventoryService {
     
     Collection<Product> getProductsByCategoryId(String categoryId) throws Exception;
     
-    public void updateProduct(Product product) throws Exception;
+    Collection<Vendor> getVendorsForCategory(String categoryId) throws Exception;
     
-    public void updateCategory(Category category) throws Exception;
+    Vendor addVendorForCategory(String name, String description, Category category) throws Exception;
+    
+    List<Vendor> getAllVendors() throws Exception;
 }

@@ -15,6 +15,8 @@ import java.util.logging.Logger;
  */
 public class ApplicationLauncher {
     
+    private String username = "";
+    
      /**
      * @param args the command line arguments
      */
@@ -56,6 +58,7 @@ public class ApplicationLauncher {
                     } catch (Exception ex) {
                         Logger.getLogger(ApplicationLauncher.class.getName()).log(Level.SEVERE, null, ex);
                     }
+                    
                 }
             });
             

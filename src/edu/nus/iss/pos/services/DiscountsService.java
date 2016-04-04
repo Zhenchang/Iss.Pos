@@ -4,7 +4,9 @@ import edu.nus.iss.pos.core.*;
 import edu.nus.iss.pos.core.dao.IUnitOfWork;
 import edu.nus.iss.pos.core.services.IDiscountsService;
 import edu.nus.iss.pos.dao.format.RepoType;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 public class DiscountsService implements IDiscountsService {
     
@@ -139,5 +141,13 @@ public class DiscountsService implements IDiscountsService {
     @Override
     public void addDiscount(Discount discount) throws Exception {
         unitOfWork.getRepository(RepoType.Discount).add(discount);
+    }
+
+    @Override
+    public List<Discount> getAllDiscounts() throws Exception{
+        List<Discount> discounts = new ArrayList();
+        for(Object discount : unitOfWork.getRepository(RepoType.Discount).getAll())
+            discounts.add((Discount)discount);
+        return discounts;
     }
 }

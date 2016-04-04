@@ -5,11 +5,11 @@
  */
 package edu.nus.iss.pos.gui;
 
-import edu.nus.iss.pos.core.Category;
-import edu.nus.iss.pos.core.Product;
-import edu.nus.iss.pos.core.services.IInventoryService;
+import edu.nus.iss.pos.core.Member;
+import edu.nus.iss.pos.core.services.IMembershipService;
 import edu.nus.iss.pos.dao.repositories.UnitOfWork;
-import edu.nus.iss.pos.services.InventoryService;
+import edu.nus.iss.pos.services.MembershipService;
+import java.awt.Color;
 import java.awt.Component;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -19,8 +19,8 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.AbstractCellEditor;
 import javax.swing.JButton;
-import javax.swing.JOptionPane;
 import javax.swing.JTable;
+import javax.swing.JTextField;
 import javax.swing.table.AbstractTableModel;
 import javax.swing.table.TableCellEditor;
 import javax.swing.table.TableCellRenderer;
@@ -29,30 +29,31 @@ import javax.swing.table.TableModel;
 
 /**
  *
- * @author zz
+ * @author Ankan
  */
-public class ProductsReportFrame extends javax.swing.JFrame {
+public class MemberReportFrame extends javax.swing.JFrame {
 
+     private IMembershipService membershipService;
     /**
-     * Creates new form ProductsReportFrame
+     * Creates new form MemberReportFrame
      */
-    
-    private IInventoryService inventoryService;
-    private List<Product> products;
-    
-    public ProductsReportFrame(IInventoryService inventoryService) throws Exception {
+    public MemberReportFrame(IMembershipService membershipService) throws Exception {
         initComponents();
-        this.inventoryService = inventoryService;
-        TableModel tableModel = new ProductTableModel(this.getAllProducts());
+        this.setContent(membershipService);
+    }
+    
+     private void setContent(IMembershipService membershipService) throws Exception{
+        this.membershipService = membershipService;
+        TableModel tableModel;
+         tableModel = new MemberTableModel(this.membershipService.getAllMembers());
         this.jTable1.setModel(tableModel);
-        
-        TableColumn tc = this.jTable1.getColumnModel().getColumn(8);
+        TableColumn tc = this.jTable1.getColumnModel().getColumn(3);
 
         tc.setCellEditor(new ButtonEditor());
         tc.setCellRenderer(new ButtonRenderer());
 
     }
-    
+     
     class ButtonEditor extends AbstractCellEditor implements TableCellEditor, ActionListener{
         
         private JButton jButton;
@@ -65,7 +66,6 @@ public class ProductsReportFrame extends javax.swing.JFrame {
             jButton.setOpaque(true);
             jButton.addActionListener(this);
         }
-
         @Override
         public Object getCellEditorValue() {
             return "";
@@ -82,22 +82,12 @@ public class ProductsReportFrame extends javax.swing.JFrame {
         @Override
         public void actionPerformed(ActionEvent e) {
             System.out.println("clicked");
-            ProductTableModel tableMode = (ProductTableModel)this.jTable.getModel();
-            Product product = tableMode.getProductAt(this.row);
-            if(product.getBarcodeNumber().contains(",")){
-                JOptionPane.showConfirmDialog(null,
-                    "The field can not contain comma", "warning", JOptionPane.YES_NO_OPTION,JOptionPane.WARNING_MESSAGE, null);
-                return ;
-            } else if(product.getName().contains(",")){
-                JOptionPane.showConfirmDialog(null,
-                    "The field can not contain comma", "warning", JOptionPane.YES_NO_OPTION,JOptionPane.WARNING_MESSAGE, null);
-                tableMode.fireTableStructureChanged();
-                return ;
-            }
+            MemberTableModel tableModel = (MemberTableModel) this.jTable.getModel();
+            
             try {
-                inventoryService.updateProduct(product);
+                membershipService.updateMember(tableModel.getMemberAt(this.row));
             } catch (Exception ex) {
-                Logger.getLogger(ProductsReportFrame.class.getName()).log(Level.SEVERE, null, ex);
+                Logger.getLogger(CategoryReportFrame.class.getName()).log(Level.SEVERE, null, ex);
             }
         }
     }
@@ -118,37 +108,27 @@ public class ProductsReportFrame extends javax.swing.JFrame {
     }
     
     
-    private Iterable<Product> getAllProducts() throws Exception{
-        this.products = new ArrayList<Product>();
-        Iterable<Product> tempProducts = new ArrayList<Product>();
-        Iterable<Category> categorys = this.inventoryService.getAllCategory();
-        for(Category category : categorys){
-            tempProducts = this.inventoryService.getProductsByCategoryId(category.getKey());
-            for(Product product : tempProducts){
-                this.products.add(product);
-            }
-        }
-        return this.products;
-    }
-    
-    
-    
-    class ProductTableModel extends AbstractTableModel {
+    class MemberTableModel extends AbstractTableModel {
         
-        private List<Product> productList;
-        private final String [] columns = {"id ","name","description", "quantity available","Prce","Bar code number","threshold","orderQuantity",""};
+        private List<Member> memberList;
+        private final String [] columns = {"MemberId","MemberName","Loyalty points",""};
         
-        public ProductTableModel(Iterable<Product> productList){
+        public MemberTableModel(Iterable<Member> memberList){
             super();
-            this.productList = new ArrayList<Product>();
-            for(Product product : productList){
-                this.productList.add(product);
+            this.memberList = new ArrayList<Member>();
+            for(Member member : memberList){
+                this.memberList.add(member);
             }
         }
 
         @Override
         public int getRowCount() {
-            return this.productList.size();
+            return this.memberList.size();
+        }
+        
+        @Override
+        public String getColumnName(int columnIndex){
+            return this.columns[columnIndex];
         }
 
         @Override
@@ -160,21 +140,13 @@ public class ProductsReportFrame extends javax.swing.JFrame {
         public Object getValueAt(int rowIndex, int columnIndex) {
             switch(columnIndex){
                 case 0:
-                    return this.productList.get(rowIndex).getKey();
+                    System.out.println(this.memberList.get(rowIndex).getKey());
+                    return this.memberList.get(rowIndex).getKey();
+                    
                 case 1:
-                    return this.productList.get(rowIndex).getName();
+                    return this.memberList.get(rowIndex).getName();
                 case 2:
-                    return this.productList.get(rowIndex).getDescription();
-                case 3:
-                    return this.productList.get(rowIndex).getQuantity();
-                case 4:
-                    return this.productList.get(rowIndex).getPrice();
-                case 5:
-                    return this.productList.get(rowIndex).getBarcodeNumber();
-                case 6:
-                    return this.productList.get(rowIndex).getReorderQuantity();
-                case 7:
-                    return this.productList.get(rowIndex).getOrderQuantity();
+                    return this.memberList.get(rowIndex).getLoyaltyPoints();
                 default:
                     return null;
             }
@@ -182,53 +154,41 @@ public class ProductsReportFrame extends javax.swing.JFrame {
         
         @Override
         public void setValueAt(Object value, int row, int column){
-            System.out.println(column);
-            switch(column){
-                case 1:
-                    this.productList.get(row).setName(value.toString());
-                    break;
-                case 2:
-                    this.productList.get(row).setDescription(value.toString());
-                    break;
-                case 3:
-                    this.productList.get(row).setQuantity(Integer.parseInt(value.toString()));
-                    break;
-                case 4:
-                    this.productList.get(row).setPrice(Float.parseFloat(value.toString()));
-                    break;
-                case 5:
-                    this.productList.get(row).setBarcodeNumber(value.toString());
-                    break;
-                case 6:
-                    this.productList.get(row).setReorderQuantity(Integer.parseInt(value.toString()));
-                    break;
-                case 7:
-                    this.productList.get(row).setOrderQuantity(Integer.parseInt(value.toString()));
-                    break;
-                default:
-            }
+            if(column == 1){
+                this.memberList.get(row).setName(value.toString());
+            } 
             fireTableCellUpdated(row, column);
         }
-
+        
+        public Member getMemberAt(int rowIndex){
+            return this.memberList.get(rowIndex);
+        }
+        
         @Override
-        public String getColumnName(int column) {
-            return this.columns[column];//To change body of generated methods, choose Tools | Templates.
-        }
-        
-        
-        
-        public Product getProductAt(int rowIndex){
-            return this.productList.get(rowIndex);
-        }
-        
         public boolean isCellEditable(int row, int column){
-            if(column == 0){
+            if(column == 0 || column == 2){
                 return false;
             }
             return true;
         }
         
     }
+    
+    class TextFieldRender implements TableCellRenderer {
+        
+        JTextField field = null;
+        
+        public TextFieldRender() {
+            field = new JTextField();
+            field.setBackground(Color.GRAY);
+        }
+        
+        @Override
+        public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, boolean hasFocus, int row, int column) {
+            return field;
+        }
+    }
+
 
     /**
      * This method is called from within the constructor to initialize the form.
@@ -246,14 +206,14 @@ public class ProductsReportFrame extends javax.swing.JFrame {
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
-        jButton1.setText("cancel");
+        jButton1.setText("Cancel");
         jButton1.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jButton1ActionPerformed(evt);
             }
         });
 
-        jButton2.setText("add");
+        jButton2.setText("Add");
 
         jTable1.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
@@ -272,21 +232,20 @@ public class ProductsReportFrame extends javax.swing.JFrame {
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(jButton2)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jButton1)
+                .addContainerGap())
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                        .addGap(0, 0, Short.MAX_VALUE)
-                        .addComponent(jButton2)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jButton1))
-                    .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 746, Short.MAX_VALUE))
-                .addContainerGap())
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 375, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(15, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                .addContainerGap()
                 .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 275, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
@@ -320,23 +279,31 @@ public class ProductsReportFrame extends javax.swing.JFrame {
                 }
             }
         } catch (ClassNotFoundException ex) {
-            java.util.logging.Logger.getLogger(ProductsReportFrame.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(MemberReportFrame.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (InstantiationException ex) {
-            java.util.logging.Logger.getLogger(ProductsReportFrame.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(MemberReportFrame.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (IllegalAccessException ex) {
-            java.util.logging.Logger.getLogger(ProductsReportFrame.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(MemberReportFrame.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (javax.swing.UnsupportedLookAndFeelException ex) {
-            java.util.logging.Logger.getLogger(ProductsReportFrame.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(MemberReportFrame.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         }
+        //</editor-fold>
+        //</editor-fold>
+        //</editor-fold>
+        //</editor-fold>
+        //</editor-fold>
+        //</editor-fold>
+        //</editor-fold>
         //</editor-fold>
 
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
-                try {
-                    new ProductsReportFrame(new InventoryService(new UnitOfWork())).setVisible(true);
+                 try {
+                    IMembershipService membershipService = new MembershipService(new UnitOfWork());
+                    new MemberReportFrame(membershipService).setVisible(true);
                 } catch (Exception ex) {
-                    Logger.getLogger(ProductsReportFrame.class.getName()).log(Level.SEVERE, null, ex);
+                    Logger.getLogger(CategoryReportFrame.class.getName()).log(Level.SEVERE, null, ex);
                 }
             }
         });

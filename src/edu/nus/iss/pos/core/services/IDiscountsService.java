@@ -7,6 +7,7 @@ package edu.nus.iss.pos.core.services;
 
 import edu.nus.iss.pos.core.Discount;
 import edu.nus.iss.pos.core.Transaction;
+import java.util.List;
 
 /**
  *
@@ -19,4 +20,6 @@ public interface IDiscountsService {
     void applyDiscountForTransaction(Transaction transaction);
     
     public void addDiscount(Discount discount) throws Exception;
+    
+    public List<Discount> getAllDiscounts() throws Exception;
 }

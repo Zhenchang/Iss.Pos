@@ -52,9 +52,16 @@ public class CategoryReportFrame extends javax.swing.JFrame {
         TableModel tableModel = new CategoryTableModel(this.inventoryService.getAllCategory());
         this.jTable1.setModel(tableModel);
         TableColumn tc = this.jTable1.getColumnModel().getColumn(2);
+        
+        TableColumn tc1 = this.jTable1.getColumnModel().getColumn(3);
+        
+        
 
         tc.setCellEditor(new ButtonEditor());
         tc.setCellRenderer(new ButtonRenderer());
+        
+        tc1.setCellEditor(new ViewVendorEditor());
+        tc1.setCellRenderer(new ViewVendorRenderer());
 
     }
     
@@ -90,6 +97,7 @@ public class CategoryReportFrame extends javax.swing.JFrame {
             CategoryTableModel tableModel = (CategoryTableModel) this.jTable.getModel();
             
             try {
+                
                 inventoryService.updateCategory(tableModel.getCategoryAt(this.row));
             } catch (Exception ex) {
                 Logger.getLogger(CategoryReportFrame.class.getName()).log(Level.SEVERE, null, ex);
@@ -113,10 +121,66 @@ public class CategoryReportFrame extends javax.swing.JFrame {
     }
     
     
+    class ViewVendorEditor extends AbstractCellEditor implements TableCellEditor, ActionListener{
+        
+        private JButton jButton;
+        private JTable jTable;
+        private int row;
+        private int column;
+        
+        public ViewVendorEditor(){
+            this.jButton = new JButton("view vendor");
+            jButton.setOpaque(true);
+            jButton.addActionListener(this);
+        }
+
+        @Override
+        public Object getCellEditorValue() {
+            return "";
+        }
+
+        @Override
+        public Component getTableCellEditorComponent(JTable table, Object value, boolean isSelected, int row, int column) {
+            this.jTable = table;
+            this.row = row;
+            this.column = column;
+            return this.jButton;
+        }
+
+        @Override
+        public void actionPerformed(ActionEvent e) {
+            CategoryTableModel tableModel = (CategoryTableModel) this.jTable.getModel();
+            
+            try {
+                VendorReportFrame dialog = new VendorReportFrame(null, true, inventoryService, tableModel.getCategoryAt(this.row));
+                dialog.setVisible(true);
+            } catch (Exception ex) {
+                Logger.getLogger(CategoryReportFrame.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
+    }
+    
+        
+    class ViewVendorRenderer implements TableCellRenderer {
+        
+        JButton button = null;
+        
+        public ViewVendorRenderer() {
+            button = new JButton("view vendor");
+        }
+        @Override
+        public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, boolean hasFocus, int row, int column) {
+           // button.setEnabled((boolean) value);
+            return button;
+        }
+    }
+    
+    
+    
     class CategoryTableModel extends AbstractTableModel {
         
         private List<Category> categoryList;
-        private final String [] columns = {"id ","name",""};
+        private final String [] columns = {"id ","name","",""};
         
         public CategoryTableModel(Iterable<Category> categoryList){
             super();
@@ -206,8 +270,18 @@ public class CategoryReportFrame extends javax.swing.JFrame {
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
         jButton1.setText("cancel");
+        jButton1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton1ActionPerformed(evt);
+            }
+        });
 
         jButton2.setText("add");
+        jButton2.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton2ActionPerformed(evt);
+            }
+        });
 
         jTable1.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
@@ -252,6 +326,15 @@ public class CategoryReportFrame extends javax.swing.JFrame {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
+    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
+        // TODO add your handling code here:
+        this.dispose();
+    }//GEN-LAST:event_jButton1ActionPerformed
+
+    private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_jButton2ActionPerformed
+
     /**
      * @param args the command line arguments
      */
@@ -285,6 +368,8 @@ public class CategoryReportFrame extends javax.swing.JFrame {
                 try {
                     IInventoryService inventoryService = new InventoryService(new UnitOfWork());
                     new CategoryReportFrame(inventoryService).setVisible(true);
+                   
+                    
                 } catch (Exception ex) {
                     Logger.getLogger(CategoryReportFrame.class.getName()).log(Level.SEVERE, null, ex);
                 }

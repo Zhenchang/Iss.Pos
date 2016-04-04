@@ -18,6 +18,15 @@ public interface IMembershipService {
     Member searchMemberByName(String name) throws Exception;
     
     Member searchMemberById(String id) throws Exception;
+
+    /**
+     *
+     * @param member
+     * @throws Exception
+     */
+    public void updateMember(Member member)throws Exception;
+
+    public Iterable<Member> getAllMembers()throws Exception;
     
     
 }
