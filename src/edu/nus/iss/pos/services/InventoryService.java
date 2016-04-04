@@ -213,6 +213,32 @@ public class InventoryService implements IInventoryService {
     }
 
     @Override
+    public Collection<Vendor> getVendorsForCategory(String categoryId) throws Exception {
+        Collection<Vendor> vendors = (Collection<Vendor>) unitOfWork.getRepository(RepoType.Vendor).getAll();
+        Collection<Vendor> vendorsNeeded = new ArrayList<Vendor>();
+        
+        for(Vendor vendor : vendors){
+            for(Category category : vendor.getCategories()){
+                if(category.getKey().equals(categoryId)){
+                    vendorsNeeded.add(vendor);
+                }
+            }
+        }
+        
+        return vendorsNeeded;
+        
+    }
+
+    @Override
+    public Vendor addVendorForCategory(String name, String description, Category category) throws Exception {
+        Vendor vendor = new Vendor(name, description);
+        vendor.addCategory(category);
+        IRepository repository = unitOfWork.getRepository(RepoType.Vendor);
+        repository.add(vendor);
+        return vendor;
+    }
+    
+    
     public List<Vendor> getAllVendors() throws Exception {
         IRepository repository = unitOfWork.getRepository(RepoType.Vendor);
         List<Vendor> vendors = new ArrayList();

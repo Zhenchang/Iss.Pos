@@ -50,5 +50,9 @@ public interface IInventoryService {
     
     Collection<Product> getProductsByCategoryId(String categoryId) throws Exception;
     
+    Collection<Vendor> getVendorsForCategory(String categoryId) throws Exception;
+    
+    Vendor addVendorForCategory(String name, String description, Category category) throws Exception;
+    
     List<Vendor> getAllVendors() throws Exception;
 }
