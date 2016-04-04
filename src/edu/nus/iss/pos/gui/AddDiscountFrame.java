@@ -154,7 +154,7 @@ public class AddDiscountFrame extends CustomedFrame {
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
             .addGroup(jDialog1Layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(jLabel8, javax.swing.GroupLayout.DEFAULT_SIZE, 220, Short.MAX_VALUE)
+                .addComponent(jLabel8, javax.swing.GroupLayout.PREFERRED_SIZE, 220, Short.MAX_VALUE)
                 .addContainerGap())
         );
         jDialog1Layout.setVerticalGroup(
@@ -205,7 +205,7 @@ public class AddDiscountFrame extends CustomedFrame {
         );
         startDatePanelLayout.setVerticalGroup(
             startDatePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 23, Short.MAX_VALUE)
+            .addGap(0, 27, Short.MAX_VALUE)
         );
 
         jLabel6.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);

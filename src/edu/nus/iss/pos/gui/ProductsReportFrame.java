@@ -19,6 +19,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.AbstractCellEditor;
 import javax.swing.JButton;
+import javax.swing.JOptionPane;
 import javax.swing.JTable;
 import javax.swing.table.AbstractTableModel;
 import javax.swing.table.TableCellEditor;
@@ -83,6 +84,16 @@ public class ProductsReportFrame extends javax.swing.JFrame {
             System.out.println("clicked");
             ProductTableModel tableMode = (ProductTableModel)this.jTable.getModel();
             Product product = tableMode.getProductAt(this.row);
+            if(product.getBarcodeNumber().contains(",")){
+                JOptionPane.showConfirmDialog(null,
+                    "The field can not contain comma", "warning", JOptionPane.YES_NO_OPTION,JOptionPane.WARNING_MESSAGE, null);
+                return ;
+            } else if(product.getName().contains(",")){
+                JOptionPane.showConfirmDialog(null,
+                    "The field can not contain comma", "warning", JOptionPane.YES_NO_OPTION,JOptionPane.WARNING_MESSAGE, null);
+                tableMode.fireTableStructureChanged();
+                return ;
+            }
             try {
                 inventoryService.updateProduct(product);
             } catch (Exception ex) {
@@ -236,6 +247,11 @@ public class ProductsReportFrame extends javax.swing.JFrame {
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
         jButton1.setText("cancel");
+        jButton1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton1ActionPerformed(evt);
+            }
+        });
 
         jButton2.setText("add");
 
@@ -281,6 +297,11 @@ public class ProductsReportFrame extends javax.swing.JFrame {
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
+
+    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
+        // TODO add your handling code here:
+        this.dispose();
+    }//GEN-LAST:event_jButton1ActionPerformed
 
     /**
      * @param args the command line arguments

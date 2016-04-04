@@ -7,6 +7,7 @@ package edu.nus.iss.pos.core.services;
 
 import edu.nus.iss.pos.core.Category;
 import edu.nus.iss.pos.core.Product;
+import edu.nus.iss.pos.core.Vendor;
 import java.util.Collection;
 
 /**
@@ -47,4 +48,9 @@ public interface IInventoryService {
     Collection<Product> getProductsBelowThreshold() throws Exception;
     
     Collection<Product> getProductsByCategoryId(String categoryId) throws Exception;
+    
+    Collection<Vendor> getVendorsForCategory(String categoryId) throws Exception;
+    
+    Vendor addVendorForCategory(String name, String description, Category category) throws Exception;
+    
 }
