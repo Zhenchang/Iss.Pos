@@ -591,6 +591,7 @@ public class MainFrame extends javax.swing.JFrame {
         jLabel3.setText("Discount");
 
         jLabel4.setBackground(new java.awt.Color(255, 255, 204));
+        jLabel4.setFont(new java.awt.Font("Tahoma", 0, 18)); // NOI18N
         jLabel4.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         jLabel4.setText("0.00");
 
@@ -1087,7 +1088,7 @@ public class MainFrame extends javax.swing.JFrame {
     }//GEN-LAST:event_jMenuItem3ActionPerformed
 
     private void jMenuItem15ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem15ActionPerformed
-        new LoginFrame(membershipService, salesService, inventoryService, discountsService, usersService);
+        new LoginFrame(membershipService, salesService, inventoryService, discountsService, usersService).setVisible(true);
         this.setVisible(false);
     }//GEN-LAST:event_jMenuItem15ActionPerformed
 
