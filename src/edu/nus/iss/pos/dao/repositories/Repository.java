@@ -26,6 +26,8 @@ public class Repository<T extends IEntity> implements IRepository<T>{
     private final IFileFormatter formatter;
     private final IUnitOfWork unitOfWork;
     
+    public final static String DAT_PATH = "data/";
+    
     public Repository(IUnitOfWork unitOfWork, RepoType fileType, String filename) throws Exception{
         this.setFileType(fileType);
         this.setFileName(filename);
@@ -39,9 +41,14 @@ public class Repository<T extends IEntity> implements IRepository<T>{
 
     protected final void setFileName(String fileName) throws IOException{
         if(fileName.length() != 0){
+            fileName = DAT_PATH + fileName;
             new File(fileName).createNewFile();
             this.fileName = fileName;
         }
+    }
+    
+    public String getFileName(){
+        return this.fileName;
     }
 
     @Override

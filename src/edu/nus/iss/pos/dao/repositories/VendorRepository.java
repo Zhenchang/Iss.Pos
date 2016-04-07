@@ -25,7 +25,6 @@ import java.util.List;
 public class VendorRepository extends Repository<Vendor>{
     
     private String fileNamePrefix = "";
-    private String vendorFileName = "";
     
     
     public VendorRepository(IUnitOfWork unitOfWork, String fileNamePrefix) throws Exception {
@@ -38,7 +37,6 @@ public class VendorRepository extends Repository<Vendor>{
     public void add(Vendor entity) throws Exception {
         for(Category category : entity.getCategories()){
             setFileName(fileNamePrefix + category.getKey() + ".dat");
-            this.vendorFileName = "data/" + fileNamePrefix + category.getKey() + ".dat";
             update(entity.getKey(), entity);
         }
     }
@@ -59,12 +57,10 @@ public class VendorRepository extends Repository<Vendor>{
         }
         for(Category category : shouldBeDeleted){
             this.setFileName(fileNamePrefix + category.getKey() + ".dat");
-            this.vendorFileName = fileNamePrefix + category.getKey() + ".dat";
             super.delete(entity);
         }
         for(Category category : vendorCategories){
             this.setFileName(fileNamePrefix + category.getKey() + ".dat");
-            this.vendorFileName = fileNamePrefix + category.getKey() + ".dat";
             vendorUpdate(oldKey, entity);
         }
     }
@@ -74,7 +70,6 @@ public class VendorRepository extends Repository<Vendor>{
         Iterable<Category> categories = this.getUnitOfWork().getRepository(RepoType.Category).getAll();
         for(Category category : categories){
             this.setFileName(fileNamePrefix + category.getKey() + ".dat");
-            this.vendorFileName = fileNamePrefix + category.getKey() + ".dat";
             super.delete(entity);
         }
     }
@@ -85,7 +80,6 @@ public class VendorRepository extends Repository<Vendor>{
         Iterable<Category> categories = this.getUnitOfWork().getRepository(RepoType.Category).getAll();
         for(Category category : categories){
             this.setFileName(fileNamePrefix + category.getKey() + ".dat");
-            this.vendorFileName = fileNamePrefix + category.getKey() + ".dat";
             super.getAll().forEach((v)->{
                 int index = vendors.indexOf(v);
                 if(index == -1){
@@ -109,7 +103,7 @@ public class VendorRepository extends Repository<Vendor>{
     public void vendorUpdate(String oldKey, Vendor entity) throws Exception {
         int linePosition = indexOfKey(oldKey);
         if(linePosition != -1){
-            removeNthLine(this.vendorFileName, linePosition);
+            removeNthLine(this.getFileName(), linePosition);
         }
         this.vendorAdd(entity);
     }
@@ -118,13 +112,13 @@ public class VendorRepository extends Repository<Vendor>{
         if(indexOfKey(entity.getKey()) != -1){
             throw new Exception("Duplicate Key!");
         }
-        try(FileWriter fileWriter = new FileWriter(this.vendorFileName, true)){
+        try(FileWriter fileWriter = new FileWriter(this.getFileName(), true)){
             fileWriter.append(FileFormatterFactory.getFormatter(RepoType.Vendor, new UnitOfWork()).format(entity));
         }
     }
         
     private int indexOfKey(String key) throws Exception{
-        try(FileReader fileReader = new FileReader(this.vendorFileName)){
+        try(FileReader fileReader = new FileReader(this.getFileName())){
             try(BufferedReader bufferedReader = new BufferedReader(fileReader)){
                 int linePosition = -1;
                 while(bufferedReader.ready()){
